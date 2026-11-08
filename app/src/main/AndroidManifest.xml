@@ -7,6 +7,11 @@
       1.8.0-beta01 also trust a host that holds this permission; on a phone no system package
       defines it, so we define it (normal protection) and hold it. Newer library versions ignore it
       on phones: those apps need our signing digest in their allow-list instead (see docs).
+
+      Do not rename: car apps validate the host by this permission.
+      Only one installed package can define it: while another (AARE, net.prototux.aare) defines
+      it, this one isn't granted it, and stays without it after that package is uninstalled
+      until it is reinstalled or the phone reboots.
     -->
     <permission
         android:name="android.car.permission.TEMPLATE_RENDERER"
