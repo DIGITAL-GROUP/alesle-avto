@@ -68,4 +68,17 @@ class PhoneAppsTest {
         assertTrue(PhoneApps.drivingAllowed("com.example.player", extra = setOf("com.example.player")))
         assertFalse(PhoneApps.drivingAllowed("com.google.android.youtube"))
     }
+
+    @Test fun backOutOfAnApp() {
+        val yt = "com.google.android.youtube"
+        // Watch page -> home page: still the app.
+        assertFalse(PhoneApps.backedOut(yt, before = yt, now = yt))
+        // Its task finished or went behind, nothing left on the display.
+        assertTrue(PhoneApps.backedOut(yt, before = yt, now = ""))
+        // Its task went behind Maps, opened earlier on the same display.
+        assertTrue(PhoneApps.backedOut(yt, before = yt, now = "ru.yandex.yandexmaps"))
+        // A browser the app opened goes back within itself, or back to the app.
+        assertFalse(PhoneApps.backedOut(yt, before = "com.android.browser", now = "com.android.browser"))
+        assertFalse(PhoneApps.backedOut(yt, before = "com.android.browser", now = yt))
+    }
 }

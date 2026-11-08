@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Uzbek (Latin). oʻ/gʻ are written with ‘ (U+2018): the car font (Geist) has it, not ʻ (U+02BB). -->
 <resources>
+    <string name="common_back">Orqaga</string>
+    <string name="dash_menu_home">Bosh sahifa</string>
     <!-- launcher: car apps / phone apps tabs -->
     <string name="launcher_tab_car">Avto ilovalar</string>
     <string name="launcher_tab_phone">Telefon ilovalari</string>

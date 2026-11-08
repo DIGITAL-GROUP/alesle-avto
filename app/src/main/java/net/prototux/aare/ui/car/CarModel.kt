@@ -139,6 +139,8 @@ data class CarCall(val ringing: Boolean, val name: String, val sinceMs: Long)
 interface CarActions {
     fun openApp(app: CarAppEntry)
     fun goHome()
+    /** The rail's Back button: the same as the car's back key. */
+    fun back()
     fun openLauncher()
     fun assistant()
     fun mediaPlayPause()

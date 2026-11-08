@@ -574,6 +574,7 @@ class CarRuntime(
         }
 
         override fun goHome() { ui.screen = CarScreen.Dashboard }
+        override fun back() = this@CarRuntime.back()
         override fun openLauncher() { ui.screen = CarScreen.Launcher }
         override fun assistant() { this@CarRuntime.assistant() }
         override fun mediaPlayPause() = media.playPause()
@@ -621,14 +622,23 @@ class CarRuntime(
     /** Set by a screen with its own back stack (a conversation in a messaging app): true if it handled back. */
     var screenBack: (() -> Boolean)? = null
 
-    /** Back key from the car. */
+    /**
+     * Back, from the car's back key or the rail's Back button: to the open screen's own back stack
+     * ([screenBack]: a phone app on its display, a conversation…), else the hosted car app's, else
+     * out of the app. The launcher goes home.
+     */
     fun back() {
         if (ui.assistantAppId != null) { ui.assistantAppId = null; return }
         if (screenBack?.invoke() == true) return
         when (val s = ui.screen) {
             is CarScreen.App -> {
                 val conn = connections[s.appId]
-                if (conn != null) conn.back() else ui.screen = CarScreen.Dashboard
+                when {
+                    conn != null -> conn.back()
+                    // A phone app that isn't showing (no Shizuku yet): back to the list it came from.
+                    ui.app(s.appId)?.kind == CarAppKind.PHONE_APP -> ui.screen = CarScreen.Launcher
+                    else -> ui.screen = CarScreen.Dashboard
+                }
             }
             CarScreen.Launcher -> ui.screen = CarScreen.Dashboard
             CarScreen.Dashboard -> Unit

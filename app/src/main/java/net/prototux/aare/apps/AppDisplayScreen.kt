@@ -3,6 +3,7 @@ package net.prototux.aare.apps
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.SurfaceTexture
+import android.os.SystemClock
 import android.view.MotionEvent
 import android.view.Surface
 import android.view.TextureView
@@ -32,8 +33,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.prototux.aare.R
 import net.prototux.aare.host.CarRuntime
@@ -94,9 +98,29 @@ private fun AppSurface(runtime: CarRuntime, app: CarAppEntry) {
     var left by remember(app.id) { mutableStateOf(false) }
     val state = display.state
 
-    DisposableEffect(display) {
-        // The car's Back key goes to the app; leaving it is the rail's Home button.
-        runtime.screenBack = { display.back(); true }
+    val scope = rememberCoroutineScope()
+    /** When Back was last sent to the app (uptime ms). */
+    var backAt by remember(app.id) { mutableLongStateOf(0L) }
+    DisposableEffect(display, app.id) {
+        // The car's back key and the rail's Back button go to the app. When the app has nothing
+        // left to go back to (its task finishes or goes behind), the car goes back to the launcher
+        // rather than showing an empty display.
+        runtime.screenBack = {
+            backAt = SystemClock.uptimeMillis()
+            scope.launch {
+                val before = withContext(Dispatchers.IO) { display.topPackage() }
+                display.back()
+                repeat(4) {
+                    delay(400)
+                    val now = withContext(Dispatchers.IO) { display.topPackage() } ?: return@repeat
+                    if (PhoneApps.backedOut(app.packageName, before, now)) {
+                        runtime.actions.openLauncher()
+                        return@launch
+                    }
+                }
+            }
+            true
+        }
         onDispose { runtime.screenBack = null }
     }
     // Start the app once the display exists, and again on "Open again" / "Try again".
@@ -115,7 +139,12 @@ private fun AppSurface(runtime: CarRuntime, app: CarAppEntry) {
             val top = withContext(Dispatchers.IO) { display.topPackage() } ?: continue
             if (top == app.packageName) seen = true
             // Another package in front is fine (Maps opening Navigator, a browser…); nothing at all isn't.
-            if (top.isEmpty() && seen) { left = true; launched = false; break }
+            if (top.isEmpty() && seen) {
+                // Emptied by our own Back (caught here if the check after it missed): to the launcher.
+                if (SystemClock.uptimeMillis() - backAt < BACK_WINDOW_MS) runtime.actions.openLauncher() else left = true
+                launched = false
+                break
+            }
         }
     }
 
@@ -257,4 +286,5 @@ private class AppSurfaceView(context: Context, private val display: AppDisplay, 
 }
 
 private const val SHIZUKU_REQUEST = 7311
+private const val BACK_WINDOW_MS = 4_000L
 

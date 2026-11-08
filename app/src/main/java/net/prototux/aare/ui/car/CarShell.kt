@@ -32,6 +32,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Apps
 import androidx.compose.material.icons.rounded.Call
 import androidx.compose.material.icons.rounded.Close
@@ -70,6 +71,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import net.prototux.aare.R
@@ -203,9 +205,16 @@ private fun RailContent(state: CarUiState, actions: CarActions, horizontal: Bool
         phone?.let { RailApp(it, Icons.Rounded.Call, on(it)) { actions.openApp(it) } }
         settings?.takeIf { !tighterBar }?.let { RailApp(it, Icons.Rounded.Settings, on(it)) { actions.openApp(it) } }
     }
-    val menu: @Composable () -> Unit = {
-        if (state.screen == CarScreen.Dashboard) RailButton(Icons.Rounded.Apps, stringResource(R.string.dash_menu_apps), selected = false) { actions.openLauncher() }
-        else RailButton(Icons.Rounded.Home, stringResource(R.string.dash_menu_home), selected = false) { actions.goHome() }
+    val menu: @Composable (Dp?, Dp?) -> Unit = { size, icon ->
+        val s = size ?: d.touchTarget
+        val i = icon ?: d.iconSize
+        if (state.screen == CarScreen.Dashboard) RailButton(Icons.Rounded.Apps, stringResource(R.string.dash_menu_apps), selected = false, size = s, iconSize = i) { actions.openLauncher() }
+        else RailButton(Icons.Rounded.Home, stringResource(R.string.dash_menu_home), selected = false, size = s, iconSize = i) { actions.goHome() }
+    }
+    // Back, shown on every screen but the dashboard, next to the menu button.
+    val canGoBack = state.screen != CarScreen.Dashboard
+    val back: @Composable (Dp, Dp) -> Unit = { size, icon ->
+        RailButton(Icons.AutoMirrored.Rounded.ArrowBack, stringResource(R.string.common_back), selected = false, size = size, iconSize = icon) { actions.back() }
     }
     val mic: @Composable () -> Unit = { MicButton(state.listening) { actions.assistant() } }
     val bell = { state.apps.firstOrNull { it.kind == CarAppKind.NOTIFICATIONS }?.let(actions::openApp) }
@@ -216,7 +225,13 @@ private fun RailContent(state: CarUiState, actions: CarActions, horizontal: Bool
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val driverEnd: @Composable () -> Unit = { Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                if (state.driverOnRight) { menu(); mic() } else { mic(); menu() }
+                if (state.driverOnRight) {
+                    if (canGoBack) back(d.touchTarget, d.iconSize)
+                    menu(null, null); mic()
+                } else {
+                    mic(); menu(null, null)
+                    if (canGoBack) back(d.touchTarget, d.iconSize)
+                }
             } }
             val status: @Composable () -> Unit = { Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
                 Clock(); if (!tightBar) WeatherChip(state.weather); PhoneStatusIcons(); NotificationBell(state) { bell() }
@@ -255,7 +270,15 @@ private fun RailContent(state: CarUiState, actions: CarActions, horizontal: Bool
                 }
             }
             Spacer(Modifier.height(8.dp))
-            menu()
+            when {
+                !canGoBack -> menu(null, null)
+                // Three full-size buttons would leave the apps no room: Back and Home share a row.
+                short -> Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    back(COMPACT_BUTTON, COMPACT_ICON)
+                    menu(COMPACT_BUTTON, COMPACT_ICON)
+                }
+                else -> { back(d.touchTarget, d.iconSize); Spacer(Modifier.height(8.dp)); menu(null, null) }
+            }
             Spacer(Modifier.height(8.dp))
             mic()
         }
@@ -279,15 +302,21 @@ internal fun Clock() {
 }
 
 @Composable
-private fun RailButton(icon: ImageVector, label: String, selected: Boolean, onClick: () -> Unit) {
-    val d = LocalCarDimens.current
+private fun RailButton(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean,
+    size: Dp = LocalCarDimens.current.touchTarget,
+    iconSize: Dp = LocalCarDimens.current.iconSize,
+    onClick: () -> Unit,
+) {
     val bg = if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
     val fg = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
     Box(
-        Modifier.size(d.touchTarget).clip(RoundedCornerShape(24.dp)).background(bg).carFocusHighlight(RoundedCornerShape(24.dp)).clickable(onClick = onClick),
+        Modifier.size(size).clip(RoundedCornerShape(24.dp)).background(bg).carFocusHighlight(RoundedCornerShape(24.dp)).clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(icon, contentDescription = label, tint = fg, modifier = Modifier.size(d.iconSize))
+        Icon(icon, contentDescription = label, tint = fg, modifier = Modifier.size(iconSize))
     }
 }
 
@@ -295,7 +324,7 @@ private fun RailButton(icon: ImageVector, label: String, selected: Boolean, onCl
 private fun RailApp(app: CarAppEntry?, fallback: ImageVector, selected: Boolean, onClick: () -> Unit) {
     val d = LocalCarDimens.current
     if (app?.icon == null) {
-        RailButton(fallback, app?.label ?: "", selected, onClick)
+        RailButton(fallback, app?.label ?: "", selected, onClick = onClick)
         return
     }
     val ring = if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
@@ -647,3 +676,7 @@ internal fun NoticeOverlay(state: CarUiState, actions: CarActions, modifier: Mod
         RoundIcon(Icons.Rounded.Close, stringResource(R.string.common_dismiss), filled = false) { actions.dismissNotice(notice) }
     }
 }
+
+/** Back and Home side by side on a short side rail (two fit its 96 dp). */
+private val COMPACT_BUTTON = 44.dp
+private val COMPACT_ICON = 28.dp

@@ -59,6 +59,14 @@ object PhoneApps {
     }
 
     /**
+     * After Back was sent to [app] on its display, whether the app went away: the display is empty
+     * ([now] ""), or something other than the app and what was in front before is there (the app's
+     * task went behind another phone app). [before] and [now] are the packages in front, "" for none.
+     */
+    fun backedOut(app: String, before: String?, now: String): Boolean =
+        now.isEmpty() || (now != app && now != before)
+
+    /**
      * Apps the car may show while driving: navigation and music, as the phone screen mirror
      * allows. [extra] adds the packages AARE knows as navigation or media apps.
      */
