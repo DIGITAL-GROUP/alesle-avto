@@ -13,6 +13,7 @@ import androidx.core.content.IntentCompat
 import uz.alesle.avto.DiagLog
 import uz.alesle.avto.Settings
 import uz.alesle.avto.transport.wireless.WirelessAutoStarter
+import uz.alesle.avto.transport.wireless.WirelessConnector
 
 /**
  * A paired head unit offering wireless Android Auto just connected over Bluetooth (or its
@@ -47,8 +48,16 @@ class WirelessReceiver : BroadcastReceiver() {
             done = true
             main.removeCallbacksAndMessages(null)
             runCatching { app.unregisterReceiver(answer) }
-            if (found != null) start(app, found)
-            else DiagLog.add("wireless: ${nameOf(device)} connected over Bluetooth but doesn't offer Android Auto wireless")
+            when {
+                found != null -> start(app, found)
+                // A head unit app may publish the service only once its wireless mode is up, after
+                // this link: the service keeps asking for a minute.
+                WirelessConnector.looksLikeCar(device) -> {
+                    DiagLog.add("wireless: ${nameOf(device)} doesn't offer Android Auto wireless yet, waiting for it")
+                    ProjectionService.startWireless(app, device.address)
+                }
+                else -> DiagLog.add("wireless: ${nameOf(device)} connected over Bluetooth but doesn't offer Android Auto wireless")
+            }
             pending.finish()
         }
         answer = object : BroadcastReceiver() {

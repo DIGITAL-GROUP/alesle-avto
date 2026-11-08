@@ -3,6 +3,7 @@ package uz.alesle.avto.transport.wireless
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
@@ -21,6 +22,7 @@ import uz.alesle.avto.aap.wireless.AA_WIRELESS_UUID
 import uz.alesle.avto.aap.wireless.JoinResult
 import uz.alesle.avto.aap.wireless.WifiCredentials
 import uz.alesle.avto.aap.wireless.WirelessBootstrap
+import uz.alesle.avto.aap.wireless.WppStatus
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -35,8 +37,24 @@ import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
-/** Wireless connection setup failed; [message] says at which step. */
-class WirelessException(message: String, cause: Throwable? = null) : IOException(message, cause)
+/** Wireless connection setup failed; [message] says at which step, [kind] what the user can do about it. */
+class WirelessException(
+    message: String,
+    cause: Throwable? = null,
+    val kind: Kind = Kind.OTHER,
+    /** The head unit's network, for [Kind.WIFI_OFF] and [Kind.WIFI_JOIN_FAILED]. */
+    val ssid: String? = null,
+) : IOException(message, cause) {
+    enum class Kind {
+        /** Nothing answers on the Android Auto wireless UUID: the head unit doesn't offer it (now). */
+        NO_AA_SERVICE,
+        /** The phone's Wi-Fi is off. */
+        WIFI_OFF,
+        /** The head unit's network wasn't found in time, or the user didn't approve it. */
+        WIFI_JOIN_FAILED,
+        OTHER,
+    }
+}
 
 /** Runtime permissions the user has not granted (yet). Request [missing] and try again. */
 class WirelessPermissionException(val missing: List<String>) :
@@ -97,6 +115,37 @@ class WirelessConnector(context: Context, private val log: AapLog, private val o
         return adapter.bondedDevices.orEmpty().filter { isHeadUnit(it) && isConnected(it) }
     }
 
+    /**
+     * Bonded devices that look like a car (hands-free or car audio class) or offer Android Auto
+     * wireless, for the user to see and connect by hand. Uses the cached services; see [refresh].
+     */
+    fun pairedCars(): List<PairedCar> {
+        requirePermissions(bluetoothPermissions())
+        val adapter = adapter ?: return emptyList()
+        if (!adapter.isEnabled) return emptyList()
+        return adapter.bondedDevices.orEmpty().filter { looksLikeCar(it) }.map {
+            PairedCar(it.address, runCatching { it.name }.getOrNull() ?: it.address, isConnected(it), isHeadUnit(it))
+        }.sortedWith(compareByDescending<PairedCar> { it.connected }.thenBy { it.name })
+    }
+
+    /** Asks [address] for its services again; the answer comes as ACTION_UUID. False if it couldn't be asked. */
+    fun refresh(address: String): Boolean {
+        requirePermissions(bluetoothPermissions())
+        val device = runCatching { adapter?.getRemoteDevice(address) }.getOrNull() ?: return false
+        return runCatching { device.fetchUuidsWithSdp() }.getOrDefault(false)
+    }
+
+    /**
+     * Connected bonded cars that don't (yet) offer Android Auto wireless: a head unit app often
+     * publishes the service only once its wireless mode is up, after the Bluetooth link.
+     */
+    fun findConnectedCarsWithoutService(): List<BluetoothDevice> {
+        requirePermissions(bluetoothPermissions())
+        val adapter = adapter ?: return emptyList()
+        if (!adapter.isEnabled) return emptyList()
+        return adapter.bondedDevices.orEmpty().filter { looksLikeCar(it) && !isHeadUnit(it) && isConnected(it) }
+    }
+
     private fun isConnected(device: BluetoothDevice): Boolean = runCatching {
         BluetoothDevice::class.java.getMethod("isConnected").invoke(device) as Boolean
     }.getOrDefault(false)
@@ -141,6 +190,8 @@ class WirelessConnector(context: Context, private val log: AapLog, private val o
         @Volatile private var network: HeadUnitNetwork? = null
         @Volatile private var tcp: Socket? = null
         @Volatile private var transport: Transport? = null
+        /** Why joining the head unit's network failed, if it did: the bootstrap only reports a WPP status. */
+        @Volatile private var joinFailure: Pair<WifiCredentials, JoinResult.Failed>? = null
 
         fun run(): Transport {
             requirePermissions(requiredPermissions())
@@ -203,14 +254,15 @@ class WirelessConnector(context: Context, private val log: AapLog, private val o
                 }
             }
             throw WirelessException("cannot reach the Android Auto service of ${device.address} over Bluetooth " +
-                "(is wireless Android Auto enabled on the head unit? re-pairing can help)", last)
+                "(is wireless Android Auto enabled on the head unit? re-pairing can help)", last, WirelessException.Kind.NO_AA_SERVICE)
         }
 
         /** Runs the RFCOMM exchange on its own thread, which then keeps the link for the session. */
         private fun bootstrap(socket: BluetoothSocket, net: HeadUnitNetwork): Pair<String, Int> {
             val ready = CompletableFuture<Pair<String, Int>>()
             val b = WirelessBootstrap(socket.inputStream, socket.outputStream, object : WirelessBootstrap.Listener {
-                override fun connectWifi(credentials: WifiCredentials): JoinResult = net.join(credentials)
+                override fun connectWifi(credentials: WifiCredentials): JoinResult =
+                    net.join(credentials).also { if (it is JoinResult.Failed) joinFailure = credentials to it }
                 override fun onReady(ip: String, port: Int) {
                     ready.complete(ip to port)
                 }
@@ -231,6 +283,11 @@ class WirelessConnector(context: Context, private val log: AapLog, private val o
                 ready.get(options.joinTimeoutMs + 3 * options.bootstrap.messageTimeoutMs, TimeUnit.MILLISECONDS)
             } catch (e: ExecutionException) {
                 val cause = e.cause ?: e
+                joinFailure?.let { (credentials, failed) ->
+                    val kind = if (failed.status == WppStatus.PHONE_WIFI_DISABLED) WirelessException.Kind.WIFI_OFF
+                        else WirelessException.Kind.WIFI_JOIN_FAILED
+                    throw WirelessException(cause.message ?: failed.message, cause, kind, credentials.ssid)
+                }
                 throw if (cause is IOException) cause else WirelessException(cause.message ?: "wireless bootstrap failed", cause)
             } catch (e: TimeoutException) {
                 throw WirelessException("wireless bootstrap took too long", e)
@@ -305,6 +362,9 @@ class WirelessConnector(context: Context, private val log: AapLog, private val o
 
     private fun granted(permission: String) = context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
 
+    /** A bonded car as [pairedCars] lists it. [aaWireless]: its cached services include Android Auto wireless. */
+    data class PairedCar(val address: String, val name: String, val connected: Boolean, val aaWireless: Boolean)
+
     companion object {
         val AA_UUID: UUID = UUID.fromString(AA_WIRELESS_UUID)
         /** Some Android versions report 128-bit SDP UUIDs byte-reversed; Gearhead accepts both. */
@@ -313,6 +373,17 @@ class WirelessConnector(context: Context, private val log: AapLog, private val o
         /** Whether [device]'s cached SDP services include Android Auto wireless. Needs BLUETOOTH_CONNECT. */
         @SuppressLint("MissingPermission")
         fun isHeadUnit(device: BluetoothDevice): Boolean = hasAaUuid(device.uuids)
+
+        /**
+         * Whether [device] could be a head unit: its Bluetooth class is hands-free or car audio (what
+         * head units and their Bluetooth modules report), or it already offers Android Auto wireless.
+         */
+        @SuppressLint("MissingPermission")
+        fun looksLikeCar(device: BluetoothDevice): Boolean {
+            val cls = runCatching { device.bluetoothClass?.deviceClass }.getOrNull()
+            return cls == BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE || cls == BluetoothClass.Device.AUDIO_VIDEO_CAR_AUDIO ||
+                runCatching { isHeadUnit(device) }.getOrDefault(false)
+        }
 
         internal fun hasAaUuid(uuids: Array<out ParcelUuid>?): Boolean =
             uuids.orEmpty().any { it.uuid == AA_UUID || it.uuid == AA_UUID_REVERSED }

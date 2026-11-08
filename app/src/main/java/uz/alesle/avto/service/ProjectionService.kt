@@ -5,8 +5,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.hardware.usb.UsbAccessory
@@ -17,19 +20,24 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.ParcelUuid
 import android.os.PowerManager
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import uz.alesle.avto.DiagAapLog
 import uz.alesle.avto.DiagLog
 import uz.alesle.avto.PinnedHeadUnits
@@ -44,6 +52,7 @@ import uz.alesle.avto.transport.LocalSocketTransport
 import uz.alesle.avto.transport.TcpServer
 import uz.alesle.avto.transport.UsbAccessoryTransport
 import uz.alesle.avto.transport.wireless.WirelessConnector
+import uz.alesle.avto.transport.wireless.WirelessException
 import uz.alesle.avto.ui.MainActivity
 
 /**
@@ -81,6 +90,13 @@ class ProjectionService : Service() {
     private var usbRetries = 0
     private var wakeLock: PowerManager.WakeLock? = null
     private var wirelessJob: Job? = null
+    /** Waiting for a connected car to publish the Android Auto wireless service (see [watchWireless]). */
+    private var watchJob: Job? = null
+    /**
+     * While the service runs, cars coming into Bluetooth range are noticed here too: the manifest
+     * receiver alone depends on HyperOS and the like delivering the broadcast to a stopped app.
+     */
+    private var carWatcher: uz.alesle.avto.transport.wireless.WirelessAutoStarter? = null
     /** onDestroy ran: a session closing late must not touch this instance any more. */
     private var destroyed = false
 
@@ -93,6 +109,11 @@ class ProjectionService : Service() {
         media = MediaHub(this, scope)
         createChannel()
         _state.update { it.copy(running = true) }
+        if (settings.wireless) {
+            carWatcher = uz.alesle.avto.transport.wireless.WirelessAutoStarter(this, DiagAapLog, WirelessConnector::looksLikeCar) { device ->
+                main.post { if (!destroyed) connectWireless(device.address) }
+            }.also { w -> runCatching { w.register() }.onFailure { carWatcher = null } }
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -115,6 +136,8 @@ class ProjectionService : Service() {
         // Pending retries and idle checks would run on a dead instance.
         main.removeCallbacksAndMessages(null)
         wirelessJob?.cancel()
+        watchJob?.cancel()
+        carWatcher?.unregister()
         // The session closes up to a second later; forget it first so its onEnded is ignored.
         val s = session
         session = null
@@ -162,10 +185,16 @@ class ProjectionService : Service() {
      * Wireless: Bluetooth bootstrap, join the car's Wi-Fi, TCP to its AAP server. Runs in the
      * foreground service because Android only lets foreground apps request Wi-Fi networks.
      */
-    private fun connectWireless(address: String) {
-        if (session != null || wirelessJob?.isActive == true) return
+    private fun connectWireless(address: String, watchIfMissing: Boolean = true) {
+        if (session != null || wirelessJob?.isActive == true || watchJob?.isActive == true) return
         val adapter = getSystemService(android.bluetooth.BluetoothManager::class.java)?.adapter ?: return
         val device = runCatching { adapter.getRemoteDevice(address) }.getOrNull() ?: return
+        // Not offering the service (yet): head unit apps often publish it only once their wireless
+        // mode is up, after the Bluetooth link. Wait for it instead of failing at once.
+        if (watchIfMissing && runCatching { !WirelessConnector.isHeadUnit(device) }.getOrDefault(false)) {
+            watchWireless(address)
+            return
+        }
         // Pass the phone's stable id as the WPP device serial: strict head units (#46) want it in
         // the version response before they send the WifiStartRequest.
         val connector = WirelessConnector(this, DiagAapLog,
@@ -175,7 +204,7 @@ class ProjectionService : Service() {
             log("wireless: missing permissions ${missing.joinToString { it.substringAfterLast('.') }}")
             return
         }
-        log("wireless: connecting to ${runCatching { device.name }.getOrNull() ?: address}")
+        log("wireless: connecting to ${deviceName(address)}")
         _state.update { it.copy(status = getString(R.string.notif_status_connecting_wirelessly)) }
         wirelessJob = scope.launch {
             try {
@@ -185,10 +214,86 @@ class ProjectionService : Service() {
                 throw e
             } catch (e: Exception) {
                 log("wireless: ${e.message}")
-                _state.update { it.copy(status = getString(R.string.notif_status_not_connected), lastError = e.message) }
+                if (watchIfMissing && (e as? WirelessException)?.kind == WirelessException.Kind.NO_AA_SERVICE) {
+                    // Listed in the cache, but nothing answers yet: the head unit's wireless mode may still be starting.
+                    wirelessJob = null
+                    watchWireless(address)
+                    return@launch
+                }
+                val text = describe(e, address)
+                _state.update { it.copy(status = getString(R.string.notif_status_not_connected), lastError = text) }
+                updateNotification(getString(R.string.notif_status_not_connected))
+                scheduleIdleStop()
             }
         }
     }
+
+    /**
+     * Asks [address] for its services every few seconds, for up to [WATCH_MS], and connects as soon
+     * as it lists Android Auto wireless. Phones cache a device's services, and a head unit app (Open
+     * Headunit, a projection app) adds its record only while its wireless mode is up, which often is
+     * after the hands-free link came up: one query at connect time misses it.
+     */
+    private fun watchWireless(address: String) {
+        if (session != null || watchJob?.isActive == true) return
+        val connector = WirelessConnector(this, DiagAapLog)
+        if (connector.missingPermissions().isNotEmpty()) { scheduleIdleStop(); return }
+        val name = deviceName(address)
+        log("wireless: waiting up to ${WATCH_MS / 1000} s for $name to offer Android Auto wireless")
+        val status = getString(R.string.notif_status_waiting_for_car, name)
+        _state.update { it.copy(status = status) }
+        updateNotification(status)
+        val offered = CompletableDeferred<Unit>()
+        val answer = object : BroadcastReceiver() {
+            override fun onReceive(c: Context, i: Intent) {
+                val d = IntentCompat.getParcelableExtra(i, BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
+                if (d?.address != address) return
+                val uuids = IntentCompat.getParcelableArrayExtra(i, BluetoothDevice.EXTRA_UUID, ParcelUuid::class.java)
+                    ?.filterIsInstance<ParcelUuid>()?.toTypedArray()
+                if (WirelessConnector.hasAaUuid(uuids)) offered.complete(Unit)
+            }
+        }
+        // Sent by the Bluetooth stack, which is not our uid: exported.
+        ContextCompat.registerReceiver(this, answer, IntentFilter(BluetoothDevice.ACTION_UUID), ContextCompat.RECEIVER_EXPORTED)
+        watchJob = scope.launch {
+            val asking = launch {
+                while (true) {
+                    if (!runCatching { connector.refresh(address) }.getOrDefault(false)) log("wireless: couldn't ask $name for its services")
+                    delay(WATCH_EVERY_MS)
+                }
+            }
+            val found = try {
+                withTimeoutOrNull(WATCH_MS) { offered.await() } != null
+            } finally {
+                asking.cancel()
+                runCatching { unregisterReceiver(answer) }
+            }
+            watchJob = null
+            if (found) {
+                log("wireless: $name now offers Android Auto wireless")
+                connectWireless(address, watchIfMissing = false)
+            } else {
+                log("wireless: $name didn't offer Android Auto wireless within ${WATCH_MS / 1000} s")
+                val text = getString(R.string.wireless_error_no_service, name)
+                _state.update { it.copy(status = getString(R.string.notif_status_not_connected), lastError = text) }
+                updateNotification(getString(R.string.notif_status_not_connected))
+                scheduleIdleStop()
+            }
+        }
+    }
+
+    /** What the user can do about a failed wireless connection, in their language. The log keeps the details. */
+    private fun describe(e: Exception, address: String): String = when ((e as? WirelessException)?.kind) {
+        WirelessException.Kind.NO_AA_SERVICE -> getString(R.string.wireless_error_no_service, deviceName(address))
+        WirelessException.Kind.WIFI_OFF -> getString(R.string.wireless_error_wifi_off)
+        WirelessException.Kind.WIFI_JOIN_FAILED -> getString(R.string.wireless_error_wifi_join, (e as WirelessException).ssid ?: "?")
+        else -> e.message ?: e.toString()
+    }
+
+    @android.annotation.SuppressLint("MissingPermission") // wrapped: without BLUETOOTH_CONNECT the address is shown
+    private fun deviceName(address: String): String = runCatching {
+        getSystemService(android.bluetooth.BluetoothManager::class.java)?.adapter?.getRemoteDevice(address)?.name
+    }.getOrNull() ?: address
 
     /**
      * The car was already connected over Bluetooth when Alesle Avto opened, so the ACL-connect broadcast
@@ -202,11 +307,14 @@ class ProjectionService : Service() {
         if (connector.missingPermissions().isNotEmpty()) { scheduleIdleStop(); return }
         val device = runCatching { connector.findConnectedHeadUnits() }.getOrDefault(emptyList()).firstOrNull()
         if (device == null) {
+            // A connected car that doesn't list the service may still be starting its wireless mode.
+            val car = runCatching { connector.findConnectedCarsWithoutService() }.getOrDefault(emptyList()).firstOrNull()
+            if (car != null) { watchWireless(car.address); return }
             log("wireless: no Android Auto car connected over Bluetooth to probe")
             scheduleIdleStop()
             return
         }
-        log("wireless: ${runCatching { device.name }.getOrNull() ?: device.address} already connected over Bluetooth, connecting")
+        log("wireless: ${deviceName(device.address)} already connected over Bluetooth, connecting")
         connectWireless(device.address)
     }
 
@@ -240,6 +348,9 @@ class ProjectionService : Service() {
             transport.close()
             return
         }
+        // Plugged in (or reached otherwise) while waiting for a wireless head unit: that wait is moot.
+        watchJob?.cancel()
+        watchJob = null
         val cert = certs.pick(settings.certificateIndex)
         log("connecting ${transport.name} with certificate \"${cert.name}\"")
         acquireWakeLock()
@@ -273,6 +384,7 @@ class ProjectionService : Service() {
             }
             // A changed certificate gets the same Trust prompt as a new head unit, saying it changed.
             val why = when {
+                pinRefusal == null && certificateRejected -> getString(R.string.error_certificate_refused)
                 pinRefusal == null -> reason
                 pinRefusal.changed -> getString(R.string.notif_cert_changed_message)
                 else -> getString(R.string.notif_cert_untrusted_message)
@@ -412,7 +524,7 @@ class ProjectionService : Service() {
     }
 
     /** Nothing to keep the service for. A held screen-capture consent counts: it can't be given again silently. */
-    private fun idle() = session == null && tcpServer == null && wirelessJob?.isActive != true && projection == null
+    private fun idle() = session == null && tcpServer == null && wirelessJob?.isActive != true && watchJob?.isActive != true && projection == null
 
     private fun stopEverything() {
         // No USB reconnect after this: the session's onEnded may come after the stop.
@@ -435,6 +547,9 @@ class ProjectionService : Service() {
         const val ACTION_STOP = "uz.alesle.avto.STOP"
         const val ACTION_WIRELESS = "uz.alesle.avto.WIRELESS"
         const val ACTION_PROBE_WIRELESS = "uz.alesle.avto.PROBE_WIRELESS"
+        /** How long to wait for a connected car to publish the Android Auto wireless service. */
+        private const val WATCH_MS = 60_000L
+        private const val WATCH_EVERY_MS = 6_000L
         const val EXTRA_DEVICE = "device"
         const val ACTION_AUDIO_CONSENT = "uz.alesle.avto.AUDIO_CONSENT"
         const val EXTRA_RESULT_CODE = "code"
@@ -474,6 +589,11 @@ class ProjectionService : Service() {
         fun probeWireless(context: Context) {
             if (!Settings(context).wireless) return
             context.startForegroundService(Intent(context, ProjectionService::class.java).setAction(ACTION_PROBE_WIRELESS))
+        }
+
+        /** The user asked to connect to [address] (Connection → Your cars): we are in the foreground. */
+        fun connectWirelessNow(context: Context, address: String) {
+            context.startForegroundService(Intent(context, ProjectionService::class.java).setAction(ACTION_WIRELESS).putExtra(EXTRA_DEVICE, address))
         }
 
         fun startWireless(context: Context, address: String) {

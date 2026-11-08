@@ -25,4 +25,11 @@
     <string name="app_display_open_again">Qayta ochish</string>
     <string name="app_display_retry">Qayta urinish</string>
     <string name="app_display_open_itself">Ilovaning o‘zini ochish</string>
+
+    <!-- connection: wireless errors -->
+    <string name="notif_status_waiting_for_car">%1$s simsiz Android Auto’ni taklif qilishi kutilmoqda…</string>
+    <string name="wireless_error_no_service">%1$s Bluetooth orqali simsiz Android Auto’ni taklif qilmayapti. Head unit’da simsiz rejimni yoqing (Open Headunit: WiFi rejimi), so‘ng Connection → Your cars bo‘limida «Simsiz ulanish»ni bosing.</string>
+    <string name="wireless_error_wifi_off">Telefonda Wi-Fi o‘chiq. Uni yoqing va qayta ulaning.</string>
+    <string name="wireless_error_wifi_join">Avtomobilning «%1$s» Wi-Fi tarmog‘iga ulanib bo‘lmadi: tarmoq vaqtida topilmadi yoki so‘rov tasdiqlanmadi. Telefonni head unit’ga yaqin tuting; Android «Searching for device» oynasini ko‘rsatganda avtomobil tarmog‘ini tanlang, so‘ng «Connect»ni bosing.</string>
+    <string name="error_certificate_refused">Head unit bu telefonning sertifikatini rad etdi (ba’zilari faqat Google imzolagan telefonlarni qabul qiladi). Keyingi ulanishda boshqa sertifikat taklif qilinadi; u ham rad etilsa, docs/certificates.md ga qarang yoki Open Headunit’ni head unit server orqali ishlating.</string>
 </resources>

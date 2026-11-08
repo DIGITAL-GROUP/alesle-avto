@@ -213,6 +213,12 @@
     <string name="notif_cert_untrusted_message">head unit certificate not trusted yet: tap Trust in the notification or in Alesle Avto, then reconnect</string>
     <string name="notif_car_nearby_title">Car nearby</string>
     <string name="notif_car_nearby_text">Tap to connect wirelessly</string>
+    <string name="notif_status_waiting_for_car">Waiting for %1$s to offer wireless Android Auto…</string>
+    <!-- wireless and certificate errors, shown as "Last error" on the home screen -->
+    <string name="wireless_error_no_service">%1$s doesn\'t offer wireless Android Auto over Bluetooth. Turn wireless on in the head unit (Open Headunit: WiFi mode), then tap Connect wirelessly in Connection → Your cars.</string>
+    <string name="wireless_error_wifi_off">Wi-Fi is off on the phone. Turn it on, then connect again.</string>
+    <string name="wireless_error_wifi_join">Couldn\'t join the car\'s Wi-Fi "%1$s": it wasn\'t found in time, or the request wasn\'t approved. Keep the phone near the head unit; when Android shows "Searching for device", tap the car\'s network, then Connect.</string>
+    <string name="error_certificate_refused">The head unit refused this phone\'s certificate (some only accept phones signed by Google). The next connection offers another certificate; if it\'s refused too, see docs/certificates.md or use Open Headunit with the head unit server.</string>
     <string name="notif_status_connecting_to">Connecting to %1$s</string>
     <string name="notif_status_connected_to">Connected to %1$s</string>
     <string name="notif_status_projecting_to">Projecting to %1$s</string>
