@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
@@ -216,22 +218,33 @@ private fun RailContent(state: CarUiState, actions: CarActions, horizontal: Bool
             if (state.driverOnRight) driverEnd() else status()
         }
     } else {
+        // Short screens (a phone in landscape, ~400 dp): no weather or bell, so the apps keep some room.
+        val short = conf.screenHeightDp < 560
         Column(
-            Modifier.fillMaxHeight().width(d.railWidth).background(container).padding(vertical = 16.dp),
+            Modifier.fillMaxHeight().width(d.railWidth).background(container).padding(vertical = if (short) 8.dp else 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Clock()
             Spacer(Modifier.height(6.dp))
             PhoneStatusIcons()
-            Spacer(Modifier.height(4.dp))
-            WeatherChip(state.weather)
-            NotificationBell(state) { bell() }
-            Spacer(Modifier.weight(1f))
-            // A side rail has room for a recent app only on tall screens.
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                apps(if (LocalConfiguration.current.screenHeightDp >= 800) 1 else 0)
+            if (!short) {
+                Spacer(Modifier.height(4.dp))
+                WeatherChip(state.weather)
+                NotificationBell(state) { bell() }
             }
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.height(8.dp))
+            // The apps take the space left and scroll, so the menu and mic buttons below always show.
+            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Column(
+                    Modifier.verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    // A side rail has room for a recent app only on tall screens.
+                    apps(if (conf.screenHeightDp >= 800) 1 else 0)
+                }
+            }
+            Spacer(Modifier.height(8.dp))
             menu()
             Spacer(Modifier.height(8.dp))
             mic()
