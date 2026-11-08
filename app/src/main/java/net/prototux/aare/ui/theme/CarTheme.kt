@@ -12,13 +12,17 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import net.prototux.aare.R
 
 /**
- * The in-car look: calm dark surfaces, one warm accent, big type and big targets.
+ * The in-car look: near-black graphite surfaces, one signal-orange accent, big type and big targets.
  *
  * Car screens are viewed from ~70 cm at a glance, so sizes follow the car-UI rule of thumb:
  * touch targets ≥ 76 dp, body text ≥ 24 sp, and no more than two text styles per card.
@@ -28,65 +32,96 @@ data class CarDimens(
     val touchTarget: Dp = 76.dp,
     val railWidth: Dp = 96.dp,
     val gutter: Dp = 12.dp,
-    val cardRadius: Dp = 28.dp,
+    val cardRadius: Dp = 20.dp,
     val iconSize: Dp = 36.dp,
 )
 
 val LocalCarDimens = staticCompositionLocalOf { CarDimens() }
 
-/** Brand accent: a river teal (the Aare is famously turquoise). */
-private val Teal = Color(0xFF3DDBC6)
-private val TealDeep = Color(0xFF00695C)
+/** Brand accent. At night it sits on near-black (5.9:1); by day it is deepened to stay ≥ 4.5:1 on light grey. */
+private val Signal = Color(0xFFFF4F00)
+private val SignalDeep = Color(0xFFC43D00)
+
+/** Night surfaces, darkest to lightest: page, card, raised card. */
+private val Ink = Color(0xFF0B0D10)
+private val Graphite = Color(0xFF15181D)
+private val GraphiteHigh = Color(0xFF1E2228)
 
 private val NightColors: ColorScheme = darkColorScheme(
-    primary = Teal,
-    onPrimary = Color(0xFF00201C),
-    primaryContainer = Color(0xFF0E3B36),
-    onPrimaryContainer = Color(0xFFB9F5EA),
-    secondary = Color(0xFFB4CAC5),
-    onSecondary = Color(0xFF1F3531),
-    secondaryContainer = Color(0xFF263330),
-    onSecondaryContainer = Color(0xFFD0E6E1),
-    tertiary = Color(0xFFFFB86B),
-    onTertiary = Color(0xFF2E1500),
-    background = Color(0xFF0B0F0F),
-    onBackground = Color(0xFFE3E9E7),
-    surface = Color(0xFF0B0F0F),
-    onSurface = Color(0xFFE3E9E7),
-    surfaceVariant = Color(0xFF1A2120),
-    onSurfaceVariant = Color(0xFFAFBAB7),
-    surfaceContainerLowest = Color(0xFF060909),
-    surfaceContainerLow = Color(0xFF121818),
-    surfaceContainer = Color(0xFF161D1C),
-    surfaceContainerHigh = Color(0xFF1D2524),
-    surfaceContainerHighest = Color(0xFF26302E),
-    outline = Color(0xFF5E6B68),
-    outlineVariant = Color(0xFF2E3836),
+    primary = Signal,
+    // White on #FF4F00 is only 3.3:1; near-black is 5.9:1, which reads better at a glance.
+    onPrimary = Ink,
+    primaryContainer = Color(0xFF3A1A0A),
+    onPrimaryContainer = Color(0xFFFFDBCC),
+    secondary = Color(0xFFB8BEC6),
+    onSecondary = Color(0xFF23272D),
+    secondaryContainer = GraphiteHigh,
+    onSecondaryContainer = Color(0xFFE4E7EB),
+    tertiary = Color(0xFFFFB547),
+    onTertiary = Color(0xFF2B1700),
+    background = Ink,
+    onBackground = Color(0xFFF2F3F5),
+    surface = Ink,
+    onSurface = Color(0xFFF2F3F5),
+    surfaceVariant = GraphiteHigh,
+    onSurfaceVariant = Color(0xFFA3A9B3),
+    surfaceContainerLowest = Color(0xFF07080A),
+    surfaceContainerLow = Color(0xFF111317),
+    surfaceContainer = Graphite,
+    surfaceContainerHigh = GraphiteHigh,
+    surfaceContainerHighest = Color(0xFF272C33),
+    outline = Color(0xFF5B636D),
+    outlineVariant = Color(0xFF2A2F36),
     error = Color(0xFFFF8A80),
 )
 
 private val DayColors: ColorScheme = lightColorScheme(
-    primary = TealDeep,
+    primary = SignalDeep,
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFB9F5EA),
-    onPrimaryContainer = Color(0xFF00201C),
-    secondary = Color(0xFF4A635F),
-    secondaryContainer = Color(0xFFCCE8E2),
-    onSecondaryContainer = Color(0xFF06201C),
+    primaryContainer = Color(0xFFFFDBCC),
+    onPrimaryContainer = Color(0xFF3A1000),
+    secondary = Color(0xFF50575F),
+    secondaryContainer = Color(0xFFE1E4E8),
+    onSecondaryContainer = Graphite,
     tertiary = Color(0xFF8B5000),
-    background = Color(0xFFF3F7F6),
-    onBackground = Color(0xFF161D1C),
-    surface = Color(0xFFF3F7F6),
-    onSurface = Color(0xFF161D1C),
-    surfaceVariant = Color(0xFFDAE5E2),
-    onSurfaceVariant = Color(0xFF3F4947),
+    background = Color(0xFFF4F5F7),
+    onBackground = Graphite,
+    surface = Color(0xFFF4F5F7),
+    onSurface = Graphite,
+    surfaceVariant = Color(0xFFE1E4E8),
+    onSurfaceVariant = Color(0xFF444A52),
     surfaceContainerLowest = Color.White,
-    surfaceContainerLow = Color(0xFFECF2F0),
-    surfaceContainer = Color(0xFFE6ECEA),
-    surfaceContainerHigh = Color(0xFFE0E7E5),
-    surfaceContainerHighest = Color(0xFFD9E1DF),
-    outline = Color(0xFF6F7977),
-    outlineVariant = Color(0xFFBEC9C6),
+    surfaceContainerLow = Color(0xFFEEF0F2),
+    surfaceContainer = Color(0xFFE8EAED),
+    surfaceContainerHigh = Color(0xFFE2E5E8),
+    surfaceContainerHighest = Color(0xFFDCDFE3),
+    outline = Color(0xFF737A84),
+    outlineVariant = Color(0xFFC3C8CE),
+)
+
+/**
+ * Geist (SIL OFL 1.1, see docs/licenses/Geist-OFL.txt), one variable file for every weight.
+ * It has no U+02BB (Uzbek oʻ/gʻ); Android falls back to the system font for that glyph only.
+ */
+private fun geist(weight: FontWeight) =
+    Font(R.font.geist, weight, variationSettings = FontVariation.Settings(FontVariation.weight(weight.weight)))
+
+val Geist = FontFamily(
+    geist(FontWeight.Normal),
+    geist(FontWeight.Medium),
+    geist(FontWeight.SemiBold),
+    geist(FontWeight.Bold),
+)
+
+private fun TextStyle.geist() = copy(fontFamily = Geist)
+
+/** Applies [Geist] to every style, including the ones the car scale leaves at Material defaults. */
+private fun Typography.withGeist() = Typography(
+    displayLarge = displayLarge.geist(), displayMedium = displayMedium.geist(), displaySmall = displaySmall.geist(),
+    headlineLarge = headlineLarge.geist(), headlineMedium = headlineMedium.geist(), headlineSmall = headlineSmall.geist(),
+    titleLarge = titleLarge.geist(), titleMedium = titleMedium.geist(), titleSmall = titleSmall.geist(),
+    bodyLarge = bodyLarge.geist(), bodyMedium = bodyMedium.geist(), bodySmall = bodySmall.geist(),
+    labelLarge = labelLarge.geist(), labelMedium = labelMedium.geist(), labelSmall = labelSmall.geist(),
 )
 
 private val CarType = Typography(
@@ -99,13 +134,13 @@ private val CarType = Typography(
     bodyMedium = TextStyle(fontSize = 22.sp, lineHeight = 30.sp),
     labelLarge = TextStyle(fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.Medium),
     labelMedium = TextStyle(fontSize = 18.sp, lineHeight = 24.sp, fontWeight = FontWeight.Medium),
-)
+).withGeist()
 
 private val CarShapes = Shapes(
     small = RoundedCornerShape(12.dp),
-    medium = RoundedCornerShape(20.dp),
-    large = RoundedCornerShape(28.dp),
-    extraLarge = RoundedCornerShape(36.dp),
+    medium = RoundedCornerShape(16.dp),
+    large = RoundedCornerShape(20.dp),
+    extraLarge = RoundedCornerShape(28.dp),
 )
 
 @Composable
