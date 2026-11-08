@@ -323,4 +323,16 @@
     <string name="phone_apps_loading">Loading the phone\'s apps…</string>
     <string name="phone_apps_none_found">No app matches</string>
     <string name="phone_apps_driving_only">While driving, only navigation and music apps are shown.</string>
+
+    <!-- phone apps run on the car screen (Shizuku) -->
+    <string name="app_display_shizuku_not_running">Phone apps run on the car screen through Shizuku. Install Shizuku on the phone and start it, then open the app again.</string>
+    <string name="app_display_shizuku_permission">AARE needs Shizuku\'s permission to show phone apps on the car screen. Tap Allow, then confirm on the phone.</string>
+    <string name="app_display_shizuku_unsupported">Phone apps on the car screen need Android 12 or newer and Shizuku 11 or newer.</string>
+    <string name="app_display_phone_screen_hint">Or show the phone\'s own screen instead: turn on Phone screen in AARE on the phone.</string>
+    <string name="app_display_allow">Allow</string>
+    <string name="app_display_use_phone_screen">Phone screen</string>
+    <string name="app_display_failed">%1$s couldn\'t be opened on the car screen: %2$s</string>
+    <string name="app_display_left">%1$s left the car screen: it was closed, or moved itself to the phone.</string>
+    <string name="app_display_open_again">Open again</string>
+    <string name="app_display_retry">Try again</string>
 </resources>

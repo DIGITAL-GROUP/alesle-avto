@@ -74,8 +74,17 @@ class AppDisplay(private val context: Context) {
         }
     }
 
+    /** The surface the display draws into now (main thread). */
+    private var current: Surface? = null
+
+    /** The display's size in pixels, as last attached (main thread). */
+    var size: Pair<Int, Int> = 0 to 0
+        private set
+
     /** Shows the display in [surface] ([w]×[h] pixels at [densityDpi]), creating it the first time. */
     fun attach(surface: Surface, w: Int, h: Int, densityDpi: Int) {
+        current = surface
+        size = w to h
         if (state !is State.Ready) state = State.Starting
         bg.post {
             val s = connect() ?: return@post fail("Shizuku isn't available")
@@ -98,8 +107,13 @@ class AppDisplay(private val context: Context) {
         }
     }
 
-    /** Stops drawing (the surface is going away); the display and its apps stay for the next [attach]. */
-    fun detach() {
+    /**
+     * Stops drawing into [surface] (it is going away); the display and its apps stay for the next
+     * [attach]. Ignored if another surface took over meanwhile (switching apps cross-fades two views).
+     */
+    fun detach(surface: Surface) {
+        if (current !== surface) return
+        current = null
         bg.post { runCatching { displayId.takeIf { it >= 0 }?.let { service?.setSurface(it, null) } } }
     }
 

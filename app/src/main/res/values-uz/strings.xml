@@ -9,4 +9,16 @@
     <string name="phone_apps_loading">Telefon ilovalari yuklanmoqda…</string>
     <string name="phone_apps_none_found">Mos ilova topilmadi</string>
     <string name="phone_apps_driving_only">Haydash paytida faqat navigatsiya va musiqa ilovalari ko‘rsatiladi.</string>
+
+    <!-- phone apps run on the car screen (Shizuku) -->
+    <string name="app_display_shizuku_not_running">Telefon ilovalari avtomobil ekranida Shizuku orqali ishlaydi. Telefonga Shizuku’ni o‘rnating va ishga tushiring, so‘ng ilovani qayta oching.</string>
+    <string name="app_display_shizuku_permission">Telefon ilovalarini avtomobil ekranida ko‘rsatish uchun AARE’ga Shizuku ruxsati kerak. «Ruxsat berish»ni bosing va telefonda tasdiqlang.</string>
+    <string name="app_display_shizuku_unsupported">Telefon ilovalarini avtomobil ekranida ochish uchun Android 12 yoki yangisi va Shizuku 11 yoki yangisi kerak.</string>
+    <string name="app_display_phone_screen_hint">Yoki telefonning o‘z ekranini ko‘rsating: telefondagi AARE’da «Telefon ekrani»ni yoqing.</string>
+    <string name="app_display_allow">Ruxsat berish</string>
+    <string name="app_display_use_phone_screen">Telefon ekrani</string>
+    <string name="app_display_failed">%1$s avtomobil ekranida ochilmadi: %2$s</string>
+    <string name="app_display_left">%1$s avtomobil ekranidan chiqib ketdi: u yopildi yoki o‘zini telefonga o‘tkazdi.</string>
+    <string name="app_display_open_again">Qayta ochish</string>
+    <string name="app_display_retry">Qayta urinish</string>
 </resources>

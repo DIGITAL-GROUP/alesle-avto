@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import net.prototux.aare.R
 import net.prototux.aare.Settings
 import net.prototux.aare.apps.AppDisplay
+import net.prototux.aare.apps.AppDisplayScreen
 import net.prototux.aare.apps.PhoneApps
 import net.prototux.aare.car.Calls
 import net.prototux.aare.car.DashboardInfo
@@ -644,6 +645,7 @@ class CarRuntime(
                             CarAppKind.PHONE -> PhoneScreen(this, mod)
                             CarAppKind.SETTINGS -> CarSettingsScreen(settings, mod)
                             CarAppKind.NOTIFICATIONS -> NotificationsScreen(ui, mod)
+                            CarAppKind.PHONE_APP -> AppDisplayScreen(this, app, mod)
                             else -> connection(app.id)?.let { CarAppScreen(it, this, mod) }
                         }
                     },
@@ -668,7 +670,10 @@ class CarRuntime(
         fun carId(app: CarAppInfo) = "car:${app.service.flattenToShortString()}"
         fun mediaId(pkg: String) = "media:$pkg"
         fun messagingId(pkg: String) = "messages:$pkg"
-        fun phoneAppId(component: android.content.ComponentName) = "phoneapp:${component.flattenToShortString()}"
+        fun phoneAppId(component: android.content.ComponentName) = "$PHONE_APP_PREFIX${component.flattenToShortString()}"
+        fun phoneAppComponent(id: String): android.content.ComponentName? =
+            id.takeIf { it.startsWith(PHONE_APP_PREFIX) }?.let { android.content.ComponentName.unflattenFromString(it.removePrefix(PHONE_APP_PREFIX)) }
+        private const val PHONE_APP_PREFIX = "phoneapp:"
         const val PHONE_SCREEN_ID = "phone-screen"
         const val PHONE_ID = "phone"
         const val SETTINGS_ID = "car-settings"
