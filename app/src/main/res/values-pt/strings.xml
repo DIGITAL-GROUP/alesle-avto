@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AARE</string>
-    <string name="mirror_touch_description">Permite utilizar o ecrã do telemóvel a partir do carro: a AARE reproduz no telemóvel os toques feitos no ecrã do carro e verifica qual a aplicação em primeiro plano, para que o ecrã do telemóvel fique em pausa durante a condução, exceto quando mostra uma aplicação de navegação. A AARE não lê mais nada.</string>
+    <string name="app_name">Alesle Avto</string>
+    <string name="mirror_touch_description">Permite utilizar o ecrã do telemóvel a partir do carro: a Alesle Avto reproduz no telemóvel os toques feitos no ecrã do carro e verifica qual a aplicação em primeiro plano, para que o ecrã do telemóvel fique em pausa durante a condução, exceto quando mostra uma aplicação de navegação. A Alesle Avto não lê mais nada.</string>
     <string name="mirror_locked_placeholder">O ecrã do telemóvel está em pausa enquanto o telemóvel estiver bloqueado. Desbloqueie o telemóvel para o mostrar.</string>
-    <string name="mirror_driving_no_accessibility">O ecrã do telemóvel está em pausa durante a condução. Para mostrar aplicações de navegação durante a condução, ative a AARE nas definições de acessibilidade do telemóvel: isso indica à AARE qual a aplicação aberta.</string>
+    <string name="mirror_driving_no_accessibility">O ecrã do telemóvel está em pausa durante a condução. Para mostrar aplicações de navegação durante a condução, ative a Alesle Avto nas definições de acessibilidade do telemóvel: isso indica à Alesle Avto qual a aplicação aberta.</string>
     <string name="mirror_driving_nav_only">O ecrã do telemóvel está em pausa durante a condução. Mostra apenas aplicações de navegação.</string>
-    <string name="mirror_need_car_audio">Ative o Áudio do carro na AARE no telemóvel e escolha Ecrã inteiro quando o Android perguntar: o ecrã do telemóvel utiliza a mesma permissão.</string>
-    <string name="mirror_need_accessibility">Para utilizar o telemóvel a partir do carro, ative a AARE nas definições de acessibilidade do telemóvel.</string>
+    <string name="mirror_need_car_audio">Ative o Áudio do carro na Alesle Avto no telemóvel e escolha Ecrã inteiro quando o Android perguntar: o ecrã do telemóvel utiliza a mesma permissão.</string>
+    <string name="mirror_need_accessibility">Para utilizar o telemóvel a partir do carro, ative a Alesle Avto nas definições de acessibilidade do telemóvel.</string>
 
     <!-- common: shared across screens -->
     <string name="common_back">Voltar</string>
@@ -55,8 +55,8 @@
     <string name="setup_section_location">Localização</string>
     <string name="setup_toggle_car_gps_title">Utilizar o GPS do carro</string>
     <string name="setup_toggle_car_gps_subtitle">Enquanto ligado, as aplicações no telemóvel veem a posição do carro em vez da do próprio telemóvel, para que as aplicações de navegação não misturem as duas</string>
-    <string name="setup_check_mock_location_title">Permitir que a AARE defina a localização</string>
-    <string name="setup_check_mock_location_subtitle">Opções de programador &gt; Selecionar aplicação de localização fictícia &gt; AARE</string>
+    <string name="setup_check_mock_location_title">Permitir que a Alesle Avto defina a localização</string>
+    <string name="setup_check_mock_location_subtitle">Opções de programador &gt; Selecionar aplicação de localização fictícia &gt; Alesle Avto</string>
     <string name="setup_section_video">Vídeo</string>
     <string name="setup_toggle_60fps_title">Preferir 60 fps</string>
     <string name="setup_toggle_60fps_subtitle">Mais suave quando o carro o suporta</string>
@@ -104,15 +104,15 @@
     <string name="setup_app_kind_media">Música, podcasts, rádio</string>
     <string name="setup_app_group_messaging">Mensagens</string>
     <string name="setup_app_kind_messaging">Mensagens a partir das suas notificações</string>
-    <string name="setup_app_group_aare">AARE</string>
-    <string name="setup_section_unsupported_apps">Aplicações Android Auto que a AARE não consegue mostrar</string>
+    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_section_unsupported_apps">Aplicações Android Auto que a Alesle Avto não consegue mostrar</string>
     <string name="setup_hint_allowlist">As aplicações criadas com versões recentes da biblioteca de carro da Google só aceitam anfitriões incluídos na sua lista de permissões; consulte o README.</string>
     <string name="setup_app_entry_phone">Telefone</string>
     <string name="setup_app_entry_settings">Definições</string>
     <string name="setup_app_entry_notifications">Notificações</string>
     <string name="setup_section_app_order">Ordem no carro</string>
     <string name="setup_section_connection_log">Registo de ligação</string>
-    <string name="setup_about_text">AARE %1$s · GPL-3.0-or-later · Não afiliada com a Google. Android Auto é uma marca comercial da Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Não afiliada com a Google. Android Auto é uma marca comercial da Google LLC.</string>
     <string name="setup_choice_style">Estilo</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -123,7 +123,7 @@
 
     <!-- cert: certificate management -->
     <string name="cert_section_title">Certificados do telemóvel</string>
-    <string name="cert_hint">As unidades principais verificam o certificado do telemóvel. As unidades principais de código aberto aceitam o certificado gerado; os carros que utilizam o software de unidade principal da Google só aceitam um certificado emitido pela Google, que a AARE não pode incluir. Pode importar um que tenha o direito de utilizar (certificado PEM + chave PKCS#8, ou PKCS#12).</string>
+    <string name="cert_hint">As unidades principais verificam o certificado do telemóvel. As unidades principais de código aberto aceitam o certificado gerado; os carros que utilizam o software de unidade principal da Google só aceitam um certificado emitido pela Google, que a Alesle Avto não pode incluir. Pode importar um que tenha o direito de utilizar (certificado PEM + chave PKCS#8, ou PKCS#12).</string>
     <string name="cert_entry_subtitle">%1$s · até %2$s</string>
     <string name="cert_action_remove">Remover</string>
     <string name="cert_action_import">Importar certificado…</string>
@@ -155,7 +155,7 @@
     <string name="msg_section_while_driving">Durante a condução</string>
     <string name="msg_toggle_dnd_title">Não perturbar</string>
     <string name="msg_toggle_dnd_subtitle">Silenciar o telemóvel enquanto ligado; as chamadas e as conversas prioritárias continuam a passar</string>
-    <string name="msg_check_dnd_access_title">Permitir que a AARE ative o Não perturbar</string>
+    <string name="msg_check_dnd_access_title">Permitir que a Alesle Avto ative o Não perturbar</string>
     <string name="msg_check_dnd_access_subtitle">O Android pergunta uma vez</string>
     <string name="msg_toggle_autoreply_title">Resposta automática</string>
     <string name="msg_toggle_autoreply_subtitle">Responder a quem escreve, uma vez por conversa em cada viagem (exceto grupos)</string>
@@ -170,23 +170,23 @@
     <string name="audio_no_method">Ainda nenhum método configurado: escolha um abaixo.</string>
     <string name="audio_section_methods">Métodos, por ordem de preferência</string>
     <string name="audio_policy_ready">Pronto. A música e a voz de navegação vão para o carro separadamente, o telemóvel fica em silêncio.</string>
-    <string name="audio_policy_not_ready">Como no Android Auto: música e voz de navegação separadas, altifalante do telemóvel desligado. Requer um telemóvel com root: instale a AARE como aplicação do sistema com o módulo Magisk (consulte o README).</string>
+    <string name="audio_policy_not_ready">Como no Android Auto: música e voz de navegação separadas, altifalante do telemóvel desligado. Requer um telemóvel com root: instale a Alesle Avto como aplicação do sistema com o módulo Magisk (consulte o README).</string>
     <string name="audio_shizuku_ready">Pronto. Tudo o que o telemóvel reproduz vai para o carro, incluindo a voz de navegação; o telemóvel fica em silêncio.</string>
     <string name="audio_shizuku_needs_android12">Requer Android 12 ou mais recente.</string>
-    <string name="audio_shizuku_tap_allow">O Shizuku está em execução: toque para permitir a AARE.</string>
+    <string name="audio_shizuku_tap_allow">O Shizuku está em execução: toque para permitir a Alesle Avto.</string>
     <string name="audio_shizuku_install_hint">Não é necessário root. Instale o Shizuku, inicie-o (depuração sem fios, uma vez por reinício) e volte aqui depois.</string>
     <string name="audio_playback_ready">Pronto. Apenas multimédia: sem voz de navegação, algumas aplicações optam por não participar, e o telemóvel continua também a reproduzir.</string>
     <string name="audio_playback_not_ready">Funciona em qualquer lado, com limitações: apenas multimédia, sem voz de navegação. O Android pede para capturar o ecrã: escolha Ecrã inteiro (também utilizado pelo ecrã do telemóvel).</string>
-    <string name="audio_notice_setup_hint">Abra a AARE no telemóvel e configure o áudio do carro para ouvir o telemóvel no carro</string>
+    <string name="audio_notice_setup_hint">Abra a Alesle Avto no telemóvel e configure o áudio do carro para ouvir o telemóvel no carro</string>
 
     <!-- phone: phone screen feature -->
     <string name="phone_section_title">Ecrã do telemóvel</string>
     <string name="phone_toggle_enable_title">Ecrã do telemóvel no carro</string>
-    <string name="phone_toggle_enable_subtitle">O próprio ecrã do telemóvel, para aplicações que a AARE não consegue alojar (Google Maps, Waze). Em pausa enquanto o telemóvel está bloqueado, e durante a condução a menos que uma aplicação de navegação esteja a guiar. Não é oferecido no servidor da unidade principal a menos que seja ativado aí</string>
+    <string name="phone_toggle_enable_subtitle">O próprio ecrã do telemóvel, para aplicações que a Alesle Avto não consegue alojar (Google Maps, Waze). Em pausa enquanto o telemóvel está bloqueado, e durante a condução a menos que uma aplicação de navegação esteja a guiar. Não é oferecido no servidor da unidade principal a menos que seja ativado aí</string>
     <string name="phone_check_touch_title">Toque no ecrã do telemóvel</string>
-    <string name="phone_check_touch_subtitle">Ative a AARE em Acessibilidade. As aplicações instaladas fora da loja podem precisar primeiro de "Permitir definições restritas" nas informações da aplicação AARE</string>
+    <string name="phone_check_touch_subtitle">Ative a Alesle Avto em Acessibilidade. As aplicações instaladas fora da loja podem precisar primeiro de "Permitir definições restritas" nas informações da aplicação Alesle Avto</string>
     <string name="phone_hint_touch_capture">A imagem utiliza a permissão de captura de ecrã (página Áudio do carro, escolha Ecrã inteiro).</string>
-    <string name="phone_app_row_subtitle">O próprio ecrã do telemóvel, para aplicações que a AARE não consegue alojar</string>
+    <string name="phone_app_row_subtitle">O próprio ecrã do telemóvel, para aplicações que a Alesle Avto não consegue alojar</string>
 
     <!-- assistant: voice assistant settings and bar -->
     <string name="assistant_settings_title">Assistente de voz</string>
@@ -209,8 +209,8 @@
     <string name="notif_trust_warning">Só confie numa unidade principal à qual esteja ligado neste momento</string>
     <string name="notif_untrusted_message">SHA-256 %1$s... %2$s, depois volte a ligar.</string>
     <string name="notif_trust_reconnect_suffix">%1$s, depois volte a ligar.</string>
-    <string name="notif_cert_changed_message">certificado da unidade principal alterado: toque em Confiar na notificação ou na AARE apenas se o respetivo software tiver sido atualizado, depois volte a ligar</string>
-    <string name="notif_cert_untrusted_message">certificado da unidade principal ainda não é de confiança: toque em Confiar na notificação ou na AARE, depois volte a ligar</string>
+    <string name="notif_cert_changed_message">certificado da unidade principal alterado: toque em Confiar na notificação ou na Alesle Avto apenas se o respetivo software tiver sido atualizado, depois volte a ligar</string>
+    <string name="notif_cert_untrusted_message">certificado da unidade principal ainda não é de confiança: toque em Confiar na notificação ou na Alesle Avto, depois volte a ligar</string>
     <string name="notif_car_nearby_title">Carro próximo</string>
     <string name="notif_car_nearby_text">Toque para ligar sem fios</string>
     <string name="notif_status_connecting_to">A ligar a %1$s</string>
@@ -227,9 +227,9 @@
     <string name="notif_navigation_title">Navegação</string>
     <string name="notif_navigation_no_app_text">Nenhuma aplicação de navegação no carro</string>
     <string name="notif_assistant_title">Assistente</string>
-    <string name="notif_assistant_choose_text">Escolha um assistente de voz nas definições da AARE no telemóvel</string>
+    <string name="notif_assistant_choose_text">Escolha um assistente de voz nas definições da Alesle Avto no telemóvel</string>
     <string name="notif_assistant_no_car_screen">%1$s não tem ecrã de carro: abriu no telemóvel</string>
-    <string name="notif_assistant_cant_open">Não é possível abrir %1$s. Escolha outro assistente nas definições da AARE</string>
+    <string name="notif_assistant_cant_open">Não é possível abrir %1$s. Escolha outro assistente nas definições da Alesle Avto</string>
     <string name="notif_parked_only_title">Não disponível durante a condução</string>
     <string name="notif_parked_only_text">Estacione para utilizar isto</string>
     <string name="notif_empty">Sem notificações</string>
@@ -271,7 +271,7 @@
     <string name="media_queue_empty">A fila está vazia</string>
 
     <!-- msg: messaging screen (notifications-based conversations) -->
-    <string name="msg_no_access">Conceda à AARE acesso às notificações no telemóvel para ver mensagens aqui</string>
+    <string name="msg_no_access">Conceda à Alesle Avto acesso às notificações no telemóvel para ver mensagens aqui</string>
     <string name="msg_listener_not_ready">Ainda nada para ver aqui</string>
     <string name="msg_reply_sent">Resposta enviada</string>
     <string name="msg_reply_rejected">%1$s não aceitou a resposta</string>
@@ -291,7 +291,7 @@
     <string name="phone_tab_recents">Recentes</string>
     <string name="phone_tab_contacts">Contactos</string>
     <string name="phone_tab_keypad">Teclado</string>
-    <string name="phone_permissions_placeholder">Permita chamadas, histórico de chamadas e contactos na AARE no telemóvel (Concluir a configuração).</string>
+    <string name="phone_permissions_placeholder">Permita chamadas, histórico de chamadas e contactos na Alesle Avto no telemóvel (Concluir a configuração).</string>
     <string name="phone_notice_calling_title">A ligar</string>
     <string name="phone_no_recent_calls">Sem chamadas recentes</string>
     <string name="phone_no_contacts">Sem contactos com número de telefone</string>

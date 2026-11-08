@@ -14,9 +14,9 @@
 
     <!-- phone apps run on the car screen (Shizuku) -->
     <string name="app_display_shizuku_not_running">Telefon ilovalari avtomobil ekranida Shizuku orqali ishlaydi. Telefonga Shizuku’ni o‘rnating va ishga tushiring, so‘ng ilovani qayta oching.</string>
-    <string name="app_display_shizuku_permission">Telefon ilovalarini avtomobil ekranida ko‘rsatish uchun AARE’ga Shizuku ruxsati kerak. «Ruxsat berish»ni bosing va telefonda tasdiqlang.</string>
+    <string name="app_display_shizuku_permission">Telefon ilovalarini avtomobil ekranida ko‘rsatish uchun Alesle Avto’ga Shizuku ruxsati kerak. «Ruxsat berish»ni bosing va telefonda tasdiqlang.</string>
     <string name="app_display_shizuku_unsupported">Telefon ilovalarini avtomobil ekranida ochish uchun Android 12 yoki yangisi va Shizuku 11 yoki yangisi kerak.</string>
-    <string name="app_display_phone_screen_hint">Yoki telefonning o‘z ekranini ko‘rsating: telefondagi AARE’da «Telefon ekrani»ni yoqing.</string>
+    <string name="app_display_phone_screen_hint">Yoki telefonning o‘z ekranini ko‘rsating: telefondagi Alesle Avto’da «Telefon ekrani»ni yoqing.</string>
     <string name="app_display_allow">Ruxsat berish</string>
     <string name="app_display_use_phone_screen">Telefon ekrani</string>
     <string name="app_display_failed">%1$s avtomobil ekranida ochilmadi: %2$s</string>

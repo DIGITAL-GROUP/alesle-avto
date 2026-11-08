@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AARE</string>
-    <string name="mirror_touch_description">Позволяет использовать экран телефона из автомобиля: AARE повторяет на телефоне касания, сделанные на экране автомобиля, и проверяет, какое приложение активно, чтобы экран телефона оставался приостановленным во время движения, если на нём не отображается навигационное приложение. AARE больше ничего не считывает.</string>
+    <string name="app_name">Alesle Avto</string>
+    <string name="mirror_touch_description">Позволяет использовать экран телефона из автомобиля: Alesle Avto повторяет на телефоне касания, сделанные на экране автомобиля, и проверяет, какое приложение активно, чтобы экран телефона оставался приостановленным во время движения, если на нём не отображается навигационное приложение. Alesle Avto больше ничего не считывает.</string>
     <string name="mirror_locked_placeholder">Экран телефона приостановлен, пока телефон заблокирован. Разблокируйте телефон, чтобы показать его.</string>
-    <string name="mirror_driving_no_accessibility">Экран телефона приостановлен во время движения. Чтобы показывать навигационные приложения во время движения, включите AARE в настройках специальных возможностей телефона: это сообщает AARE, какое приложение открыто.</string>
+    <string name="mirror_driving_no_accessibility">Экран телефона приостановлен во время движения. Чтобы показывать навигационные приложения во время движения, включите Alesle Avto в настройках специальных возможностей телефона: это сообщает Alesle Avto, какое приложение открыто.</string>
     <string name="mirror_driving_nav_only">Экран телефона приостановлен во время движения. Он показывает только навигационные приложения.</string>
-    <string name="mirror_need_car_audio">Включите Звук в автомобиле в AARE на телефоне и выберите Весь экран, когда Android спросит: экран телефона использует то же разрешение.</string>
-    <string name="mirror_need_accessibility">Чтобы использовать телефон из автомобиля, включите AARE в настройках специальных возможностей телефона.</string>
+    <string name="mirror_need_car_audio">Включите Звук в автомобиле в Alesle Avto на телефоне и выберите Весь экран, когда Android спросит: экран телефона использует то же разрешение.</string>
+    <string name="mirror_need_accessibility">Чтобы использовать телефон из автомобиля, включите Alesle Avto в настройках специальных возможностей телефона.</string>
 
     <!-- common: shared across screens -->
     <string name="common_back">Назад</string>
@@ -55,8 +55,8 @@
     <string name="setup_section_location">Местоположение</string>
     <string name="setup_toggle_car_gps_title">Использовать GPS автомобиля</string>
     <string name="setup_toggle_car_gps_subtitle">При соединении приложения на телефоне видят позицию автомобиля вместо позиции телефона, поэтому навигационные приложения не путают их</string>
-    <string name="setup_check_mock_location_title">Разрешить AARE устанавливать местоположение</string>
-    <string name="setup_check_mock_location_subtitle">Параметры разработчика &gt; Выбрать приложение фиктивного местоположения &gt; AARE</string>
+    <string name="setup_check_mock_location_title">Разрешить Alesle Avto устанавливать местоположение</string>
+    <string name="setup_check_mock_location_subtitle">Параметры разработчика &gt; Выбрать приложение фиктивного местоположения &gt; Alesle Avto</string>
     <string name="setup_section_video">Видео</string>
     <string name="setup_toggle_60fps_title">Предпочитать 60 кадров/с</string>
     <string name="setup_toggle_60fps_subtitle">Плавнее, если автомобиль это поддерживает</string>
@@ -104,15 +104,15 @@
     <string name="setup_app_kind_media">Музыка, подкасты, радио</string>
     <string name="setup_app_group_messaging">Сообщения</string>
     <string name="setup_app_kind_messaging">Сообщения из его уведомлений</string>
-    <string name="setup_app_group_aare">AARE</string>
-    <string name="setup_section_unsupported_apps">Приложения Android Auto, которые AARE не может показать</string>
+    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_section_unsupported_apps">Приложения Android Auto, которые Alesle Avto не может показать</string>
     <string name="setup_hint_allowlist">Приложения, созданные на новых версиях библиотеки Google для автомобилей, принимают только хосты из списка разрешённых; см. README.</string>
     <string name="setup_app_entry_phone">Телефон</string>
     <string name="setup_app_entry_settings">Настройки</string>
     <string name="setup_app_entry_notifications">Уведомления</string>
     <string name="setup_section_app_order">Порядок в автомобиле</string>
     <string name="setup_section_connection_log">Журнал соединений</string>
-    <string name="setup_about_text">AARE %1$s · GPL-3.0-or-later · Не связано с Google. Android Auto является товарным знаком Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Не связано с Google. Android Auto является товарным знаком Google LLC.</string>
     <string name="setup_choice_style">Стиль</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -123,7 +123,7 @@
 
     <!-- cert: certificate management -->
     <string name="cert_section_title">Сертификаты телефона</string>
-    <string name="cert_hint">Головные устройства проверяют сертификат телефона. Головные устройства с открытым кодом принимают сгенерированный сертификат; автомобили с программным обеспечением головного устройства Google принимают только сертификат, выданный Google, который AARE не может включить. Вы можете импортировать тот, на использование которого у вас есть право (сертификат PEM + ключ PKCS#8, или PKCS#12).</string>
+    <string name="cert_hint">Головные устройства проверяют сертификат телефона. Головные устройства с открытым кодом принимают сгенерированный сертификат; автомобили с программным обеспечением головного устройства Google принимают только сертификат, выданный Google, который Alesle Avto не может включить. Вы можете импортировать тот, на использование которого у вас есть право (сертификат PEM + ключ PKCS#8, или PKCS#12).</string>
     <string name="cert_entry_subtitle">%1$s · до %2$s</string>
     <string name="cert_action_remove">Удалить</string>
     <string name="cert_action_import">Импортировать сертификат…</string>
@@ -155,7 +155,7 @@
     <string name="msg_section_while_driving">Во время движения</string>
     <string name="msg_toggle_dnd_title">Не беспокоить</string>
     <string name="msg_toggle_dnd_subtitle">Отключать звук телефона во время соединения; звонки и приоритетные беседы всё равно проходят</string>
-    <string name="msg_check_dnd_access_title">Разрешить AARE включать Не беспокоить</string>
+    <string name="msg_check_dnd_access_title">Разрешить Alesle Avto включать Не беспокоить</string>
     <string name="msg_check_dnd_access_subtitle">Android спрашивает один раз</string>
     <string name="msg_toggle_autoreply_title">Автоответ</string>
     <string name="msg_toggle_autoreply_subtitle">Отвечает тем, кто пишет, один раз за беседу за поездку (не группам)</string>
@@ -170,23 +170,23 @@
     <string name="audio_no_method">Пока не настроен ни один метод: выберите один ниже.</string>
     <string name="audio_section_methods">Методы, лучшие сначала</string>
     <string name="audio_policy_ready">Готово. Музыка и голос навигации идут в автомобиль отдельно, телефон остаётся тихим.</string>
-    <string name="audio_policy_not_ready">Как Android Auto: музыка и голос навигации отдельно, динамик телефона выключен. Требуется телефон с root-правами: установите AARE как системное приложение с помощью модуля Magisk (см. README).</string>
+    <string name="audio_policy_not_ready">Как Android Auto: музыка и голос навигации отдельно, динамик телефона выключен. Требуется телефон с root-правами: установите Alesle Avto как системное приложение с помощью модуля Magisk (см. README).</string>
     <string name="audio_shizuku_ready">Готово. Всё, что воспроизводит телефон, идёт в автомобиль, включая голос навигации; телефон остаётся тихим.</string>
     <string name="audio_shizuku_needs_android12">Требуется Android 12 или новее.</string>
-    <string name="audio_shizuku_tap_allow">Shizuku работает: нажмите, чтобы разрешить AARE.</string>
+    <string name="audio_shizuku_tap_allow">Shizuku работает: нажмите, чтобы разрешить Alesle Avto.</string>
     <string name="audio_shizuku_install_hint">Root-права не нужны. Установите Shizuku, запустите его (беспроводная отладка, один раз после перезагрузки), а затем вернитесь сюда.</string>
     <string name="audio_playback_ready">Готово. Только медиа: без голоса навигации, некоторые приложения отключаются, а телефон тоже продолжает воспроизведение.</string>
     <string name="audio_playback_not_ready">Работает везде, с ограничениями: только медиа, без голоса навигации. Android спросит о захвате экрана: выберите Весь экран (также используется экраном телефона).</string>
-    <string name="audio_notice_setup_hint">Откройте AARE на телефоне и настройте звук в автомобиле, чтобы слышать телефон в автомобиле</string>
+    <string name="audio_notice_setup_hint">Откройте Alesle Avto на телефоне и настройте звук в автомобиле, чтобы слышать телефон в автомобиле</string>
 
     <!-- phone: phone screen feature -->
     <string name="phone_section_title">Экран телефона</string>
     <string name="phone_toggle_enable_title">Экран телефона в автомобиле</string>
-    <string name="phone_toggle_enable_subtitle">Собственный экран телефона, для приложений, которые AARE не может разместить (Google Maps, Waze). Приостановлен, когда телефон заблокирован, и во время движения, если навигационное приложение не ведёт маршрут. Не предлагается на сервере головного устройства, если там не включён</string>
+    <string name="phone_toggle_enable_subtitle">Собственный экран телефона, для приложений, которые Alesle Avto не может разместить (Google Maps, Waze). Приостановлен, когда телефон заблокирован, и во время движения, если навигационное приложение не ведёт маршрут. Не предлагается на сервере головного устройства, если там не включён</string>
     <string name="phone_check_touch_title">Касание на экране телефона</string>
-    <string name="phone_check_touch_subtitle">Включите AARE в Специальных возможностях. Приложениям, установленным не из магазина, может сначала потребоваться «Разрешить ограниченные настройки» в информации о приложении AARE</string>
+    <string name="phone_check_touch_subtitle">Включите Alesle Avto в Специальных возможностях. Приложениям, установленным не из магазина, может сначала потребоваться «Разрешить ограниченные настройки» в информации о приложении Alesle Avto</string>
     <string name="phone_hint_touch_capture">Изображение использует разрешение на захват экрана (страница Звук в автомобиле, выберите Весь экран).</string>
-    <string name="phone_app_row_subtitle">Собственный экран телефона, для приложений, которые AARE не может разместить</string>
+    <string name="phone_app_row_subtitle">Собственный экран телефона, для приложений, которые Alesle Avto не может разместить</string>
 
     <!-- assistant: voice assistant settings and bar -->
     <string name="assistant_settings_title">Голосовой ассистент</string>
@@ -209,8 +209,8 @@
     <string name="notif_trust_warning">Доверяйте только тому головному устройству, к которому вы подключены прямо сейчас</string>
     <string name="notif_untrusted_message">SHA-256 %1$s... %2$s, затем подключитесь снова.</string>
     <string name="notif_trust_reconnect_suffix">%1$s, затем подключитесь снова.</string>
-    <string name="notif_cert_changed_message">сертификат головного устройства изменился: нажмите Доверять в уведомлении или в AARE только если его программное обеспечение было обновлено, затем подключитесь снова</string>
-    <string name="notif_cert_untrusted_message">сертификат головного устройства ещё не доверенный: нажмите Доверять в уведомлении или в AARE, затем подключитесь снова</string>
+    <string name="notif_cert_changed_message">сертификат головного устройства изменился: нажмите Доверять в уведомлении или в Alesle Avto только если его программное обеспечение было обновлено, затем подключитесь снова</string>
+    <string name="notif_cert_untrusted_message">сертификат головного устройства ещё не доверенный: нажмите Доверять в уведомлении или в Alesle Avto, затем подключитесь снова</string>
     <string name="notif_car_nearby_title">Автомобиль рядом</string>
     <string name="notif_car_nearby_text">Нажмите, чтобы соединиться по беспроводной сети</string>
     <string name="notif_status_connecting_to">Соединение с %1$s</string>
@@ -227,9 +227,9 @@
     <string name="notif_navigation_title">Навигация</string>
     <string name="notif_navigation_no_app_text">В автомобиле нет навигационного приложения</string>
     <string name="notif_assistant_title">Ассистент</string>
-    <string name="notif_assistant_choose_text">Выберите голосового ассистента в настройках AARE на телефоне</string>
+    <string name="notif_assistant_choose_text">Выберите голосового ассистента в настройках Alesle Avto на телефоне</string>
     <string name="notif_assistant_no_car_screen">У %1$s нет экрана для автомобиля: он открылся на телефоне</string>
-    <string name="notif_assistant_cant_open">Не удаётся открыть %1$s. Выберите другого ассистента в настройках AARE</string>
+    <string name="notif_assistant_cant_open">Не удаётся открыть %1$s. Выберите другого ассистента в настройках Alesle Avto</string>
     <string name="notif_parked_only_title">Недоступно во время движения</string>
     <string name="notif_parked_only_text">Остановитесь на парковке, чтобы использовать это</string>
     <string name="notif_empty">Нет уведомлений</string>
@@ -271,7 +271,7 @@
     <string name="media_queue_empty">Очередь пуста</string>
 
     <!-- msg: messaging screen (notifications-based conversations) -->
-    <string name="msg_no_access">Дайте AARE доступ к уведомлениям на телефоне, чтобы видеть сообщения здесь</string>
+    <string name="msg_no_access">Дайте Alesle Avto доступ к уведомлениям на телефоне, чтобы видеть сообщения здесь</string>
     <string name="msg_listener_not_ready">Здесь пока ничего нет</string>
     <string name="msg_reply_sent">Ответ отправлен</string>
     <string name="msg_reply_rejected">%1$s не принял ответ</string>
@@ -291,7 +291,7 @@
     <string name="phone_tab_recents">Недавние</string>
     <string name="phone_tab_contacts">Контакты</string>
     <string name="phone_tab_keypad">Клавиатура</string>
-    <string name="phone_permissions_placeholder">Разрешите звонки, историю звонков и контакты в AARE на телефоне (Завершить настройку).</string>
+    <string name="phone_permissions_placeholder">Разрешите звонки, историю звонков и контакты в Alesle Avto на телефоне (Завершить настройку).</string>
     <string name="phone_notice_calling_title">Звонок</string>
     <string name="phone_no_recent_calls">Нет недавних звонков</string>
     <string name="phone_no_contacts">Нет контактов с номером телефона</string>

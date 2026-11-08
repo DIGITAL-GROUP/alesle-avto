@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AARE</string>
-    <string name="mirror_touch_description">Lar deg bruke telefonskjermen fra bilen: AARE gjengir berøringene som gjøres på bilskjermen, på telefonen, og kontrollerer hvilken app som er i forgrunnen, slik at telefonskjermen forblir pauset under kjøring med mindre den viser en navigasjonsapp. AARE leser ingenting annet.</string>
+    <string name="app_name">Alesle Avto</string>
+    <string name="mirror_touch_description">Lar deg bruke telefonskjermen fra bilen: Alesle Avto gjengir berøringene som gjøres på bilskjermen, på telefonen, og kontrollerer hvilken app som er i forgrunnen, slik at telefonskjermen forblir pauset under kjøring med mindre den viser en navigasjonsapp. Alesle Avto leser ingenting annet.</string>
     <string name="mirror_locked_placeholder">Telefonskjermen er pauset mens telefonen er låst. Lås opp telefonen for å vise den.</string>
-    <string name="mirror_driving_no_accessibility">Telefonskjermen er pauset under kjøring. For å vise navigasjonsapper under kjøring, slå på AARE i telefonens tilgjengelighetsinnstillinger: det forteller AARE hvilken app som er åpen.</string>
+    <string name="mirror_driving_no_accessibility">Telefonskjermen er pauset under kjøring. For å vise navigasjonsapper under kjøring, slå på Alesle Avto i telefonens tilgjengelighetsinnstillinger: det forteller Alesle Avto hvilken app som er åpen.</string>
     <string name="mirror_driving_nav_only">Telefonskjermen er pauset under kjøring. Den viser bare navigasjonsapper.</string>
-    <string name="mirror_need_car_audio">Slå på Bilaudio i AARE på telefonen, og velg Hele skjermen når Android spør: telefonskjermen bruker samme tillatelse.</string>
-    <string name="mirror_need_accessibility">For å bruke telefonen fra bilen, slå på AARE i telefonens tilgjengelighetsinnstillinger.</string>
+    <string name="mirror_need_car_audio">Slå på Bilaudio i Alesle Avto på telefonen, og velg Hele skjermen når Android spør: telefonskjermen bruker samme tillatelse.</string>
+    <string name="mirror_need_accessibility">For å bruke telefonen fra bilen, slå på Alesle Avto i telefonens tilgjengelighetsinnstillinger.</string>
 
     <!-- common: shared across screens -->
     <string name="common_back">Tilbake</string>
@@ -55,8 +55,8 @@
     <string name="setup_section_location">Posisjon</string>
     <string name="setup_toggle_car_gps_title">Bruk bilens GPS</string>
     <string name="setup_toggle_car_gps_subtitle">Mens tilkoblet ser apper på telefonen bilens posisjon i stedet for telefonens egen, slik at navigasjonsapper ikke blander de to</string>
-    <string name="setup_check_mock_location_title">Tillat AARE å angi posisjonen</string>
-    <string name="setup_check_mock_location_subtitle">Utvikleralternativer &gt; Velg app for simulert posisjon &gt; AARE</string>
+    <string name="setup_check_mock_location_title">Tillat Alesle Avto å angi posisjonen</string>
+    <string name="setup_check_mock_location_subtitle">Utvikleralternativer &gt; Velg app for simulert posisjon &gt; Alesle Avto</string>
     <string name="setup_section_video">Video</string>
     <string name="setup_toggle_60fps_title">Foretrekk 60 fps</string>
     <string name="setup_toggle_60fps_subtitle">Jevnere når bilen støtter det</string>
@@ -104,15 +104,15 @@
     <string name="setup_app_kind_media">Musikk, podkaster, radio</string>
     <string name="setup_app_group_messaging">Meldinger</string>
     <string name="setup_app_kind_messaging">Meldinger fra sine varsler</string>
-    <string name="setup_app_group_aare">AARE</string>
-    <string name="setup_section_unsupported_apps">Android Auto-apper AARE ikke kan vise</string>
+    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_section_unsupported_apps">Android Auto-apper Alesle Avto ikke kan vise</string>
     <string name="setup_hint_allowlist">Apper bygget med nyere versjoner av Googles bilbibliotek godtar bare verter på sin tillatelsesliste; se README.</string>
     <string name="setup_app_entry_phone">Telefon</string>
     <string name="setup_app_entry_settings">Innstillinger</string>
     <string name="setup_app_entry_notifications">Varsler</string>
     <string name="setup_section_app_order">Rekkefølge i bilen</string>
     <string name="setup_section_connection_log">Tilkoblingslogg</string>
-    <string name="setup_about_text">AARE %1$s · GPL-3.0-or-later · Ikke tilknyttet Google. Android Auto er et varemerke som tilhører Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Ikke tilknyttet Google. Android Auto er et varemerke som tilhører Google LLC.</string>
     <string name="setup_choice_style">Stil</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -123,7 +123,7 @@
 
     <!-- cert: certificate management -->
     <string name="cert_section_title">Telefonsertifikater</string>
-    <string name="cert_hint">Head units kontrollerer telefonens sertifikat. Head units med åpen kildekode godtar det genererte; biler som bruker Googles head unit-programvare godtar bare et sertifikat utstedt av Google, som AARE ikke kan inkludere. Du kan importere et du har rett til å bruke (PEM-sertifikat + PKCS#8-nøkkel, eller PKCS#12).</string>
+    <string name="cert_hint">Head units kontrollerer telefonens sertifikat. Head units med åpen kildekode godtar det genererte; biler som bruker Googles head unit-programvare godtar bare et sertifikat utstedt av Google, som Alesle Avto ikke kan inkludere. Du kan importere et du har rett til å bruke (PEM-sertifikat + PKCS#8-nøkkel, eller PKCS#12).</string>
     <string name="cert_entry_subtitle">%1$s · til %2$s</string>
     <string name="cert_action_remove">Fjern</string>
     <string name="cert_action_import">Importer sertifikat…</string>
@@ -155,7 +155,7 @@
     <string name="msg_section_while_driving">Under kjøring</string>
     <string name="msg_toggle_dnd_title">Ikke forstyrr</string>
     <string name="msg_toggle_dnd_subtitle">Setter telefonen på lydløs mens tilkoblet; samtaler og prioriterte samtaler kommer fortsatt gjennom</string>
-    <string name="msg_check_dnd_access_title">Tillat AARE å slå på Ikke forstyrr</string>
+    <string name="msg_check_dnd_access_title">Tillat Alesle Avto å slå på Ikke forstyrr</string>
     <string name="msg_check_dnd_access_subtitle">Android spør én gang</string>
     <string name="msg_toggle_autoreply_title">Autosvar</string>
     <string name="msg_toggle_autoreply_subtitle">Svarer personer som skriver, én gang per samtale per kjøretur (ikke grupper)</string>
@@ -170,23 +170,23 @@
     <string name="audio_no_method">Ingen metode er satt opp ennå: velg en nedenfor.</string>
     <string name="audio_section_methods">Metoder, beste først</string>
     <string name="audio_policy_ready">Klar. Musikk og navigasjonsstemme går separat til bilen, telefonen forblir stille.</string>
-    <string name="audio_policy_not_ready">Som Android Auto: musikk og navigasjonsstemme separat, telefonhøyttaler av. Krever en rootet telefon: installer AARE som systemapp med Magisk-modulen (se README).</string>
+    <string name="audio_policy_not_ready">Som Android Auto: musikk og navigasjonsstemme separat, telefonhøyttaler av. Krever en rootet telefon: installer Alesle Avto som systemapp med Magisk-modulen (se README).</string>
     <string name="audio_shizuku_ready">Klar. Alt telefonen spiller går til bilen, inkludert navigasjonsstemme; telefonen forblir stille.</string>
     <string name="audio_shizuku_needs_android12">Krever Android 12 eller nyere.</string>
-    <string name="audio_shizuku_tap_allow">Shizuku kjører: trykk for å tillate AARE.</string>
+    <string name="audio_shizuku_tap_allow">Shizuku kjører: trykk for å tillate Alesle Avto.</string>
     <string name="audio_shizuku_install_hint">Ingen root nødvendig. Installer Shizuku, start det (trådløs feilsøking, én gang per omstart), og kom så tilbake hit.</string>
     <string name="audio_playback_ready">Klar. Bare media: ingen navigasjonsstemme, noen apper deltar ikke, og telefonen fortsetter også å spille.</string>
     <string name="audio_playback_not_ready">Fungerer overalt, med begrensninger: bare media, ingen navigasjonsstemme. Android spør om å ta opp skjermen: velg Hele skjermen (brukes også av telefonskjermen).</string>
-    <string name="audio_notice_setup_hint">Åpne AARE på telefonen og sett opp Bilaudio for å høre telefonen i bilen</string>
+    <string name="audio_notice_setup_hint">Åpne Alesle Avto på telefonen og sett opp Bilaudio for å høre telefonen i bilen</string>
 
     <!-- phone: phone screen feature -->
     <string name="phone_section_title">Telefonskjerm</string>
     <string name="phone_toggle_enable_title">Telefonskjerm i bilen</string>
-    <string name="phone_toggle_enable_subtitle">Telefonens egen skjerm, for apper AARE ikke kan være vert for (Google Maps, Waze). Pauset mens telefonen er låst, og under kjøring med mindre en navigasjonsapp veileder. Tilbys ikke på head unit-serveren med mindre aktivert der</string>
+    <string name="phone_toggle_enable_subtitle">Telefonens egen skjerm, for apper Alesle Avto ikke kan være vert for (Google Maps, Waze). Pauset mens telefonen er låst, og under kjøring med mindre en navigasjonsapp veileder. Tilbys ikke på head unit-serveren med mindre aktivert der</string>
     <string name="phone_check_touch_title">Berøring på telefonskjermen</string>
-    <string name="phone_check_touch_subtitle">Slå på AARE i Tilgjengelighet. Sideinnlastede apper kan først trenge "Tillat begrensede innstillinger" i AAREs appinfo</string>
+    <string name="phone_check_touch_subtitle">Slå på Alesle Avto i Tilgjengelighet. Sideinnlastede apper kan først trenge "Tillat begrensede innstillinger" i Alesle Avtos appinfo</string>
     <string name="phone_hint_touch_capture">Bildet bruker skjermopptak-tillatelsen (siden Bilaudio, velg Hele skjermen).</string>
-    <string name="phone_app_row_subtitle">Telefonens egen skjerm, for apper AARE ikke kan være vert for</string>
+    <string name="phone_app_row_subtitle">Telefonens egen skjerm, for apper Alesle Avto ikke kan være vert for</string>
 
     <!-- assistant: voice assistant settings and bar -->
     <string name="assistant_settings_title">Taleassistent</string>
@@ -209,8 +209,8 @@
     <string name="notif_trust_warning">Stol bare på en head unit du er tilkoblet akkurat nå</string>
     <string name="notif_untrusted_message">SHA-256 %1$s... %2$s, koble deretter til igjen.</string>
     <string name="notif_trust_reconnect_suffix">%1$s, koble deretter til igjen.</string>
-    <string name="notif_cert_changed_message">head unit-sertifikat endret: trykk på Stol på i varselet eller i AARE bare hvis programvaren er oppdatert, koble deretter til igjen</string>
-    <string name="notif_cert_untrusted_message">head unit-sertifikat ikke betrodd ennå: trykk på Stol på i varselet eller i AARE, koble deretter til igjen</string>
+    <string name="notif_cert_changed_message">head unit-sertifikat endret: trykk på Stol på i varselet eller i Alesle Avto bare hvis programvaren er oppdatert, koble deretter til igjen</string>
+    <string name="notif_cert_untrusted_message">head unit-sertifikat ikke betrodd ennå: trykk på Stol på i varselet eller i Alesle Avto, koble deretter til igjen</string>
     <string name="notif_car_nearby_title">Bil i nærheten</string>
     <string name="notif_car_nearby_text">Trykk for å koble til trådløst</string>
     <string name="notif_status_connecting_to">Kobler til %1$s</string>
@@ -227,9 +227,9 @@
     <string name="notif_navigation_title">Navigasjon</string>
     <string name="notif_navigation_no_app_text">Ingen navigasjonsapp i bilen</string>
     <string name="notif_assistant_title">Assistent</string>
-    <string name="notif_assistant_choose_text">Velg en taleassistent i AAREs innstillinger på telefonen</string>
+    <string name="notif_assistant_choose_text">Velg en taleassistent i Alesle Avtos innstillinger på telefonen</string>
     <string name="notif_assistant_no_car_screen">%1$s har ingen bilskjerm: den ble åpnet på telefonen</string>
-    <string name="notif_assistant_cant_open">%1$s kan ikke åpnes. Velg en annen assistent i AAREs innstillinger</string>
+    <string name="notif_assistant_cant_open">%1$s kan ikke åpnes. Velg en annen assistent i Alesle Avtos innstillinger</string>
     <string name="notif_parked_only_title">Ikke tilgjengelig under kjøring</string>
     <string name="notif_parked_only_text">Parker for å bruke dette</string>
     <string name="notif_empty">Ingen varsler</string>
@@ -271,7 +271,7 @@
     <string name="media_queue_empty">Køen er tom</string>
 
     <!-- msg: messaging screen (notifications-based conversations) -->
-    <string name="msg_no_access">Gi AARE varseltilgang på telefonen for å se meldinger her</string>
+    <string name="msg_no_access">Gi Alesle Avto varseltilgang på telefonen for å se meldinger her</string>
     <string name="msg_listener_not_ready">Ingenting å se her ennå</string>
     <string name="msg_reply_sent">Svar sendt</string>
     <string name="msg_reply_rejected">%1$s godtok ikke svaret</string>
@@ -291,7 +291,7 @@
     <string name="phone_tab_recents">Nylige</string>
     <string name="phone_tab_contacts">Kontakter</string>
     <string name="phone_tab_keypad">Tastatur</string>
-    <string name="phone_permissions_placeholder">Tillat samtaler, samtalehistorikk og kontakter i AARE på telefonen (Fullfør oppsettet).</string>
+    <string name="phone_permissions_placeholder">Tillat samtaler, samtalehistorikk og kontakter i Alesle Avto på telefonen (Fullfør oppsettet).</string>
     <string name="phone_notice_calling_title">Ringer</string>
     <string name="phone_no_recent_calls">Ingen nylige samtaler</string>
     <string name="phone_no_contacts">Ingen kontakter med et telefonnummer</string>
