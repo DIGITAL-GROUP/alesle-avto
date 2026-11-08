@@ -234,7 +234,7 @@ The assistant bar shows the assistant's car screen when it is a message (Lapin's
 open the assistant full screen; it closes by itself after the answer.
 
 **Car tools.** The assistant the voice button opens can act on the car through
-`content://net.prototux.aare.car` (`ContentResolver.call`): `call("tools")` returns tool specs in
+`content://uz.alesle.avto.car` (`ContentResolver.call`): `call("tools")` returns tool specs in
 the function-calling JSON schema, and `call("run", name, {"args": json})` runs one. AARE only
 answers that assistant, and only while a car (or the preview) is connected. The tools:
 
@@ -407,7 +407,7 @@ A Car App Library app decides which hosts it accepts (`HostValidator`).
   ```kotlin
   HostValidator.Builder(context)
       .addAllowedHosts(androidx.car.app.R.array.hosts_allowlist_sample)
-      .addAllowedHost("net.prototux.aare", "<sha256 of AARE's signing certificate>")
+      .addAllowedHost("uz.alesle.avto", "<sha256 of AARE's signing certificate>")
       .build()
   ```
 

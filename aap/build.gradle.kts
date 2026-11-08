@@ -36,7 +36,7 @@ tasks.register<JavaExec>("runPhoneSim") {
     group = "verification"
     description = "Serve AAP on TCP 5277 like the developer head-unit server and stream an H.264 file"
     classpath = sourceSets["test"].runtimeClasspath
-    mainClass.set("net.prototux.aare.aap.sim.PhoneSimKt")
+    mainClass.set("uz.alesle.avto.aap.sim.PhoneSimKt")
     maxHeapSize = "256m"
     workingDir = rootProject.projectDir
 }
@@ -46,7 +46,7 @@ tasks.register<JavaExec>("runHeadUnit") {
     group = "verification"
     description = "Connect to a phone on localhost:5277 as a head unit and record the projection"
     classpath = sourceSets["test"].runtimeClasspath
-    mainClass.set("net.prototux.aare.aap.sim.HeadUnitClientKt")
+    mainClass.set("uz.alesle.avto.aap.sim.HeadUnitClientKt")
     maxHeapSize = "256m"
     workingDir = rootProject.projectDir
 }

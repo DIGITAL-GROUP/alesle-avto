@@ -340,7 +340,7 @@ On a phone `hasSystemFeature(FEATURE_AUTOMOTIVE)` is false, so the permission pa
 ### 5.5 The durable solution (recommended primary mechanism)
 
 Get our host's signing-certificate SHA-256 digest into each app's `HostValidator`. Options, in order of leverage:
-1. **Upstream a patch** to CoMaps/Organic Maps/Tempus `createHostValidator()` adding our `<package, digest>` (or an allowlist resource they bundle). All three currently hardcode only the Google sample array; they would need to add `.addAllowedHost("net.prototux.aare", "<ourDigest>")`.
+1. **Upstream a patch** to CoMaps/Organic Maps/Tempus `createHostValidator()` adding our `<package, digest>` (or an allowlist resource they bundle). All three currently hardcode only the Google sample array; they would need to add `.addAllowedHost("uz.alesle.avto", "<ourDigest>")`.
 2. For apps we build/sign ourselves (Lapin), add the host to the allowlist directly — Lapin already exposes `car_hosts_allowlist`; we add our digest there.
 3. If an app can't be changed and is on a patched library, the only remaining accepted paths are same-uid (`sharedUserId` — impractical across signers) or uid 1000 (system app — only if our host is a privileged/system app, which is the realistic long-term answer for an AOSP-based build).
 

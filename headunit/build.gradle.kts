@@ -14,7 +14,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("net.prototux.aare.headunit.MainKt")
+    mainClass.set("uz.alesle.avto.headunit.MainKt")
     applicationName = "aare-headunit"
     applicationDefaultJvmArgs = listOf("-Xmx384m", "-Dsun.java2d.opengl=false")
 }
