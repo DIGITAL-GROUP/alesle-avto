@@ -26,7 +26,19 @@
     <string name="app_display_retry">Qayta urinish</string>
     <string name="app_display_open_itself">Ilovaning o‘zini ochish</string>
 
-    <!-- connection: wireless errors -->
+    <!-- connection: paired cars and wireless errors -->
+    <string name="setup_paired_title">Bluetooth orqali bog‘langan</string>
+    <string name="setup_paired_hint">Telefon bog‘langan avtomobillar. «Android Auto wireless» avtomobil oxirgi so‘ralganda bu xizmatni taklif qilgan-qilmaganini bildiradi; «Yangilash» qaytadan so‘raydi.</string>
+    <string name="setup_paired_empty">Bluetooth orqali bog‘langan avtomobil yo‘q. Telefonni Bluetooth sozlamalarida head unit bilan bog‘lang.</string>
+    <string name="setup_paired_bluetooth_off">Bluetooth o‘chiq.</string>
+    <string name="setup_paired_need_permission">Bog‘langan avtomobillarni ko‘rish uchun Alesle Avto’ga «Yaqin atrofdagi qurilmalar» ruxsatini bering.</string>
+    <string name="setup_paired_connected">Bluetooth: ulangan</string>
+    <string name="setup_paired_not_connected">Bluetooth: ulanmagan</string>
+    <string name="setup_paired_aa_yes">Android Auto wireless: bor</string>
+    <string name="setup_paired_aa_no">Android Auto wireless: yo‘q</string>
+    <string name="setup_paired_refreshing">Avtomobildan so‘ralmoqda…</string>
+    <string name="setup_action_connect_wirelessly">Simsiz ulanish</string>
+    <string name="setup_action_refresh_sdp">Yangilash (SDP)</string>
     <string name="notif_status_waiting_for_car">%1$s simsiz Android Auto’ni taklif qilishi kutilmoqda…</string>
     <string name="wireless_error_no_service">%1$s Bluetooth orqali simsiz Android Auto’ni taklif qilmayapti. Head unit’da simsiz rejimni yoqing (Open Headunit: WiFi rejimi), so‘ng Connection → Your cars bo‘limida «Simsiz ulanish»ni bosing.</string>
     <string name="wireless_error_wifi_off">Telefonda Wi-Fi o‘chiq. Uni yoqing va qayta ulaning.</string>

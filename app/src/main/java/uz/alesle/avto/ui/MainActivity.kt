@@ -413,6 +413,8 @@ private fun ConnectionSettings(settings: Settings) {
                     TextButton(onClick = { settings.forgetCar(name); cars = settings.knownCars }) { Text(stringResource(R.string.setup_action_forget)) }
                 }
             }
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+            PairedCars()
         }
         Section(stringResource(R.string.setup_section_trusted_head_units)) {
             Text(stringResource(R.string.setup_trusted_head_units_hint),
@@ -428,6 +430,91 @@ private fun ConnectionSettings(settings: Settings) {
                     }
                     TextButton(onClick = { pinned.forget(key); pins = pinned.all }) { Text(stringResource(R.string.setup_action_forget)) }
                 }
+            }
+        }
+    }
+}
+
+/**
+ * The cars paired over Bluetooth, whether each offers Android Auto wireless, and buttons to connect
+ * or to ask it again: wireless then never depends on a background broadcast arriving.
+ */
+@Composable
+private fun PairedCars() {
+    val ctx = LocalContext.current
+    val connector = remember { uz.alesle.avto.transport.wireless.WirelessConnector(ctx, uz.alesle.avto.DiagAapLog) }
+    fun read(): List<uz.alesle.avto.transport.wireless.WirelessConnector.PairedCar>? =
+        runCatching { connector.pairedCars() }.getOrNull()
+    var allowed by remember { mutableStateOf(connector.missingPermissions().none { it == android.Manifest.permission.BLUETOOTH_CONNECT }) }
+    var paired by remember { mutableStateOf(if (allowed) read() else null) }
+    var asking by remember { mutableStateOf(setOf<String>()) }
+    val btOn = remember(paired) { ctx.getSystemService(android.bluetooth.BluetoothManager::class.java)?.adapter?.isEnabled == true }
+    // Bonds, links and SDP answers change while this is open: re-read on each of them.
+    DisposableEffect(allowed) {
+        if (!allowed) return@DisposableEffect onDispose { }
+        val receiver = object : android.content.BroadcastReceiver() {
+            override fun onReceive(c: Context, i: Intent) {
+                if (i.action == android.bluetooth.BluetoothDevice.ACTION_UUID) {
+                    val d = androidx.core.content.IntentCompat.getParcelableExtra(i, android.bluetooth.BluetoothDevice.EXTRA_DEVICE, android.bluetooth.BluetoothDevice::class.java)
+                    d?.let { asking = asking - it.address }
+                }
+                paired = read()
+            }
+        }
+        val filter = android.content.IntentFilter().apply {
+            addAction(android.bluetooth.BluetoothDevice.ACTION_UUID)
+            addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED)
+            addAction(android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED)
+            addAction(android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED)
+            addAction(android.bluetooth.BluetoothAdapter.ACTION_STATE_CHANGED)
+        }
+        // Sent by the Bluetooth stack, which is not our uid: exported.
+        androidx.core.content.ContextCompat.registerReceiver(ctx, receiver, filter, androidx.core.content.ContextCompat.RECEIVER_EXPORTED)
+        onDispose { runCatching { ctx.unregisterReceiver(receiver) } }
+    }
+    // Permission granted on another screen while this one stays composed.
+    LaunchedEffect(Unit) {
+        if (!allowed) {
+            allowed = connector.missingPermissions().none { it == android.Manifest.permission.BLUETOOTH_CONNECT }
+            if (allowed) paired = read()
+        }
+    }
+    val muted = MaterialTheme.colorScheme.onSurfaceVariant
+    Text(stringResource(R.string.setup_paired_title), style = MaterialTheme.typography.titleSmall)
+    Text(stringResource(R.string.setup_paired_hint), style = MaterialTheme.typography.bodySmall, color = muted)
+    when {
+        !allowed -> Text(stringResource(R.string.setup_paired_need_permission), style = MaterialTheme.typography.bodyMedium)
+        !btOn -> Text(stringResource(R.string.setup_paired_bluetooth_off), style = MaterialTheme.typography.bodyMedium)
+        paired.isNullOrEmpty() -> Text(stringResource(R.string.setup_paired_empty), style = MaterialTheme.typography.bodyMedium)
+    }
+    if (!allowed || !btOn) return
+    paired.orEmpty().forEach { car ->
+        Column(Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Rounded.Bluetooth, null, tint = if (car.connected) MaterialTheme.colorScheme.primary else muted)
+                Spacer(Modifier.width(14.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(car.name, style = MaterialTheme.typography.bodyLarge)
+                    Text(car.address + " · " + stringResource(if (car.connected) R.string.setup_paired_connected else R.string.setup_paired_not_connected),
+                        style = MaterialTheme.typography.bodySmall, color = muted)
+                    Text(
+                        stringResource(when {
+                            car.address in asking -> R.string.setup_paired_refreshing
+                            car.aaWireless -> R.string.setup_paired_aa_yes
+                            else -> R.string.setup_paired_aa_no
+                        }),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (car.aaWireless && car.address !in asking) MaterialTheme.colorScheme.primary else muted,
+                    )
+                }
+            }
+            Row(Modifier.fillMaxWidth().padding(start = 38.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                TextButton(onClick = { uz.alesle.avto.service.ProjectionService.connectWirelessNow(ctx, car.address) }) {
+                    Text(stringResource(R.string.setup_action_connect_wirelessly))
+                }
+                TextButton(enabled = car.address !in asking, onClick = {
+                    if (runCatching { connector.refresh(car.address) }.getOrDefault(false)) asking = asking + car.address
+                }) { Text(stringResource(R.string.setup_action_refresh_sdp)) }
             }
         }
     }
