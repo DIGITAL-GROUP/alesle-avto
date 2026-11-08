@@ -1,18 +1,15 @@
 package net.prototux.aare.audio
 
 import android.annotation.SuppressLint
-import android.content.AttributionSource
 import android.content.Context
-import android.content.ContextWrapper
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.os.Build
 import android.os.ParcelFileDescriptor
-import android.os.Process
 import android.util.Log
-import androidx.annotation.RequiresApi
-import org.lsposed.hiddenapibypass.HiddenApiBypass
+import net.prototux.aare.shell.ShellContext
+import net.prototux.aare.shell.ShellContexts
 import java.io.FileOutputStream
 import kotlin.system.exitProcess
 
@@ -49,7 +46,7 @@ class ShellAudioService : IShellAudio.Stub {
                 .build()
             val chunk = sampleRate / 50 * channels * 2
             val r = AudioRecord.Builder()
-                .setContext(ShellContext(context ?: systemContext()))
+                .setContext(ShellContext(context ?: ShellContexts.systemContext()))
                 .setAudioSource(MediaRecorder.AudioSource.REMOTE_SUBMIX)
                 .setAudioFormat(format)
                 .setBufferSizeInBytes(maxOf(chunk * 8, AudioRecord.getMinBufferSize(sampleRate, format.channelMask, format.encoding)))
@@ -94,27 +91,7 @@ class ShellAudioService : IShellAudio.Stub {
         exitProcess(0)
     }
 
-    /** The system context of this (app_process) process. */
-    @SuppressLint("PrivateApi")
-    private fun systemContext(): Context {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) HiddenApiBypass.addHiddenApiExemptions("Landroid/app/ActivityThread;")
-        val at = Class.forName("android.app.ActivityThread")
-        val thread = at.getMethod("currentActivityThread").invoke(null) ?: at.getMethod("systemMain").invoke(null)
-        return at.getMethod("getSystemContext").invoke(thread) as Context
-    }
-
-    /** A context that says "the shell", so the recording is attributed to the uid running it. */
-    private class ShellContext(base: Context) : ContextWrapper(base) {
-        override fun getPackageName() = SHELL_PACKAGE
-        override fun getOpPackageName() = SHELL_PACKAGE
-        override fun getApplicationContext(): Context = this
-        @RequiresApi(Build.VERSION_CODES.S) // only used from Android 12, see start()
-        override fun getAttributionSource(): AttributionSource =
-            AttributionSource.Builder(Process.myUid()).setPackageName(SHELL_PACKAGE).build()
-    }
-
     private companion object {
         const val TAG = "AareShellAudio"
-        const val SHELL_PACKAGE = "com.android.shell"
     }
 }

@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.prototux.aare.R
 import net.prototux.aare.Settings
+import net.prototux.aare.apps.AppDisplay
 import net.prototux.aare.apps.PhoneApps
 import net.prototux.aare.car.Calls
 import net.prototux.aare.car.DashboardInfo
@@ -91,6 +92,10 @@ class CarRuntime(
     var projection: () -> MediaProjection? = { null }
     /** Guidance from a navigation app on the phone (Google Maps, Waze…) changed, or ended (null). */
     var onPhoneGuidance: ((PhoneGuidance?) -> Unit)? = null
+
+    private var appDisplayInstance: AppDisplay? = null
+    /** The display phone apps run on ([CarAppKind.PHONE_APP]), created on first use, released in [stop]. */
+    val appDisplay: AppDisplay get() = appDisplayInstance ?: AppDisplay(context).also { appDisplayInstance = it }
 
     // ------------------------------------------------------------------ HostEnvironment
 
@@ -339,6 +344,9 @@ class CarRuntime(
         connections.clear()
         clusterConnections.values.forEach { it.release() }
         clusterConnections.clear()
+        // The car is gone: close the phone apps shown on it (the display destroys its content).
+        appDisplayInstance?.release()
+        appDisplayInstance = null
         if (ownsMedia) media.release()
     }
 
