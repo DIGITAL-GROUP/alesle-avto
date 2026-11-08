@@ -1,512 +1,313 @@
 # Alesle Avto
 
+**Alesle Avto** — telefoningizni avtomobil ekraniga (head unit) Android Auto kabi ulaydigan dastur.
+Xarita, musiqa, qo‘ng‘iroqlar va xabarlar avtomobil ekranida ko‘rinadi. Yandex Xaritalar, Yandex
+Musiqa, YouTube kabi telefon ilovalarini ham avtomobil ekranida ochish mumkin.
+
+- Google xizmatlari (Google Play Services) **kerak emas**: Xitoy proshivkali telefonlarda ham ishlaydi.
+- Kabel (USB) orqali yoki **simsiz** (Bluetooth + Wi-Fi) ulanadi.
+- Ekrandagi yozuvlar o‘zbek va ingliz tillarida.
+
 > Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later.
-> This fork adds a restyled car screen (in English and Uzbek), the phone's own apps on the car
-> screen through Shizuku, and the Alesle Avto name. Not affiliated with Google.
-
-Alesle Avto is an open-source reimplementation of the phone side of Android Auto. The phone talks the
-Android Auto projection protocol (AAP) to the car's head unit, draws the car screen itself, and
-runs apps that Google's Android Auto keeps out:
-
-- **Navigation:** CoMaps, Organic Maps and other apps built with the AndroidX Car App Library,
-  F-Droid builds included.
-- **Media:** Tempus (Subsonic/Navidrome) and any app with a media3 or `MediaBrowserService`
-  library: podcasts, radio, local players.
-- **Messaging:** WhatsApp, Signal, SMS and any app whose notifications Android Auto can read:
-  conversations read aloud, marked as read, answered with the car keyboard when parked.
-- **Voice assistant:** the steering-wheel voice button opens the phone's default digital
-  assistant, or another one you pick. Assistants with a car app, such as
-  [Lapin](https://github.com/prototux/lapin), run on the car screen and hear the car's microphone.
-
-It needs no Google Play Services.
-
-![The car screen: CoMaps guiding, the music, and the bar along the bottom](docs/screenshots/main.png)
+> Alesle Avto prototux’ning AARE loyihasi asosida yaratilgan. Google bilan bog‘liq emas.
+> Android Auto — Google LLC’ning savdo belgisi.
 
 > [!WARNING]
-> **This is early software.** The protocol stack is tested against a simulated head unit, against
-> Alesle Avto's own desktop head unit and against Google's Desktop Head Unit up to the certificate check
-> (see below). So far it has been tried in two real cars, one over wireless and one over USB (see
-> [Tested on real head units](#tested-on-real-head-units)). Don't depend on it while driving
-> until you have tried it in yours.
+> Dastur hali yangi. Avval mashina to‘xtab turganda sinab ko‘ring. Haydash paytida ekran bilan
+> ovora bo‘lmang.
 
-## What works
+---
 
-| Part | State |
+## Mundarija
+
+1. [Nimalar kerak](#1-nimalar-kerak)
+2. [O‘rnatish](#2-ornatish)
+3. [Birinchi sozlash](#3-birinchi-sozlash)
+4. [Avtomobilga ulash](#4-avtomobilga-ulash)
+   - [A. Kabel (USB) orqali](#a-kabel-usb-orqali)
+   - [B. Simsiz (wireless)](#b-simsiz-wireless)
+   - [C. Zaxira yo‘l: telefon hotspot’i orqali](#c-zaxira-yol-telefon-hotspoti-orqali)
+5. [Har safar mashinaga o‘tirganda](#5-har-safar-mashinaga-otirganda)
+6. [Avtomobil ekranidan foydalanish](#6-avtomobil-ekranidan-foydalanish)
+7. [Telefon ilovalari avtomobil ekranida (Yandex, YouTube)](#7-telefon-ilovalari-avtomobil-ekranida)
+8. [Ovozni avtomobilga chiqarish](#8-ovozni-avtomobilga-chiqarish)
+9. [Telefondagi sozlamalar](#9-telefondagi-sozlamalar)
+10. [Muammo bo‘lsa](#10-muammo-bolsa)
+11. [Texnik ma’lumot va litsenziya](#11-texnik-malumot-va-litsenziya)
+
+---
+
+## 1. Nimalar kerak
+
+| Nima | Izoh |
 |---|---|
-| Protocol: framing, TLS 1.2 (phone = server), version, service discovery, channels | done, unit and loopback tests |
-| Video: H.264 hardware encoding of a private virtual display, ack flow control, focus, key-frame recovery | done |
-| Adaptive video bitrate: lower when the car or a weak wireless link falls behind, back up when it catches up | new, untested on hardware |
-| Portrait head units: bottom bar, stacked dashboard, CarPlay mode | new, tested only with the desktop head unit's `--portrait` |
-| Touch, keys, rotary controller, steering-wheel voice/media/home/back keys | done |
-| Sensors: driving restrictions, night mode, car GPS and compass (passed to nav apps) | done |
-| Every other sensor the car offers (RPM, odometer, fuel and range, temperature, HVAC, doors, lights, tyres, accelerometer, gyroscope…) for car apps (car hardware API) and the assistant | new, tested only with the desktop head unit's fake car |
-| Car App Library host: handshake, templates, map surface, navigation trips, alerts, car hardware, microphone | done |
-| Template rendering (list, grid, pane, message, search, sign-in, tabs, navigation, map...) | done |
-| Media apps: browse, search, now playing, transport, active session tracking | done |
-| Messaging apps: conversations from notifications, read aloud, mark as read, reply when parked | new |
-| Turn-by-turn to the instrument cluster and now-playing to the head unit | done |
-| Instrument-cluster video (cars with a cluster display): the navigation app's cluster map, or Alesle Avto's turn card | new, tested only with the desktop head unit's `--cluster` |
-| Directions from Google Maps, Waze… on the phone, on the dashboard and the cluster | new, untested with Google Maps and Waze |
-| Phone screen in the car, with touch | new, untested on hardware |
-| Phone audio to the car: screen capture, Shizuku, or system audio routing like Android Auto (music and navigation voice apart) | screen capture tested; Shizuku and system routing new, untested |
-| Voice assistant as a bar over the screen, with car tools | new, untested in a car |
-| Car microphone to apps (any `CarAudioRecord` app) | done |
-| Phone status to the car (call state, caller name and photo, signal), battery level; the car's call buttons answer and hang up | new, tested only with the desktop head unit |
-| More audio buffering after the car reports underflows | new, untested on hardware |
-| USB (AOA) | done, tested on one head unit (see [Tested on real head units](#tested-on-real-head-units)) |
-| Wireless (Bluetooth bootstrap + Wi-Fi + TCP) | done, tested on one head unit (see [Tested on real head units](#tested-on-real-head-units)) |
-| Developer head-unit server over adb (DHU, openauto, Headunit Revived), optional LAN TCP 5277 | done |
+| **Android telefon** | Android 8 yoki yangisi. Telefon ilovalarini avtomobil ekranida ochish uchun Android 12+. |
+| **Avtomobil ekrani (head unit)** | Android Auto’ni qo‘llaydigan ekran, yoki **Open Headunit** dasturi o‘rnatilgan Android magnitola. |
+| **Shizuku** (ixtiyoriy) | Telefon ilovalari (Yandex Xaritalar va boshqalar) avtomobil ekranida ishlashi va ovoz uchun. [shizuku.rikka.app](https://shizuku.rikka.app/) |
 
-## Not done yet
+---
 
-What Android Auto or the protocol offers that Alesle Avto doesn't do (yet).
+## 2. O‘rnatish
 
-Not planned (rare, or redundant with what Alesle Avto draws itself):
+Hozircha tayyor APK fayl e’lon qilinmagan. Ikki yo‘l bor:
 
-| Missing | Why not |
+**Yo‘l 1 — tayyor APK fayl bilan.** Kimdir sizga `app-debug.apk` faylini bergan bo‘lsa:
+
+1. Faylni telefonga ko‘chiring va ustiga bosing.
+2. Telefon "noma’lum manbadan o‘rnatish"ga ruxsat so‘rasa, ruxsat bering.
+3. **O‘rnatish**ni bosing.
+
+**Yo‘l 2 — kompyuterda o‘zingiz yig‘ish.** Kompyuterda Android SDK va JDK bo‘lishi kerak:
+
+```sh
+git clone git@github.com:DIGITAL-GROUP/alesle-avto.git
+cd alesle-avto
+./build.sh
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+> **Muhim:** yangilashda doim `adb install -r` ishlating. Dasturni **o‘chirib qayta o‘rnatmang**:
+> ishonchli head unit’lar, ruxsatlar va Shizuku ruxsati o‘chib ketadi.
+
+Dastur identifikatori `uz.alesle.avto`. U eski AARE (`net.prototux.aare`) bilan birga tura oladi.
+Lekin ikkalasi bir vaqtda o‘rnatilgan bo‘lsa, ba’zi avtomobil ilovalari Alesle Avto’ni tanimaydi.
+Shuning uchun AARE’ni o‘chirib qo‘ygan ma’qul. O‘chirgandan keyin telefonni bir marta qayta yoqing.
+
+---
+
+## 3. Birinchi sozlash
+
+Alesle Avto’ni oching. Bosh ekranda **Finish setting up** (sozlashni tugatish) ro‘yxati turadi.
+Har bir qatorni bosib, so‘ralgan ruxsatni bering:
+
+1. **Permissions** — mikrofon, joylashuv, Bluetooth, yaqin atrofdagi qurilmalar (nearby devices),
+   bildirishnomalar, qo‘ng‘iroqlar, kontaktlar, kalendar. Hammasiga **Ruxsat berish**ni bosing.
+2. **Notification access** — xabarlar va "hozir nima ijro etilyapti" avtomobilda ko‘rinishi uchun.
+   Ochilgan ro‘yxatda **Alesle Avto**ni yoqing.
+3. **Car audio** — telefon ovozi avtomobil karnaylaridan chiqishi uchun
+   (batafsil: [8-bo‘lim](#8-ovozni-avtomobilga-chiqarish)).
+
+**Xiaomi / HyperOS / MIUI telefonlarda qo‘shimcha** (aks holda telefon dasturni orqa fonda
+"uxlatib" qo‘yadi va simsiz ulanish o‘z-o‘zidan boshlanmaydi):
+
+- *Sozlamalar → Ilovalar → Alesle Avto → Avtomatik ishga tushirish* (Autostart) — **yoqing**.
+- *Sozlamalar → Ilovalar → Alesle Avto → Batareya* — **Cheklovsiz** (No restrictions) ni tanlang.
+- Oxirgi ilovalar ro‘yxatida Alesle Avto’ni **yuqoriga surib yopmang**: HyperOS bunda dasturni
+  butunlay to‘xtatadi.
+
+---
+
+## 4. Avtomobilga ulash
+
+### A. Kabel (USB) orqali
+
+Eng oddiy va eng ishonchli yo‘l.
+
+1. Telefonni avtomobilning Android Auto USB portiga (yoki Open Headunit o‘rnatilgan magnitolaga)
+   kabel bilan ulang.
+2. Telefonda "Alesle Avto’ni ochish?" degan savol chiqsa, **OK** ni bosing.
+3. **Birinchi marta:** telefonda **"New head unit"** (yangi head unit) bildirishnomasi chiqadi.
+   **Trust** (ishonish) tugmasini bosing, so‘ng kabelni chiqarib qayta ulang.
+4. Avtomobil ekranida Alesle Avto paydo bo‘ladi.
+
+> Faqat hozir o‘zingiz ulagan head unit uchun **Trust**ni bosing.
+
+### B. Simsiz (wireless)
+
+Simsiz ulanish uch qadamda ishlaydi: telefon avtomobil bilan **Bluetooth** orqali gaplashadi,
+avtomobil o‘z **Wi-Fi** tarmog‘i nomi va parolini beradi, telefon o‘sha tarmoqqa ulanadi.
+
+**Bir martalik tayyorgarlik:**
+
+1. Telefonda **Bluetooth** va **Wi-Fi** yoqilgan bo‘lsin. Wi-Fi biror tarmoqqa ulanmagan
+   bo‘lsa ham, **yoqilgan** bo‘lishi shart.
+2. Telefonni avtomobil bilan Bluetooth orqali **bog‘lang** (pair): telefonning Bluetooth
+   sozlamalarida avtomobil nomini (masalan, *Bakirov's*) tanlang.
+3. Alesle Avto → **Connection** → **Wireless** yoqilgan bo‘lsin (odatda yoqilgan).
+4. Head unit’da simsiz Android Auto yoqilgan bo‘lsin. **Open Headunit**da: Android Auto
+   rejimini **WiFi** qilib qo‘ying va ekranda *"Waiting for your phone"* chiqsin.
+
+**Ulanish:**
+
+1. Mashinani yoqing. Telefon Bluetooth orqali avtomobilga o‘zi ulanadi.
+2. Alesle Avto avtomobilni sezib, ulanishni o‘zi boshlaydi. Bildirishnomada
+   *"Connecting wirelessly…"* yoki *"Waiting for … to offer wireless Android Auto…"* chiqadi.
+   Head unit simsiz rejimni keyinroq yoqsa ham, dastur bir daqiqagacha kutadi.
+3. Telefonda **"Searching for device…"** oynasi chiqadi. Ro‘yxatda avtomobil tarmog‘i (masalan,
+   `DIRECT-QA-Android_45e4`) paydo bo‘lishini kuting, **ustiga bosing**, keyin **Connect**ni bosing.
+   Head unit har safar bir xil tarmoqni ishlatsa, bu oyna faqat **birinchi marta** chiqadi.
+   Open Headunit’da *Keep the same WiFi Direct network* yoqilgan bo‘lsin.
+4. Bir necha soniyada avtomobil ekranida Alesle Avto paydo bo‘ladi.
+
+**O‘zi ulanmasa — qo‘lda ulash:**
+
+Alesle Avto → **Connection** → pastda **Your cars** → **Paired over Bluetooth**. Bu yerda
+bog‘langan avtomobillar ko‘rinadi:
+
+| Yozuv | Ma’nosi |
 |---|---|
-| Radio service (AM/FM/DAB tuning, presets) | Very few head units offer it to the phone. |
-| Vendor extensions | Specific to each car maker, undocumented. |
-| Generic notifications service | Alesle Avto shows notifications on its own screen; sending them to the car would show them twice. |
-| Native media browser service | Same: media apps are browsed on Alesle Avto's own screen. |
-| User switch, connected-devices list, service discovery update | Only matter with several phones in the car or channels changing during a connection. |
-| Audio kept open with silence | Alesle Avto closes the car's audio stream after a few seconds of silence and reopens it when sound comes back, like Android Auto does for navigation prompts. |
+| **Bluetooth: connected / not connected** | Telefon hozir avtomobilga Bluetooth orqali ulanganmi |
+| **Android Auto wireless: yes** | Avtomobil simsiz Android Auto’ni taklif qilyapti — ulanish mumkin |
+| **Android Auto wireless: no** | Avtomobil bu xizmatni hozir taklif qilmayapti (head unit’da simsiz rejim o‘chiq) |
 
-## Requirements
+- **Refresh (SDP)** — avtomobildan xizmatlarini qaytadan so‘raydi. Head unit’da simsiz rejimni
+  yoqqandan keyin bosing: yozuv **yes**ga o‘zgarishi kerak.
+- **Connect wirelessly** — ulanishni hozir, qo‘lda boshlaydi.
 
-- A phone with **Android 8** or newer. Some features need a newer Android:
+> **Maslahat:** Wi-Fi signali zaif bo‘lsa (telefon head unit’dan uzoqda), ulanish sekin bo‘ladi
+> yoki tasvir qotadi. Telefonni head unit’ga yaqin qo‘ying.
 
-  | Feature | Needs |
-  |---|---|
-  | Car audio by screen capture | Android 10 (on Android 8 and 9: the privileged install, or the car's Bluetooth) |
-  | Car audio through Shizuku | Android 12 |
-  | WPA3-only car Wi-Fi (wireless) | Android 10 (WPA2 and WPA2/WPA3 work from Android 8) |
-  | Signal bars on the car screen | Android 9 |
-  | Hanging up or declining from the car | Android 9 |
+### C. Zaxira yo‘l: telefon hotspot’i orqali
 
-  On Android 17, wireless head units and the head unit server's network mode also need the
-  *Local network* permission (asked during setup): without it, Android silently drops the
-  connection to the head unit.
+Head unit simsiz ulanishni umuman qo‘llamasa (yoki telefon sertifikatini rad etsa), lekin unda
+**Open Headunit** o‘rnatilgan bo‘lsa, bu yo‘l doim ishlaydi:
 
-- A head unit that accepts Alesle Avto's certificate (see *Compatibility*), or a computer to run the
-  desktop head unit.
+1. Telefonda **Hotspot** (modem rejimi)ni yoqing.
+2. Head unit’ni telefon hotspot’iga Wi-Fi orqali ulang.
+3. Alesle Avto → **Advanced** → **Head unit server**ni yoqing. Shu yerda:
+   - **Accept from the network** — **yoqing**;
+   - **Turn off network mode after a session** — **o‘chiring** (aks holda har safar qayta
+     yoqishingiz kerak bo‘ladi).
+4. Open Headunit’da **Headunit Server** rejimini tanlang. Telefon manzili sifatida hotspot
+   manzilini kiriting: head unit’ning Wi-Fi sozlamalarida "gateway / router" deb ko‘rsatiladi.
+   Port: **5277**.
+5. Open Headunit’da ulanishni boshlang.
 
-## Installing
+> Ogohlantirish: **Accept from the network** yoqilganda, telefoningiz bilan bir Wi-Fi’dagi
+> istalgan qurilma parolsiz ulanishi mumkin. Buni faqat o‘z hotspot’ingizda ishlating.
 
-Alesle Avto has no published releases yet: build it (see *Building*) and
-`adb install -r app/build/outputs/apk/debug/app-debug.apk`. Its application id is
-`uz.alesle.avto`, so it installs next to AARE (`net.prototux.aare`) rather than replacing it.
+---
 
-Upstream AARE's releases ([github.com/prototux/AARE/releases](https://github.com/prototux/AARE/releases))
-are signed with AARE's release key, SHA-256
-`63:EF:0D:E1:DB:2C:09:BB:7F:B2:5C:E7:EA:4A:DC:35:38:AF:42:3B:88:52:78:B5:9D:F2:88:9C:7F:18:28:6F`;
-they are AARE, not Alesle Avto.
+## 5. Har safar mashinaga o‘tirganda
 
-## AA Key extraction
+**Kabel bilan:** telefonni USB’ga ulang. Tamom.
 
-As head units based on the official Google's host implementation checks the certificate/key of Alesle Avto,
-in order to use those, key extraction is needed:
+**Simsiz:**
 
-1. On your computer, clone this repository, or use **Code → Download ZIP** on GitHub and
-   extract it. Open a terminal in the repository folder, where [extract_key.py](extract_key.py)
-   is located alongside this README. For Git:
+1. Telefonda **Bluetooth** va **Wi-Fi** yoqilgan bo‘lsin.
+2. Mashinani yoqing. Head unit’da Open Headunit **WiFi** rejimida bo‘lsin.
+3. 10–60 soniya kuting: Alesle Avto o‘zi ulanadi.
+4. Ulanmasa: Alesle Avto → **Connection** → **Your cars** → **Connect wirelessly**.
 
-   ```sh
-   git clone <this repository's URL> AlesleAvto
-   cd AlesleAvto
-   ```
+---
 
-2. Download the APKm of Android Auto/com.google.android.projection.gearhead, for example from
-   [APKPure](https://apkpure.com/fr/android-auto/com.google.android.projection.gearhead) or
-   [APKMirror](https://www.apkmirror.com/apk/google-inc/android-auto/), and place it in the
-   repository folder.
+## 6. Avtomobil ekranidan foydalanish
 
-3. With Python 3 installed on your computer, run the script from that folder, replacing the
-   filename with the name of your downloaded APKm:
+**Bosh ekran (Dashboard):** xarita yoki yo‘nalish, hozir ijro etilayotgan musiqa, keyingi
+kalendar tadbiri. Orqa fonga rasm (wallpaper) qo‘yish mumkin.
 
-   ```sh
-   python3 extract_key.py com.google.android.projection.gearhead.apkm
-   ```
+**Panel (chetdagi yoki pastdagi qator):**
 
-4. The key and certificate are the `carservice_key.pem` and `carservice_cert.pem`. Copy them on your phone.
+- **Orqaga** (←) — oldingi ekranga qaytadi. Telefon ilovasida "orqaga" bosadi; ilovada boshqa
+  orqaga qaytadigan joy qolmasa, ilovalar menyusiga qaytadi.
+- **Menyu / Bosh sahifa** — ilovalar ro‘yxati yoki bosh ekran.
+- **Ovoz tugmasi** — ovozli yordamchi.
+- O‘rtada: navigatsiya, musiqa, oxirgi ishlatilgan ilovalar, **Telefon** va **Sozlamalar**.
+- Chetda: soat, ob-havo, telefon signali, batareya, bildirishnomalar.
 
-5. Open those two files with Alesle Avto. It should now work with the head unit.
+Avtomobilning o‘z "orqaga" tugmasi ham xuddi shunday ishlaydi.
 
-## Using it
+**Ilovalar menyusida ikki bo‘lim:**
 
-1. Open Alesle Avto on the phone and finish *Finish setting up*: permissions, notification access (for
-   messages, directions from Google Maps and Waze, and now playing) and car audio (see
-   [Car audio](#car-audio)).
-2. Have a look at the settings pages (car screen, apps, voice assistant, messages, car audio,
-   connection). They mirror Android Auto's.
-3. Plug the phone into the car's Android Auto USB port. For wireless, pair it with the car over
-   Bluetooth first.
-4. To try it without a car, tap **Preview car screen**: it shows the car UI on the phone with the
-   same apps, or use the desktop head unit below.
+- **Avto ilovalar** — avtomobil uchun maxsus ilovalar (CoMaps, Organic Maps, musiqa ilovalari va h.k.).
+- **Telefon ilovalari** — telefondagi istalgan ilova (Yandex Xaritalar, Yandex Musiqa, YouTube…).
+  Yuqoridagi qidiruv maydoniga ilova nomini yozing: natijalar klaviatura ustida chiqadi.
 
-The bar is laid out like Android Auto's: on a side next to the driver, or along the bottom
-(*Car screen* in the settings). It holds:
+**Ichki ilovalar:**
 
-- at the driver's end, the voice button and the menu button (the app grid on the home screen,
-  home anywhere else);
-- in the middle, the navigation app, the media app, the apps used last, Phone and Settings;
-- at the far end, the clock, the weather, the phone's signal and battery, and the notification
-  bell.
+- **Telefon** — oxirgi qo‘ng‘iroqlar, sevimli kontaktlar, raqam terish (to‘xtab turganda).
+  Kiruvchi qo‘ng‘iroqda **Answer** (javob) va **Decline** (rad etish) chiqadi.
+- **Bildirishnomalar** — oxirgi xabarlar, ovoz chiqarib o‘qish.
+- **Sozlamalar** — ranglar, panel joylashuvi, uslub.
 
-The dashboard shows the map (or directions from Google Maps or Waze), what's playing and the next
-calendar event, over a wallpaper if you pick one. On very wide screens (1920x720 and up) it shows
-three cards side by side. The weather comes from [Open-Meteo](https://open-meteo.com/) (no account,
-no Google), asked for an approximate position (about 10 km); you can turn it off.
+**Haydash paytida** xavfsizlik uchun ba’zi narsalar (yozish, uzun ro‘yxatlar, telefon
+ilovalari) cheklanadi: faqat navigatsiya va musiqa ilovalari qoladi. Yo‘lovchi ishlatayotgan
+bo‘lsa: telefonda *Car screen → Driving → Passenger mode*. Haydovchi esa haydash paytida
+ekranga tegmasligi kerak.
 
-**Instrument cluster.** On cars whose head unit offers a cluster display, Alesle Avto sends it its own
-video, like Android Auto: the navigation app's cluster map when the app supports it
-(`androidx.car.app.category.FEATURE_CLUSTER`), otherwise a turn card with the next maneuver, its
-distance, the road and the arrival time (also for Google Maps and Waze directions). Without
-guidance it shows the time and what's playing.
+---
 
-Built-in car apps:
+## 7. Telefon ilovalari avtomobil ekranida
 
-- **Phone:** recent calls, favourite contacts and a keypad (when parked). Incoming calls show
-  over any screen with *Answer* and *Decline*, then a strip with the caller, the duration and
-  *Hang up*. Calls go through the car's Bluetooth hands-free link as usual.
-- **Notifications:** the latest messages, with *Read aloud* and *Mark read*.
-- **Settings:** colors, bar position, a dark bar even by day, style, passenger mode, message
-  notifications, phone audio.
+Yandex Xaritalar, Yandex Navigator, Yandex Musiqa, YouTube kabi ilovalar avtomobil ekranida
+**to‘liq ishlaydi**: barmoq bilan bosish, surish, ikki barmoq bilan kattalashtirish. Ular
+telefonning o‘z ekranini band qilmaydi: telefon qulflangan bo‘lsa ham ishlaydi.
 
-On the phone, the *Apps* page sets which apps show in the car and in which order, and the
-*Messages* page has Android Auto's driving options: Do Not Disturb while connected (calls and
-priority conversations still come through) and an automatic reply, once per conversation per
-drive.
+Buning uchun **Shizuku** kerak (Android 12+):
 
-**Passenger mode** (*Car screen > Driving* on the phone, or *Settings* in the car) ignores the
-car's driving status: typing a destination, long lists and the phone screen stay available while
-moving, for a passenger. The driver must not use the screen while driving.
-- **Phone screen:** the phone's own screen (see below).
+1. Telefonga **Shizuku** ilovasini o‘rnating.
+2. Shizuku’ni ishga tushiring (*Wireless debugging* orqali). Bu telefon har qayta yoqilganda
+   **bir marta** qilinadi.
+3. Avtomobil ekranida **Telefon ilovalari** bo‘limidan ilovani birinchi marta ochganda
+   **Ruxsat berish**ni bosing va telefonda Shizuku so‘rovini tasdiqlang.
 
-As an easter egg, *Settings > Style > CarPlay* gives the car screen a CarPlay-like look. Alesle Avto is
-not affiliated with Apple; CarPlay is a trademark of Apple Inc.
+Ilova avtomobil ekranida doim tik turadi va aylanmaydi. Ekranning bo‘sh qolgan chetlari to‘q
+rangda bo‘ladi.
 
-| | |
-|---|---|
-| ![The voice assistant (Lapin) listening over the map](docs/screenshots/assistant.png) | ![All apps](docs/screenshots/menu.png) |
-| The voice button: the assistant as a bar over the screen | All apps |
-| ![The car's settings](docs/screenshots/settings.png) | |
-| The car's settings | |
+---
 
-### Which apps appear
+## 8. Ovozni avtomobilga chiqarish
 
-| Kind of app | Found by | In Alesle Avto |
+Alesle Avto → **Car audio**. Telefoningiz qo‘llaydigan eng yaxshi usulni tanlang:
+
+| Usul | Nima kerak | Navigatsiya ovozi |
 |---|---|---|
-| Car App Library apps (CoMaps, Organic Maps, OsmAnd, EV charging…) | `androidx.car.app.CarAppService` | yes |
-| Media apps | `MediaBrowserService` / media3 `MediaLibraryService` | yes |
-| Messaging apps | `<uses name="notification"/>` in `automotive_app_desc`, and the default SMS app | yes, from their notifications |
-| Google Maps, Waze and other apps on Google's private car interface | Android Auto only | no |
+| **Shizuku** | Shizuku ishlab turgan bo‘lishi, Android 12+ | ha, musiqa bilan birga |
+| **Ekranni yozib olish ruxsati** | bir marta ruxsat (*Butun ekran*ni tanlang) | yo‘q, telefonda qoladi |
 
-Some apps, Google Maps and Waze among them, draw their car screen through an undocumented
-interface that only Google's Android Auto app can host, and they check that the host is Google's.
-Alesle Avto can't host them. Alesle Avto's settings list every app that declares Android Auto support but that
-Alesle Avto can't show, with the reason. Two things make up for it:
+Ba’zi avtomobillar telefon ovozini Bluetooth orqali ijro etaveradi: unda bu sozlamani bo‘sh
+qoldiring.
 
-- **Their directions in the car.** While Google Maps, Waze or another app guides you on the
-  phone, Alesle Avto reads its navigation notification and shows the next turn, the distance and the
-  arrival time on the dashboard and on the car's instrument cluster. Their voice prompts reach
-  the car through the phone's Bluetooth link.
-- **Phone screen.** An entry in the car's app list that shows the phone's own screen, so you can
-  use those apps from the car:
-  - it uses the screen-capture permission of *Car audio and phone screen* (choose *Entire
-    screen* when Android asks);
-  - touching it needs Alesle Avto's accessibility service (*Touch on the phone screen* in *Setup*;
-    for a sideloaded APK, Android may first ask you to *Allow restricted settings* in Alesle Avto's
-    app info);
-  - it is off by default (turn on *Phone screen in the car* in *Setup*), and not offered on a
-    session from the developer head unit server unless you also turn on *Phone screen on the
-    server* under *Head unit server* (risky: whoever connects sees the phone's screen and can tap
-    on it);
-  - the phone must stay unlocked: the mirror and the touch replay pause while it is locked, and
-    the picture is the phone's, in portrait unless you turn the phone;
-  - while driving it is paused unless a navigation app is in front and guiding.
+---
 
-### Voice assistant
+## 9. Telefondagi sozlamalar
 
-| Choice | What the voice button does |
+Alesle Avto bosh ekranidagi bo‘limlar:
+
+| Bo‘lim | Nima uchun |
 |---|---|
-| **Same as the phone** (default) | the phone's default digital assistant (*Settings > Apps > Default apps > Digital assistant*) |
-| an assistant with a car app (e.g. [Lapin](https://github.com/prototux/lapin)) | a bar over the current screen, like Android Auto's assistant: it listens through the car's microphone and answers right away |
-| any other assistant | opens it on the phone; it uses the phone's microphone |
+| **Car screen** | Ranglar, panel qayerda turishi, orqa fon rasmi, ob-havo, yo‘lovchi rejimi |
+| **Apps** | Avtomobilda qaysi ilovalar va qaysi tartibda ko‘rinishi |
+| **Voice assistant** | Ovoz tugmasi qaysi yordamchini ochishi |
+| **Messages** | Xabarlar bildirishnomasi, ovoz chiqarib o‘qish, haydash paytida "Bezovta qilmang" |
+| **Car audio** | Telefon ovozi avtomobilga qanday yetib borishi |
+| **Connection** | Simsiz ulanish, video sifati, avtomobillaringiz, qo‘lda simsiz ulanish |
+| **Advanced** | Head unit server, sertifikatlar, ulanish jurnali (log) |
 
-The assistant bar shows the assistant's car screen when it is a message (Lapin's is). Tap it to
-open the assistant full screen; it closes by itself after the answer.
+**Preview car screen** tugmasi avtomobil ekranini telefonning o‘zida ko‘rsatadi: mashinasiz
+sinab ko‘rish uchun.
 
-**Car tools.** The assistant the voice button opens can act on the car through
-`content://uz.alesle.avto.car` (`ContentResolver.call`): `call("tools")` returns tool specs in
-the function-calling JSON schema, and `call("run", name, {"args": json})` runs one. Alesle Avto only
-answers that assistant, and only while a car (or the preview) is connected. The tools:
+---
 
-| Tool | Does |
-|---|---|
-| `car_status` | what's on screen, driving or parked, navigation, now playing, the phone's battery and signal |
-| `car_navigate` | navigates to a place in the car's navigation app |
-| `car_media` | play, pause, next, previous |
-| `car_open` | shows an app, home, the app list or the phone screen |
-| `car_messages` | the latest messages, to read them out |
-| `car_reply` | replies to a conversation (the assistant reads the reply back for confirmation first) |
-| `car_mark_read` | marks a conversation as read |
-| `car_display` | dark, light or the car's day/night colors |
+## 10. Muammo bo‘lsa
 
-Lapin adds them to its own device tools when it runs on Alesle Avto, so you can say "take me to the
-nearest charger", "what's the next turn?", "read my messages" or "reply to Alex that I'm 10
-minutes late".
+Bosh ekrandagi qizil **Last error** (oxirgi xato) yozuvi nima bo‘lganini aytadi.
 
-### Car audio
+| Xato yoki holat | Sababi | Nima qilish kerak |
+|---|---|---|
+| *"… doesn't offer wireless Android Auto over Bluetooth"* | Head unit’da simsiz rejim yoqilmagan | Open Headunit’ni **WiFi** rejimiga qo‘ying, keyin *Your cars → Refresh (SDP)* va *Connect wirelessly* |
+| *"Wi-Fi is off on the phone"* | Telefonda Wi-Fi o‘chiq | Wi-Fi’ni yoqing va qayta ulaning |
+| *"Couldn't join the car's Wi-Fi …"* | Tarmoq topilmadi yoki **Connect** bosilmadi | Telefonni head unit’ga yaqinlashtiring. *"Searching for device"* oynasida tarmoqni tanlab **Connect**ni bosing |
+| *"The head unit refused this phone's certificate"* | Head unit faqat Google imzolagan telefonlarni qabul qiladi | Qayta ulaning (dastur boshqa sertifikatni taklif qiladi). Bo‘lmasa: [4-C zaxira yo‘l](#c-zaxira-yol-telefon-hotspoti-orqali) yoki [sertifikatlar haqida](docs/certificates.md) |
+| *"head unit certificate not trusted yet"* | Yangi head unit | Bildirishnomada yoki dasturda **Trust**ni bosing, qayta ulaning |
+| Simsiz ulanish o‘z-o‘zidan boshlanmaydi | Telefon dasturni orqa fonda to‘xtatgan | [3-bo‘lim](#3-birinchi-sozlash)dagi Xiaomi sozlamalarini qiling. Yoki *Connect wirelessly*ni bosing |
+| Tasvir qotadi, sifati past | Wi-Fi signali zaif | Telefonni head unit’ga yaqinlashtiring. *Connection → Maximum resolution*ni 720p qiling |
+| Telefon ilovalari ochilmaydi | Shizuku ishlamayapti | Shizuku’ni qayta ishga tushiring ([7-bo‘lim](#7-telefon-ilovalari-avtomobil-ekranida)) |
+| Wi-Fi sozlamalarida avtomobil tarmog‘iga parol so‘raladi | Bu tarmoqqa qo‘lda ulanish shart emas | Parol kiritmang: Alesle Avto o‘zi ulanadi |
 
-Alesle Avto uses the best way to send the phone's sound to the car that the phone allows:
+**Batafsil jurnal (log):** Alesle Avto → **Advanced** → **Connection log**. Muammo haqida
+yozganda shu jurnalni nusxalab yuboring.
 
-| Method | Needs | Navigation voice | Phone speaker |
-|---|---|---|---|
-| **System audio routing**, as Android Auto does it | a rooted phone, Alesle Avto installed as a privileged app (below) | yes, on the car's navigation channel | off |
-| **Shizuku** | [Shizuku](https://shizuku.rikka.app/) running, Android 12+ | yes, mixed with the music | off |
-| **Screen-capture permission** | one consent (choose *Entire screen*) | no | still plays |
+---
 
-- **Privileged install (root):** `tools/magisk/build-module.sh` makes `build/alesle-magisk.zip`.
-  Install it from Magisk (*Modules > Install from storage*) and reboot. Alesle Avto is then in
-  `/system/priv-app` with `MODIFY_AUDIO_ROUTING`. Later updates install normally if they are
-  signed with the same key.
-- **Shizuku (no root):** install Shizuku and start it (wireless debugging, once after each
-  reboot). Then on Alesle Avto's *Car audio* page tap *Shizuku* to allow Alesle Avto.
-- **Screen capture:** works everywhere, but Android only gives normal apps media, game and
-  "unknown" sounds, so navigation voice stays on the phone, and apps may opt out.
+## 11. Texnik ma’lumot va litsenziya
 
-Some cars keep playing the phone's **Bluetooth** audio while in Android Auto mode (the Toyota
-Land Cruiser in [Tested on real head units](#tested-on-real-head-units) does). With those, none
-of the above is needed: pair the phone with the car and leave *Car audio* unset.
+- Dasturchilar uchun to‘liq texnik hujjat (ingliz tilida): [docs/TECHNICAL.md](docs/TECHNICAL.md) —
+  nimalar tayyor, yig‘ish (build), kompyuterda sinash (desktop head unit), mos keluvchi head
+  unit’lar, kod tuzilishi.
+- Sertifikatlar va head unit’lar: [docs/certificates.md](docs/certificates.md).
 
-**Samsung Galaxy / One UI:** *Settings → Sounds and vibration → Separate app sound* can route
-chosen navigation or media apps directly to a paired **vehicle Bluetooth audio device**. A Galaxy
-S23 owner reports hearing both music and spoken navigation guidance this way. This is **phone
-Bluetooth output**, not proof that Alesle Avto captures navigation voice or sends it over an AAP audio
-channel; it also does not verify simultaneous official Android Auto plus Alesle Avto projection.
-See [Samsung Separate app sound and Bluetooth](docs/samsung-separate-app-sound.md) for the
-setup, caveats and the scoped field report.
+**Litsenziya:** GPL-3.0-or-later ([LICENSE](LICENSE)).
 
-## Testing without a car: the desktop head unit
-
-`./headunit.sh` turns your computer into a car for a phone or emulator connected with adb. You
-need `adb` (Android SDK platform-tools), `ffmpeg` and a JDK 17-21.
-
-1. On the phone, turn on USB debugging and plug it into the computer.
-2. Install a **debug** build of Alesle Avto (`./build.sh && adb install -r app/build/outputs/apk/debug/app-debug.apk`).
-3. Run `./headunit.sh`.
-
-The script forwards TCP 5277 to the phone's `@alesle_hu` socket over adb (`adb forward tcp:5277 localabstract:alesle_hu`), switches on Alesle Avto's head-unit server (debug builds do it
-when asked; on release builds, turn on *Head unit server* in Alesle Avto's settings), builds the
-desktop head unit and opens a window showing the car screen. The *Phone screen* app is not
-offered on this server unless you turn on *Phone screen on the server* (next to *Head unit
-server* in Alesle Avto's settings), as its peer is unauthenticated.
-
-The phone only accepts the head-unit server's adb connection from adb itself (uid shell or root),
-so other apps on the phone can't use it (processes running as shell, such as `adb shell` or Shizuku, are accepted).
-For Google's DHU, or any tool on the computer running adb, run `adb forward tcp:5277 localabstract:alesle_hu`
-and point it at `localhost:5277`; head units on another device (Headunit Revived, openauto on a Pi) need
-*Accept from the network*. The desktop head unit takes `--adb-target tcp:5277` to drive the official
-Android Auto app's head unit server instead. *Accept from the
-network* in the settings also opens TCP 5277 on every network interface with no authentication: anyone
-on the same Wi-Fi can connect (apps on the phone itself are refused on every interface), so by default Alesle Avto switches it off again after one session. openauto and Headunit Revived reconnect
-on their own and would find it off: for them, turn off *Turn off network mode after a session* so
-network mode stays on until you switch it off.
-
-```sh
-./headunit.sh                       # Alesle Avto, through Alesle Avto's desktop head unit
-./headunit.sh google                # the official Android Auto app, through Google's Desktop Head Unit
-./headunit.sh --res 1920x1080 --time-scale 10 --speed 110 --rhd
-./headunit.sh --cluster             # also an 800x480 instrument cluster, in a second window
-./headunit.sh --portrait            # a portrait screen (720x1280)
-```
-
-| On the computer | In the car |
-|---|---|
-| mouse | the touch screen |
-| Esc / Backspace | back |
-| H | home |
-| V | the steering-wheel voice button |
-| wheel / arrows | rotary controller |
-| K / `,` / `.` | play-pause / previous / next |
-| N / P | night mode / parked |
-
-The window also gives you:
-
-- **Audio:** the car's audio channels play on your speakers.
-- **Microphone:** your microphone becomes the car's microphone, so you can talk to the assistant.
-- **Side panel:** the phone's turn-by-turn instructions and now playing.
-- **Simulated drive:** follows a real 775 km **Paris → Marseille** route (OpenStreetMap data via
-  OSRM), slower in towns, with pause and ×10 / ×60 / ×300 time acceleration. It is sent as the
-  car's GPS, speed and gear.
-- **Emulator GPS:** on an emulator, the phone's own GPS is moved along the route too, so apps
-  that use the phone's location (CoMaps) follow it.
-- **Headless mode:** `--headless DIR --script "tap:640,360@10 key:4@12"` runs without a window
-  and saves screenshots, for automated tests.
-
-Alesle Avto's head unit works with Alesle Avto (or other open-source phone implementations), not with Google's
-Android Auto app: Android Auto only accepts head units whose certificate is issued by Google, and
-this one's is self-signed. The head unit says so when a phone refuses it. Alesle Avto refuses a certificate it
-hasn't seen until you tap *Trust* on its *New head unit* notification (or on Alesle Avto's home screen) and connect again; the head
-unit keeps its own certificate in `~/.config/alesle-avto/headunit` (`%APPDATA%\alesle\headunit` on Windows), so you tap *Trust* once, unless you give it another with `--hu-cert`/`--hu-key`.
-
-**Google mode** runs Google's Desktop Head Unit, downloading it if needed, with the same drive on
-an emulator's GPS. The official app only accepts head units with a Google-issued head-unit
-certificate, which Alesle Avto doesn't include, so Google's own tool is the way to compare. Turn on
-*Start head unit server* in Android Auto's developer settings first. Alesle Avto's head unit can also
-present a head-unit certificate you supply (`--hu-cert`, `--hu-key`).
-
-Other tools:
-
-- `./gradlew :aap:runPhoneSim --args="test.h264"`: a desktop "phone" that serves an H.264 file
-  on TCP 5277, to exercise head-unit software.
-- `./build.sh :aap:test`: protocol tests, including full sessions against a simulated head unit.
-
-## Compatibility: read this before trying it in a car
-
-### Tested on real head units
-
-These reports were made with upstream AARE, on which Alesle Avto is based (same protocol code).
-
-| Head unit | Phone | Link | AARE version | Result |
-|---|---|---|---|---|
-| ZLink 3 aftermarket unit, model K2001N (Allwinner T3, Android 7, sold as Android 12), in a VW Golf 6 | Pixel 10 Pro XL, Android 17 | Wireless | 1.1.0 | **Works:** full sessions with video, with AARE's own certificate. On Android 17 it needs the local network permission ([#22](https://github.com/prototux/AARE/pull/22)). Known issue: the unit asks for 1280x720 at 160 dpi with 256x120 margins, and the screen edges are cut off. |
-| Denso Ten E-DA2, the factory unit of a 2026 Toyota Land Cruiser 79 series (wired Android Auto only) | Samsung Galaxy S23 (SM-S911B), Android 16, not rooted | USB | not stated | **Works**, all features tried ([#37](https://github.com/prototux/AARE/issues/37)), with AARE's own self-signed certificate. The unit also plays the phone's Bluetooth audio during Android Auto, so the car audio setup isn't needed. |
-| Factory unit of a 2023 Skoda Octavia V, MIB3 (VW Group) | Pixel 10, GrapheneOS, no Google services | USB and wireless | not stated | **Works after [AA key extraction](#aa-key-extraction)** (reported by a user, not tested by the maintainers): with AARE's own self-signed certificate the unit rejected the connection (`AUTH_COMPLETE` status -3, [#48](https://github.com/prototux/AARE/issues/48)); with the extracted certificate it connects. Known issue: the UI ignores the unit's video margins, so the layout is off ([#55](https://github.com/prototux/AARE/issues/55)). |
-| Factory Denso unit of a 2024 Toyota RAV4 | — | — | not stated | **Rejected:** the self-signed certificate ([#46](https://github.com/prototux/AARE/issues/46)). |
-| Factory unit of a 2024 Ford Transit | — | — | not stated | **Rejected:** status -3 ([#44](https://github.com/prototux/AARE/issues/44)). |
-
-If you try Alesle Avto on another head unit, please open an issue or a pull request to add it here,
-whether it worked or not.
-
-### Phone certificate
-
-During the handshake the head unit checks the phone's TLS certificate.
-
-- **Google's head unit library:** Google's Desktop Head Unit and head units built on Google's
-  receiver library accept only a phone certificate issued by Google's "Google Automotive Link"
-  CA. Alesle Avto was tested against Google's DHU: the TLS handshake completes, then the head unit
-  refuses authentication (status -3).
-- **Open-source head units:** openauto/Crankshaft, Headunit Revived, LIVI and aa-proxy-rs accept
-  Alesle Avto's generated certificate, as do some OEM units.
-- **Importing a certificate:** Alesle Avto does not ship or extract Google's key. If you have a
-  certificate and key you're entitled to use, import it under *Advanced > Phone certificates*.
-- **Fallback order:** Alesle Avto offers its certificates in turn. After a head unit rejects one, the
-  next connection uses the next one.
-
-[docs/certificates.md](docs/certificates.md) explains the certificates in detail: what Google's
-Android Auto presents and requires, which head units check what, and how to read Alesle Avto's
-connection log when a car doesn't connect.
-
-### Car apps that only trust Google
-
-A Car App Library app decides which hosts it accepts (`HostValidator`).
-
-- **Debug builds** of most apps accept any host.
-- **Release builds:** apps built with car-app library 1.8.0-beta01 or older also accept a host
-  holding `android.car.permission.TEMPLATE_RENDERER`. Alesle Avto holds it, so CoMaps (1.7.0), Organic
-  Maps (1.8.0-alpha02) and Lapin (1.7.0) work today.
-- **Newer library versions** dropped that path on phones. Those apps need Alesle Avto's signing
-  certificate digest in their allow-list:
-
-  ```kotlin
-  HostValidator.Builder(context)
-      .addAllowedHosts(androidx.car.app.R.array.hosts_allowlist_sample)
-      .addAllowedHost("uz.alesle.avto", "<sha256 of Alesle Avto's signing certificate>")
-      .build()
-  ```
-
-  For the releases, the digest is the release key's SHA-256 above (without the colons, in
-  lowercase). For your own builds, get it with `apksigner verify --print-certs app-debug.apk`.
-  For apps you build yourself, add it to their allow-list. For others, ask upstream.
-
-### Calls
-
-Calls go through Bluetooth (HFP), as with Android Auto.
-
-### VPN
-
-Alesle Avto works with a VPN app running on the phone (WireGuard, OpenVPN...), as long as the VPN's
-address ranges don't overlap the head unit's network. Over wireless, the head unit's Wi-Fi has its
-own addresses (often `192.168.x.x`): if the VPN claims the same range, the phone sends the car's
-traffic into the VPN and the connection times out. Then change the VPN's range, or exclude the head
-unit's network from the VPN (most VPN apps have a setting for local network access). USB isn't
-affected.
-
-### Coexisting with Google's Android Auto
-
-- **USB:** both apps answer the same USB accessory, so Android asks which one to use. Choose
-  Alesle Avto and "always", or disable Android Auto.
-- **Permissions:** Alesle Avto never redeclares the permissions Android Auto defines, so both can be
-  installed.
-
-## Building
-
-CI builds and tests every push. Pushing a `v1.2.3` tag publishes a release (`.github/workflows/`).
-
-You need a JDK 17-21 and the Android SDK (Android Studio installs both).
-
-```sh
-echo "sdk.dir=$HOME/Android/Sdk" > local.properties   # or set ANDROID_HOME
-./build.sh                    # debug APK: app/build/outputs/apk/debug/app-debug.apk
-./build.sh :aap:test          # protocol tests: framing, TLS, a full session against a simulated head unit
-./build.sh :app:testDebugUnitTest
-```
-
-`build.sh` finds a suitable JDK and runs Gradle. On a machine without swap, set
-`ALESLE_BUILD_MEMORY=5G` to run the build in a memory-capped systemd scope. Opening the project
-in Android Studio works too.
-
-## Layout
-
-| Folder | What |
-|---|---|
-| `aap/` | the protocol, pure Kotlin/JVM: framing, TLS, session, channels, wireless bootstrap, simulators and tests |
-| `aap/src/main/proto/` | AAP protobuf definitions, from [aasdk](https://github.com/opencardev/aasdk) |
-| `app/.../car/` | a projection session: video, input, sensors, audio, microphone, cluster |
-| `app/.../host/` | the Car App Library host, the car runtime (app list, routing, UI root), the assistant bar and car tools |
-| `app/.../host/templates/` | Compose rendering of car app templates |
-| `app/.../media/` | media apps: discovery, media3 browser, now playing, UI |
-| `app/.../mirror/` | the *Phone screen* app: mirroring and touch |
-| `app/.../audio/` | car audio: capture methods (audio policy, Shizuku, screen capture), microphone |
-| `tools/magisk/` | Magisk module that installs Alesle Avto as a privileged app |
-| `app/.../notify/` | notifications: messaging apps, and directions from navigation apps on the phone |
-| `app/.../transport/` | USB accessory, TCP server, wireless (Bluetooth + Wi-Fi) |
-| `app/.../ui/` | phone UI, car shell (rail, dashboard, launcher), theme |
-| `headunit/` | the desktop head unit (`./headunit.sh`) |
-| `docs/research/` | protocol notes: Android Auto app, reference projects, car app hosting |
-
-## Contributing
-
-Bug reports and pull requests are welcome. Reports from real cars are the most useful: say which
-head unit (make, model, year, or the open-source software it runs), USB or wireless, and attach
-`adb logcat` output around the connection (`adb logcat | grep -i alesle`).
-
-Before sending a pull request, run `./build.sh :aap:test` and build the app.
-
-## Thanks
-
-From upstream AARE: to [@dustfeather](https://github.com/dustfeather), for a security review of AARE and the fixes
-that came with it:
-
-- the protocol: the handshake order enforced, fragment reassembly capped;
-- trust: new or changed head unit certificates need your approval, the developer head unit
-  server is reachable through adb only unless you open it to the network;
-- car apps: the microphone, location and calls need the app's own permission or your action,
-  artwork and notification images only load from the app that supplied them;
-- wireless: open Wi-Fi refused, and the local network permission Android 17 needs;
-- the phone screen off by default and paused while the phone is locked;
-- GitHub Actions pinned to commits, and Dependabot;
-
-and for the first test of AARE in a real car.
-
-## License
-
-Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later.
-
-GPL-3.0-or-later (see [LICENSE](LICENSE)). The protobuf definitions come from aasdk
-(GPL-3.0-or-later, see [aap/src/main/proto/NOTICE.md](aap/src/main/proto/NOTICE.md)).
-
-Not affiliated with or endorsed by Google or Apple. Android Auto is a trademark of Google LLC;
-CarPlay is a trademark of Apple Inc.
+**Mualliflik:** Alesle Avto is based on AARE by prototux (github.com/prototux/AARE),
+GPL-3.0-or-later. Not affiliated with Google. Android Auto is a trademark of Google LLC.
