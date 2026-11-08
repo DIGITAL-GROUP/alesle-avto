@@ -5,6 +5,7 @@ import android.app.ActivityOptions
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.hardware.input.InputManager
@@ -55,6 +56,7 @@ class ShellDisplayService : IShellDisplay.Stub {
         val id = vd.display.displayId
         synchronized(displays) { displays[id] = vd }
         keepUpright(id)
+        restorePip() // left over if a previous service process died without releasing
         // The keyboard shows on this display, not on the phone (scrcpy's --display-ime-policy=local).
         runCatching { setImePolicy(id, DISPLAY_IME_POLICY_LOCAL) }.onFailure { Log.w(TAG, "IME policy", it) }
         Log.i(TAG, "display $id: ${width}x$height/$densityDpi")
@@ -74,6 +76,7 @@ class ShellDisplayService : IShellDisplay.Stub {
 
     override fun launch(displayId: Int, packageName: String, activity: String): String? {
         if (display(displayId) == null) return "no display $displayId"
+        denyPip(packageName)
         // An app already open on the phone would come to front there: move its task over first.
         runCatching { rootTasks().filter { it.packageName == packageName && it.displayId != displayId }.forEach { moveTask(it.taskId, displayId) } }
             .onFailure { Log.w(TAG, "moving $packageName's task", it) }
@@ -110,14 +113,16 @@ class ShellDisplayService : IShellDisplay.Stub {
     }
 
     override fun topPackage(displayId: Int): String? = runCatching {
-        // getAllRootTaskInfos lists the top task first.
-        rootTasks().firstOrNull { it.displayId == displayId && it.visible }?.packageName ?: ""
+        // getAllRootTaskInfos lists the top task first. A task in picture-in-picture doesn't count:
+        // it isn't drawn on this display, the app has left the screen.
+        rootTasks().firstOrNull { it.displayId == displayId && it.visible && !it.pinned }?.packageName ?: ""
     }.onFailure { Log.w(TAG, "root tasks", it) }.getOrNull()
 
     override fun release(displayId: Int) {
         val vd = synchronized(displays) { displays.remove(displayId) } ?: return
         runCatching { vd.release() }
         Log.i(TAG, "display $displayId released")
+        if (synchronized(displays) { displays.isEmpty() }) restorePip()
     }
 
     override fun destroy() {
@@ -165,6 +170,33 @@ class ShellDisplayService : IShellDisplay.Stub {
         out.trim()
     }.getOrElse { it.toString() }
 
+    // ------------------------------------------------------------------ picture-in-picture
+
+    /**
+     * Apps on the car display must not go picture-in-picture (YouTube does on Back from a video):
+     * the small window isn't drawn on this display, so the car screen would go black. While an app
+     * is shown here its PICTURE_IN_PICTURE app-op is "ignore" (then Back returns to its own home
+     * page); the mode it had is kept in [PIP_FILE] and put back when the last display goes, or by
+     * the next service if this one dies first.
+     */
+    private fun denyPip(packageName: String) {
+        val saved = savedPip()
+        if (packageName in saved) return
+        val mode = Regex("""PICTURE_IN_PICTURE: (\w+)""").find(run("appops", "get", packageName, "PICTURE_IN_PICTURE"))?.groupValues?.get(1) ?: "default"
+        if (mode == "ignore") return
+        runCatching { java.io.File(PIP_FILE).appendText("$packageName $mode\n") }.onFailure { Log.w(TAG, "PiP file", it) }
+        Log.i(TAG, "PiP off for $packageName (was $mode): ${run("appops", "set", packageName, "PICTURE_IN_PICTURE", "ignore")}")
+    }
+
+    private fun restorePip() {
+        savedPip().forEach { (pkg, mode) -> Log.i(TAG, "PiP back to $mode for $pkg: ${run("appops", "set", pkg, "PICTURE_IN_PICTURE", mode)}") }
+        runCatching { java.io.File(PIP_FILE).delete() }
+    }
+
+    private fun savedPip(): Map<String, String> = runCatching {
+        java.io.File(PIP_FILE).readLines().mapNotNull { line -> line.split(' ').takeIf { it.size == 2 }?.let { it[0] to it[1] } }.toMap()
+    }.getOrDefault(emptyMap())
+
     // ------------------------------------------------------------------ input
 
     private val inputManager: InputManager by lazy { context.getSystemService(InputManager::class.java) }
@@ -201,7 +233,7 @@ class ShellDisplayService : IShellDisplay.Stub {
         return if ("Error" in out || "Exception" in out) out else null
     }
 
-    private class RootTask(val taskId: Int, val displayId: Int, val packageName: String?, val visible: Boolean)
+    private class RootTask(val taskId: Int, val displayId: Int, val packageName: String?, val visible: Boolean, val pinned: Boolean)
 
     @SuppressLint("PrivateApi")
     private fun activityTaskManager(): Any = Class.forName("android.app.ActivityTaskManager").getMethod("getService").invoke(null)!!
@@ -214,9 +246,13 @@ class ShellDisplayService : IShellDisplay.Stub {
             val c = info.javaClass
             fun field(name: String): Any? = runCatching { c.getField(name).get(info) }.getOrNull()
             val top = (field("topActivity") ?: field("baseActivity")) as? ComponentName
+            val mode = runCatching {
+                val wc = Configuration::class.java.getField("windowConfiguration").get(field("configuration"))!!
+                wc.javaClass.getMethod("getWindowingMode").invoke(wc) as Int
+            }.getOrDefault(0)
             RootTask(
                 field("taskId") as Int, field("displayId") as Int, top?.packageName,
-                (field("visible") ?: field("isVisible")) as? Boolean ?: true,
+                (field("visible") ?: field("isVisible")) as? Boolean ?: true, mode == WINDOWING_MODE_PINNED,
             )
         }
     }
@@ -247,6 +283,9 @@ class ShellDisplayService : IShellDisplay.Stub {
         const val FLAG_DEVICE_DISPLAY_GROUP = 1 shl 15
         const val DISPLAY_IME_POLICY_LOCAL = 0
         const val WINDOWING_MODE_FULLSCREEN = 1
+        const val WINDOWING_MODE_PINNED = 2
+        /** Shell-writable: the PiP app-op modes to put back (package and mode per line). */
+        const val PIP_FILE = "/data/local/tmp/aare-pip-modes.txt"
         const val INJECT_INPUT_EVENT_MODE_ASYNC = 0
         const val USER_CURRENT = -2
     }
