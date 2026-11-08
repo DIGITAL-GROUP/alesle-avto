@@ -137,7 +137,7 @@ class CarRuntime(
             val code = raw.any { it == '*' || it == '#' } || intent.data?.encodedFragment != null
             val number = if (code) "" else raw.filter { it in '0'..'9' || it == '+' }.take(20)
             val id = idOf(from)
-            // Car apps stay connected in the background, and AARE hosts any car app (not only Play-approved
+            // Car apps stay connected in the background, and Alesle Avto hosts any car app (not only Play-approved
             // ones): only the app on screen, or in the assistant bar, calls straight away; any other is asked.
             val onScreen = id != null && ((ui.screen as? CarScreen.App)?.appId == id || ui.assistantAppId == id)
             when {
@@ -469,7 +469,7 @@ class CarRuntime(
         }
     }
 
-    /** How [Settings.appOrder] names an entry: its package, or its id for AARE's own apps. */
+    /** How [Settings.appOrder] names an entry: its package, or its id for Alesle Avto's own apps. */
     private fun orderKey(e: CarAppEntry) = if (e.packageName == context.packageName) e.id else e.packageName
 
     private fun builtinIcon(res: Int) = ContextCompat.getDrawable(context, res)?.toBitmap(128, 128)
@@ -691,7 +691,7 @@ class CarRuntime(
     }
 
     companion object {
-        private const val TAG = "AareRuntime"
+        private const val TAG = "AlesleRuntime"
         fun carId(app: CarAppInfo) = "car:${app.service.flattenToShortString()}"
         fun mediaId(pkg: String) = "media:$pkg"
         fun messagingId(pkg: String) = "messages:$pkg"

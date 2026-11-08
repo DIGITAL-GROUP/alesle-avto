@@ -31,7 +31,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- Lists AARE under Developer options > Select mock location app: the car's GPS as the
+    <!-- Lists Alesle Avto under Developer options > Select mock location app: the car's GPS as the
          phone's location while connected (car/PhoneLocationFeed). -->
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"
         tools:ignore="MockLocation,ProtectedPermissions" />
@@ -54,7 +54,7 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <!-- Only granted when AARE is installed as a privileged app (tools/magisk): car audio like
+    <!-- Only granted when Alesle Avto is installed as a privileged app (tools/magisk): car audio like
          Android Auto, through an audio policy. Ignored on a normal install. -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_ROUTING"
         tools:ignore="ProtectedPermissions" />
@@ -82,12 +82,12 @@
     </queries>
 
     <application
-        android:name=".AareApp"
+        android:name=".AlesleApp"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Aare">
+        android:theme="@style/Theme.Alesle">
 
         <activity
             android:name=".ui.MainActivity"
@@ -103,7 +103,7 @@
             android:name=".ui.CarPreviewActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
-            android:theme="@style/Theme.Aare" />
+            android:theme="@style/Theme.Alesle" />
 
         <!-- Wired head units switch the phone to accessory mode with these strings. -->
         <activity
@@ -139,7 +139,7 @@
         <!-- Car tools for the voice assistant (CarControlProvider checks the caller). -->
         <provider
             android:name=".host.CarControlProvider"
-            android:authorities="uz.alesle.avto.car"
+            android:authorities="${applicationId}.car"
             android:exported="true" />
 
         <!-- Shizuku (adb rights without root): car audio including navigation voice. -->

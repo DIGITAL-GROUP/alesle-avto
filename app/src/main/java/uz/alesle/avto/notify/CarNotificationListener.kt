@@ -216,7 +216,7 @@ class CarNotificationListener : NotificationListenerService() {
     )
 
     companion object {
-        private const val TAG = "AareNotify"
+        private const val TAG = "AlesleNotify"
         @Volatile var instance: CarNotificationListener? = null
             private set
 
@@ -227,7 +227,7 @@ class CarNotificationListener : NotificationListenerService() {
         /** Turn-by-turn from a navigation app running on the phone (Google Maps, Waze…). */
         val guidance: StateFlow<PhoneGuidance?> = _guidance
 
-        /** Whether the user gave AARE notification access (the listener may still be unbound). */
+        /** Whether the user gave Alesle Avto notification access (the listener may still be unbound). */
         fun accessGranted(context: Context): Boolean =
             NotificationManagerCompat.getEnabledListenerPackages(context).contains(context.packageName)
 

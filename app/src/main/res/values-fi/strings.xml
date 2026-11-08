@@ -104,7 +104,7 @@
     <string name="setup_app_kind_media">Musiikki, podcastit, radio</string>
     <string name="setup_app_group_messaging">Viestit</string>
     <string name="setup_app_kind_messaging">Viestit sen ilmoituksista</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">Android Auto -sovellukset, joita Alesle Avto ei voi näyttää</string>
     <string name="setup_hint_allowlist">Googlen auto-kirjaston uusimmilla versioilla rakennetut sovellukset hyväksyvät vain sallittujen isäntien luettelossa olevia; katso README.</string>
     <string name="setup_app_entry_phone">Puhelin</string>
@@ -112,7 +112,7 @@
     <string name="setup_app_entry_notifications">Ilmoitukset</string>
     <string name="setup_section_app_order">Järjestys autossa</string>
     <string name="setup_section_connection_log">Yhteysloki</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Ei liity Googleen. Android Auto on Google LLC:n tavaramerkki.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. Ei liity Googleen. Android Auto on Google LLC:n tavaramerkki.</string>
     <string name="setup_choice_style">Tyyli</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -133,7 +133,7 @@
 
     <!-- huserver: developer head unit server -->
     <string name="huserver_label">Soittolaitteen palvelin</string>
-    <string name="huserver_toggle_subtitle">Kuten Android Auton kehittäjätila, pöytäkoneen soittolaitteelle, DHU, openauto, Headunit Revived. Käytettävissä vain adb:n kautta: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">Kuten Android Auton kehittäjätila, pöytäkoneen soittolaitteelle, DHU, openauto, Headunit Revived. Käytettävissä vain adb:n kautta: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">Hyväksy verkosta</string>
     <string name="huserver_toggle_network_subtitle">Kuuntele myös TCP-portissa 5277 kaikissa verkoissa, ilman salasanaa. Kuka tahansa samassa Wi-Fi-verkossa voi yhdistää, nähdä auton näytön ja käyttää mikrofonia.</string>
     <string name="huserver_toggle_lanonce_title">Poista verkkotila käytöstä istunnon jälkeen</string>

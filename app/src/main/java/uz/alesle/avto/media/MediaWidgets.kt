@@ -155,7 +155,7 @@ internal fun sendAction(action: PendingIntent) {
         }
     } catch (e: Exception) {
         // CanceledException (the app dropped it) or a refused start
-        Log.w("AareMedia", "error action of ${action.creatorPackage} failed: $e")
+        Log.w("AlesleMedia", "error action of ${action.creatorPackage} failed: $e")
     }
 }
 

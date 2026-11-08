@@ -130,7 +130,7 @@ class CarAppConnection(
         cleanedUp = false
         val bindIntent = Intent(CarAppInfo.SERVICE_ACTION).setComponent(info.service)
         // A second session of the same app, for the cluster display: the library tells them apart by SessionInfo.
-        if (cluster) SessionInfoIntentEncoder.encode(SessionInfo(SessionInfo.DISPLAY_TYPE_CLUSTER, "aare-cluster"), bindIntent)
+        if (cluster) SessionInfoIntentEncoder.encode(SessionInfo(SessionInfo.DISPLAY_TYPE_CLUSTER, "alesle-cluster"), bindIntent)
         val ok = runCatching {
             context.bindService(bindIntent, serviceConnection,
                 Context.BIND_AUTO_CREATE or Context.BIND_INCLUDE_CAPABILITIES or Context.BIND_IMPORTANT)
@@ -413,7 +413,7 @@ class CarAppConnection(
         if (status == Status.CONNECTING) {
             fail(when {
                 "Unknown host" in message || "not allowed" in message || "SecurityException" in message ->
-                    "${info.label} only accepts Google's Android Auto. It needs to allow AARE (see the app list on the phone)."
+                    "${info.label} only accepts Google's Android Auto. It needs to allow Alesle Avto (see the app list on the phone)."
                 else -> "${info.label} couldn't start: ${message.lineSequence().first().take(120)}"
             })
         }
@@ -621,7 +621,7 @@ class CarAppConnection(
     }
 
     companion object {
-        private const val TAG = "AareCarApp"
+        private const val TAG = "AlesleCarApp"
 
         /** The OnDoneCallback handed to template delegates: logs failures. */
         val templateDone = object : androidx.car.app.OnDoneCallback {

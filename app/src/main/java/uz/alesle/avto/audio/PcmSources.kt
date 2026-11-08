@@ -33,7 +33,7 @@ interface PcmSource {
     fun release()
 }
 
-/** How AARE captures the phone's audio, best first. */
+/** How Alesle Avto captures the phone's audio, best first. */
 enum class CaptureMethod(val label: String) {
     /** Android Auto's own way: an audio policy (privileged app, see tools/magisk). Music and navigation voice apart. */
     AUDIO_POLICY("System audio routing (like Android Auto)"),
@@ -51,12 +51,12 @@ object CaptureMethods {
     fun audioPolicyAvailable(context: Context): Boolean =
         context.checkSelfPermission("android.permission.MODIFY_AUDIO_ROUTING") == PackageManager.PERMISSION_GRANTED
 
-    /** Shizuku is running and AARE may use it (Android 12+, where the shell can attribute the recording). */
+    /** Shizuku is running and Alesle Avto may use it (Android 12+, where the shell can attribute the recording). */
     fun shizukuAvailable(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && runCatching {
         Shizuku.pingBinder() && !Shizuku.isPreV11() && Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
     }.getOrDefault(false)
 
-    /** Shizuku is running but AARE hasn't been allowed yet. */
+    /** Shizuku is running but Alesle Avto hasn't been allowed yet. */
     fun shizukuNeedsPermission(): Boolean = runCatching {
         Shizuku.pingBinder() && !Shizuku.isPreV11() && Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED
     }.getOrDefault(false)
@@ -112,7 +112,7 @@ class PlaybackCaptureSource(private val projection: MediaProjection, private val
 
 /**
  * Android Auto's way: an audio policy whose mix takes the matching usages away from the phone's
- * speaker and loops them back to us. The policy API is for privileged apps only: AARE must be
+ * speaker and loops them back to us. The policy API is for privileged apps only: Alesle Avto must be
  * installed in /system/priv-app with MODIFY_AUDIO_ROUTING (tools/magisk).
  */
 class AudioPolicySource(
@@ -221,4 +221,4 @@ class ShizukuSource(private val context: Context, private val rate: Int, private
     }
 }
 
-private const val TAG = "AareCapture"
+private const val TAG = "AlesleCapture"

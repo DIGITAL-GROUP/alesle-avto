@@ -114,7 +114,7 @@ class BitrateController(
     }
 
     companion object {
-        private const val TAG = "AareBitrate"
+        private const val TAG = "AlesleBitrate"
 
         fun floorFor(start: Int, p: Params = Params()) = minOf(start, maxOf(p.minFloor, start / 4))
 

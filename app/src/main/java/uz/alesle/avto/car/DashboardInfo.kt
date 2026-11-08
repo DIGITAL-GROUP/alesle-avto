@@ -25,7 +25,7 @@ data class NextEvent(val title: String, val startMs: Long, val allDay: Boolean, 
  * comes from Open-Meteo (no account, no Google), asked for an approximate position only.
  */
 object DashboardInfo {
-    private const val TAG = "AareDashboard"
+    private const val TAG = "AlesleDashboard"
 
     /** Blocking: call off the main thread. */
     fun weather(location: Location): Weather? = runCatching {

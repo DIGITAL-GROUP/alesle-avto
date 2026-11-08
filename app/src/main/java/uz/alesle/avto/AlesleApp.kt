@@ -2,7 +2,7 @@ package uz.alesle.avto
 
 import android.app.Application
 
-class AareApp : Application() {
+class AlesleApp : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -10,7 +10,7 @@ class AareApp : Application() {
     }
 
     companion object {
-        lateinit var instance: AareApp
+        lateinit var instance: AlesleApp
             private set
     }
 }

@@ -104,7 +104,7 @@
     <string name="setup_app_kind_media">Muzyka, podcasty, radio</string>
     <string name="setup_app_group_messaging">Wiadomości</string>
     <string name="setup_app_kind_messaging">Wiadomości z jej powiadomień</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">Aplikacje Android Auto, których Alesle Avto nie może wyświetlić</string>
     <string name="setup_hint_allowlist">Aplikacje zbudowane na nowszych wersjach biblioteki samochodowej Google akceptują tylko hosty z listy dozwolonych; zobacz README.</string>
     <string name="setup_app_entry_phone">Telefon</string>
@@ -112,7 +112,7 @@
     <string name="setup_app_entry_notifications">Powiadomienia</string>
     <string name="setup_section_app_order">Kolejność w samochodzie</string>
     <string name="setup_section_connection_log">Dziennik połączeń</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Niezwiązane z Google. Android Auto jest znakiem towarowym Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. Niezwiązane z Google. Android Auto jest znakiem towarowym Google LLC.</string>
     <string name="setup_choice_style">Styl</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -133,7 +133,7 @@
 
     <!-- huserver: developer head unit server -->
     <string name="huserver_label">Serwer jednostki centralnej</string>
-    <string name="huserver_toggle_subtitle">Jak tryb programisty Android Auto, dla jednostki centralnej na komputerze, DHU, openauto, Headunit Revived. Dostępny tylko przez adb: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">Jak tryb programisty Android Auto, dla jednostki centralnej na komputerze, DHU, openauto, Headunit Revived. Dostępny tylko przez adb: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">Akceptuj z sieci</string>
     <string name="huserver_toggle_network_subtitle">Słuchaj także na porcie TCP 5277 w każdej sieci, bez hasła. Każdy w tej samej sieci Wi-Fi może się połączyć, zobaczyć ekran samochodu i używać mikrofonu.</string>
     <string name="huserver_toggle_lanonce_title">Wyłącz tryb sieciowy po sesji</string>

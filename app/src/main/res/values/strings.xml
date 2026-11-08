@@ -104,7 +104,7 @@
     <string name="setup_app_kind_media">Music, podcasts, radio</string>
     <string name="setup_app_group_messaging">Messaging</string>
     <string name="setup_app_kind_messaging">Messages from its notifications</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">Android Auto apps Alesle Avto can\'t show</string>
     <string name="setup_hint_allowlist">Apps built with recent versions of Google\'s car library only accept hosts in their allow-list; see the README.</string>
     <string name="setup_app_entry_phone">Phone</string>
@@ -112,7 +112,7 @@
     <string name="setup_app_entry_notifications">Notifications</string>
     <string name="setup_section_app_order">Order in the car</string>
     <string name="setup_section_connection_log">Connection log</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Not affiliated with Google. Android Auto is a trademark of Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. Not affiliated with Google. Android Auto is a trademark of Google LLC.</string>
     <string name="setup_choice_style">Style</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -133,7 +133,7 @@
 
     <!-- huserver: developer head unit server -->
     <string name="huserver_label">Head unit server</string>
-    <string name="huserver_toggle_subtitle">Like Android Auto\'s developer mode, for the desktop head unit, DHU, openauto, Headunit Revived. Reachable through adb only: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">Like Android Auto\'s developer mode, for the desktop head unit, DHU, openauto, Headunit Revived. Reachable through adb only: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">Accept from the network</string>
     <string name="huserver_toggle_network_subtitle">Also listen on TCP port 5277 on every network, with no password. Anyone on the same Wi-Fi can connect and see the car screen and use the microphone.</string>
     <string name="huserver_toggle_lanonce_title">Turn off network mode after a session</string>

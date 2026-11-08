@@ -61,7 +61,7 @@ class CarAudioOut(
     fun start() {
         val cfg = channel.config ?: return
         running = true
-        thread = Thread({ loop(cfg.samplingRate, cfg.numberOfChannels) }, "aare-audio-${channel.streamType.name.lowercase()}").apply { start() }
+        thread = Thread({ loop(cfg.samplingRate, cfg.numberOfChannels) }, "alesle-audio-${channel.streamType.name.lowercase()}").apply { start() }
     }
 
     private fun loop(rate: Int, channels: Int) {
@@ -152,7 +152,7 @@ class CarAudioOut(
     }
 
     companion object {
-        private const val TAG = "AareAudioOut"
+        private const val TAG = "AlesleAudioOut"
         private const val SILENCE_MS = 3_000L
         /** About 1 s of 20 ms chunks kept while waiting for the car's focus grant. */
         private const val MAX_QUEUED = 50

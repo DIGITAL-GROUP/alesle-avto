@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in AARE doesn't work as it should.
+description: Something in Alesle Avto doesn't work as it should.
 labels: ["bug"]
 body:
   - type: markdown
@@ -22,9 +22,9 @@ body:
     validations:
       required: true
   - type: input
-    id: aare-version
+    id: alesle-version
     attributes:
-      label: AARE version
+      label: Alesle Avto version
       placeholder: v1.1.1
     validations:
       required: true
@@ -45,6 +45,6 @@ body:
     attributes:
       label: Logs
       description: |
-        The connection log (Advanced → Connection log), and if you can, `adb logcat | grep -iE 'aare|AareAap'`
+        The connection log (Advanced → Connection log), and if you can, `adb logcat | grep -iE 'alesle|AlesleAap'`
         around the problem. Redact anything private first.
       render: text

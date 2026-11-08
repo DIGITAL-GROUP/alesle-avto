@@ -132,7 +132,7 @@ internal class MediaDiscovery(private val context: Context, private val scope: C
         else @Suppress("DEPRECATION") getApplicationInfo(pkg, PackageManager.GET_META_DATA)
 
     companion object {
-        private const val TAG = "AareMediaApps"
+        private const val TAG = "AlesleMediaApps"
         const val ACTION_MEDIA3_LIBRARY = "androidx.media3.session.MediaLibraryService"
         const val ACTION_LEGACY_BROWSER = "android.media.browse.MediaBrowserService"
         private const val META_CAR_APPLICATION = "com.google.android.gms.car.application"

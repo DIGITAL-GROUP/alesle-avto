@@ -23,13 +23,13 @@ android {
     signingConfigs {
         // Release key from the environment (the release workflow's secrets). Without it the
         // release APK is unsigned: use the debug one locally.
-        val keystore = providers.environmentVariable("AARE_KEYSTORE").orNull
+        val keystore = providers.environmentVariable("ALESLE_KEYSTORE").orNull
         if (keystore != null) {
             create("release") {
                 storeFile = file(keystore)
-                storePassword = providers.environmentVariable("AARE_KEYSTORE_PASSWORD").orNull
-                keyAlias = providers.environmentVariable("AARE_KEY_ALIAS").orNull
-                keyPassword = providers.environmentVariable("AARE_KEY_PASSWORD").orNull
+                storePassword = providers.environmentVariable("ALESLE_KEYSTORE_PASSWORD").orNull
+                keyAlias = providers.environmentVariable("ALESLE_KEY_ALIAS").orNull
+                keyPassword = providers.environmentVariable("ALESLE_KEY_PASSWORD").orNull
             }
         }
     }
@@ -64,8 +64,8 @@ android {
     }
 }
 
-// AARE's built-in phone certificate, offered to head units after any imported one and before the
-// runtime-generated one. Release builds get it from the AARE_PHONE_CERT / AARE_PHONE_KEY secrets
+// Alesle Avto's built-in phone certificate, offered to head units after any imported one and before the
+// runtime-generated one. Release builds get it from the ALESLE_PHONE_CERT / ALESLE_PHONE_KEY secrets
 // (PEM certificate chain, PEM PKCS#8 key); other builds simply go without. It ships in the APK, so
 // it isn't secret from users: it's a stable identity a head-unit vendor or CA could sign one day.
 abstract class PhoneIdentityAssets : DefaultTask() {
@@ -80,7 +80,7 @@ abstract class PhoneIdentityAssets : DefaultTask() {
         val c = cert.orNull?.takeIf { it.isNotBlank() }
         val k = key.orNull?.takeIf { it.isNotBlank() }
         if (c == null || k == null) {
-            if (c != null || k != null) logger.warn("AARE_PHONE_CERT and AARE_PHONE_KEY go together: no built-in certificate")
+            if (c != null || k != null) logger.warn("ALESLE_PHONE_CERT and ALESLE_PHONE_KEY go together: no built-in certificate")
             return
         }
         dir.mkdirs()
@@ -90,8 +90,8 @@ abstract class PhoneIdentityAssets : DefaultTask() {
 }
 
 val phoneIdentityAssets = tasks.register<PhoneIdentityAssets>("phoneIdentityAssets") {
-    cert.set(providers.environmentVariable("AARE_PHONE_CERT"))
-    key.set(providers.environmentVariable("AARE_PHONE_KEY"))
+    cert.set(providers.environmentVariable("ALESLE_PHONE_CERT"))
+    key.set(providers.environmentVariable("ALESLE_PHONE_KEY"))
 }
 
 androidComponents {

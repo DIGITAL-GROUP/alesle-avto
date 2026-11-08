@@ -1,13 +1,13 @@
 name: Car / head unit report
-description: Report whether AARE works with a real car or head unit (working or not — both help).
+description: Report whether Alesle Avto works with a real car or head unit (working or not — both help).
 title: "[Car] <make> <model> <year>"
 labels: ["car report"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for testing AARE in a real car. Reports of failures are as useful as successes:
-        most "doesn't work" cases are the head unit refusing AARE's certificate, which we track.
+        Thanks for testing Alesle Avto in a real car. Reports of failures are as useful as successes:
+        most "doesn't work" cases are the head unit refusing Alesle Avto's certificate, which we track.
 
         Please don't paste an unredacted connection log if it shows your home location or exact
         GPS: a couple of lines around the connection and the `status` are usually enough.
@@ -57,9 +57,9 @@ body:
     validations:
       required: true
   - type: input
-    id: aare-version
+    id: alesle-version
     attributes:
-      label: AARE version
+      label: Alesle Avto version
       description: From the app, or the release/APK you installed.
       placeholder: v1.1.1
     validations:
@@ -73,5 +73,5 @@ body:
     id: log
     attributes:
       label: Connection log
-      description: AARE on the phone → Advanced → Connection log, the lines around the connection. Redact your location first.
+      description: Alesle Avto on the phone → Advanced → Connection log, the lines around the connection. Redact your location first.
       render: text

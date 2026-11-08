@@ -196,7 +196,7 @@ class NavStatusBridge(
         .build()
 
     companion object {
-        private const val TAG = "AareNavStatus"
+        private const val TAG = "AlesleNavStatus"
 
         /**
          * Car App Library maneuver types newer than the protocol's list (43..50: roundabout enter

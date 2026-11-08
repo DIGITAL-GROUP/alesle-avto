@@ -6,7 +6,7 @@ import android.content.Intent
 
 /**
  * The "Trust" action of the "New head unit" notification: trusts the refused certificate, so the
- * next connection to that head unit goes through. Not exported: only AARE's own (immutable)
+ * next connection to that head unit goes through. Not exported: only Alesle Avto's own (immutable)
  * pending intent reaches it.
  */
 class TrustReceiver : BroadcastReceiver() {

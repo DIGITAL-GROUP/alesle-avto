@@ -18,7 +18,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "AARE"
+rootProject.name = "AlesleAvto"
 include(":aap")
 include(":app")
 include(":headunit")

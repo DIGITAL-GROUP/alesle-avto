@@ -24,7 +24,7 @@ object SelfSignedCertificate {
 
     class Generated(val keyPair: KeyPair, val certificate: X509Certificate)
 
-    fun generate(commonName: String = "AARE phone", validYears: Int = 30, random: SecureRandom = SecureRandom()): Generated {
+    fun generate(commonName: String = "Alesle Avto phone", validYears: Int = 30, random: SecureRandom = SecureRandom()): Generated {
         val keyPair = KeyPairGenerator.getInstance("RSA").apply { initialize(2048, random) }.generateKeyPair()
         val serial = BigInteger(64, random).abs().add(BigInteger.ONE)
         val now = System.currentTimeMillis()

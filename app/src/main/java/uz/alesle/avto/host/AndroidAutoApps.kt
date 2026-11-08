@@ -10,7 +10,7 @@ import androidx.core.graphics.drawable.toBitmap
 import uz.alesle.avto.media.MediaDiscovery
 import org.xmlpull.v1.XmlPullParser
 
-/** An app that declares Android Auto support but that AARE doesn't show, and why. */
+/** An app that declares Android Auto support but that Alesle Avto doesn't show, and why. */
 data class UnsupportedCarApp(
     val packageName: String,
     val label: String,
@@ -25,7 +25,7 @@ data class PhoneApp(val packageName: String, val label: String, val icon: Bitmap
 
 /**
  * Finds every app that declares Android Auto support (`com.google.android.gms.car.application`
- * meta-data): the messaging apps among them, and the ones AARE can't show, to tell the user.
+ * meta-data): the messaging apps among them, and the ones Alesle Avto can't show, to tell the user.
  */
 object AndroidAutoApps {
     private const val META_CAR_APPLICATION = "com.google.android.gms.car.application"
@@ -62,7 +62,7 @@ object AndroidAutoApps {
         }.sortedBy { it.label.lowercase() }
     }
 
-    /** Apps declaring Android Auto support that AARE lists neither as car apps ([carApps]) nor as media or messaging apps. */
+    /** Apps declaring Android Auto support that Alesle Avto lists neither as car apps ([carApps]) nor as media or messaging apps. */
     fun unsupported(context: Context, carApps: Collection<String>, iconSizePx: Int = 96): List<UnsupportedCarApp> {
         val pm = context.packageManager
         val shown = carApps.toSet() + mediaPackages(pm)
@@ -89,7 +89,7 @@ object AndroidAutoApps {
             .map { it to uses(pm, it) }
     }
 
-    /** Packages with a media browser service, which AARE lists as media apps (see MediaDiscovery). */
+    /** Packages with a media browser service, which Alesle Avto lists as media apps (see MediaDiscovery). */
     private fun mediaPackages(pm: PackageManager): Set<String> =
         listOf(MediaDiscovery.ACTION_MEDIA3_LIBRARY, MediaDiscovery.ACTION_LEGACY_BROWSER).flatMap { action ->
             @Suppress("DEPRECATION") pm.queryIntentServices(Intent(action), 0)
@@ -97,8 +97,8 @@ object AndroidAutoApps {
         }.toSet()
 
     private fun reason(uses: Set<String>): String = when {
-        "media" in uses -> "Declares media support but has no media browser service AARE can use"
-        "template" in uses -> "Declares a car app but has no Car App Library service AARE can use"
+        "media" in uses -> "Declares media support but has no media browser service Alesle Avto can use"
+        "template" in uses -> "Declares a car app but has no Car App Library service Alesle Avto can use"
         uses.isEmpty() -> "Uses Google's private Android Auto interface, which only Android Auto can host"
         else -> "Uses Google's private Android Auto interface (${uses.joinToString()}), which only Android Auto can host"
     }

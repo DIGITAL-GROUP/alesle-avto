@@ -84,7 +84,7 @@ class WirelessConnector(context: Context, private val log: AapLog, private val o
 
     /**
      * Bonded head units offering wireless Android Auto that are already connected over Bluetooth.
-     * For the case where the car was connected before AARE could react to the ACL-connect
+     * For the case where the car was connected before Alesle Avto could react to the ACL-connect
      * broadcast (#56): we can't wait for an edge that already passed, so we look at the current
      * state. Uses the hidden isConnected(); if it can't be read, returns empty and the normal
      * ACL-connect path is unaffected.

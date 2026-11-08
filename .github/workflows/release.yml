@@ -1,13 +1,13 @@
 # Publishes a GitHub release when a version tag (v1.2.3) is pushed:
-#   - the Android app (aare-<version>.apk),
-#   - the Magisk module that installs it as a privileged app (aare-<version>-magisk.zip),
-#   - the desktop head unit (aare-headunit-<version>.zip),
+#   - the Android app (alesle-<version>.apk),
+#   - the Magisk module that installs it as a privileged app (alesle-<version>-magisk.zip),
+#   - the desktop head unit (alesle-headunit-<version>.zip),
 #   - SHA256SUMS.
 #
 # The APK is signed with the key in these repository secrets:
-# AARE_KEYSTORE_BASE64 (base64 of the .jks file), AARE_KEYSTORE_PASSWORD, AARE_KEY_ALIAS,
-# AARE_KEY_PASSWORD. Without them it publishes a debug-signed APK instead (and says so).
-# AARE_PHONE_CERT and AARE_PHONE_KEY (PEM certificate, PEM PKCS#8 key), if set, become AARE's
+# ALESLE_KEYSTORE_BASE64 (base64 of the .jks file), ALESLE_KEYSTORE_PASSWORD, ALESLE_KEY_ALIAS,
+# ALESLE_KEY_PASSWORD. Without them it publishes a debug-signed APK instead (and says so).
+# ALESLE_PHONE_CERT and ALESLE_PHONE_KEY (PEM certificate, PEM PKCS#8 key), if set, become Alesle Avto's
 # built-in phone certificate (see app/build.gradle.kts).
 name: Release
 
@@ -22,7 +22,7 @@ jobs:
     permissions:
       contents: write
     env:
-      HAS_KEY: ${{ secrets.AARE_KEYSTORE_BASE64 != '' }}
+      HAS_KEY: ${{ secrets.ALESLE_KEYSTORE_BASE64 != '' }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -45,56 +45,56 @@ jobs:
       - name: Signed release APK
         if: env.HAS_KEY == 'true'
         env:
-          KEYSTORE_BASE64: ${{ secrets.AARE_KEYSTORE_BASE64 }}
-          AARE_KEYSTORE_PASSWORD: ${{ secrets.AARE_KEYSTORE_PASSWORD }}
-          AARE_KEY_ALIAS: ${{ secrets.AARE_KEY_ALIAS }}
-          AARE_KEY_PASSWORD: ${{ secrets.AARE_KEY_PASSWORD }}
-          AARE_PHONE_CERT: ${{ secrets.AARE_PHONE_CERT }}
-          AARE_PHONE_KEY: ${{ secrets.AARE_PHONE_KEY }}
+          KEYSTORE_BASE64: ${{ secrets.ALESLE_KEYSTORE_BASE64 }}
+          ALESLE_KEYSTORE_PASSWORD: ${{ secrets.ALESLE_KEYSTORE_PASSWORD }}
+          ALESLE_KEY_ALIAS: ${{ secrets.ALESLE_KEY_ALIAS }}
+          ALESLE_KEY_PASSWORD: ${{ secrets.ALESLE_KEY_PASSWORD }}
+          ALESLE_PHONE_CERT: ${{ secrets.ALESLE_PHONE_CERT }}
+          ALESLE_PHONE_KEY: ${{ secrets.ALESLE_PHONE_KEY }}
         run: |
-          export AARE_KEYSTORE="$RUNNER_TEMP/release.jks"
-          echo "$KEYSTORE_BASE64" | base64 -d > "$AARE_KEYSTORE"
+          export ALESLE_KEYSTORE="$RUNNER_TEMP/release.jks"
+          echo "$KEYSTORE_BASE64" | base64 -d > "$ALESLE_KEYSTORE"
           ./gradlew --no-daemon :app:assembleRelease -PversionName="$VERSION" -PversionCode="$VERSION_CODE"
-          rm -f "$AARE_KEYSTORE"
+          rm -f "$ALESLE_KEYSTORE"
           mkdir -p out
-          cp app/build/outputs/apk/release/app-release.apk "out/aare-$VERSION.apk"
+          cp app/build/outputs/apk/release/app-release.apk "out/alesle-$VERSION.apk"
 
       - name: Debug APK (no signing key in the secrets)
         if: env.HAS_KEY != 'true'
         env:
-          AARE_PHONE_CERT: ${{ secrets.AARE_PHONE_CERT }}
-          AARE_PHONE_KEY: ${{ secrets.AARE_PHONE_KEY }}
+          ALESLE_PHONE_CERT: ${{ secrets.ALESLE_PHONE_CERT }}
+          ALESLE_PHONE_KEY: ${{ secrets.ALESLE_PHONE_KEY }}
         run: |
-          echo "::warning::AARE_KEYSTORE_BASE64 is not set: publishing a debug-signed APK"
+          echo "::warning::ALESLE_KEYSTORE_BASE64 is not set: publishing a debug-signed APK"
           ./gradlew --no-daemon :app:assembleDebug -PversionName="$VERSION" -PversionCode="$VERSION_CODE"
           mkdir -p out
-          cp app/build/outputs/apk/debug/app-debug.apk "out/aare-$VERSION-debug.apk"
+          cp app/build/outputs/apk/debug/app-debug.apk "out/alesle-$VERSION-debug.apk"
 
       - name: Magisk module and desktop head unit
         run: |
-          APK=$(ls out/aare-*.apk)
-          AARE_VERSION="$VERSION" tools/magisk/build-module.sh "$APK"
-          cp build/aare-magisk.zip "out/aare-$VERSION-magisk.zip"
+          APK=$(ls out/alesle-*.apk)
+          ALESLE_VERSION="$VERSION" tools/magisk/build-module.sh "$APK"
+          cp build/alesle-magisk.zip "out/alesle-$VERSION-magisk.zip"
           ./gradlew --no-daemon :headunit:installDist
-          (cd headunit/build/install && zip -qr "$GITHUB_WORKSPACE/out/aare-headunit-$VERSION.zip" aare-headunit)
+          (cd headunit/build/install && zip -qr "$GITHUB_WORKSPACE/out/alesle-headunit-$VERSION.zip" alesle-headunit)
 
       - name: Publish
         run: |
           cd out
           sha256sum -- * > SHA256SUMS
           cat SHA256SUMS
-          APK=$(ls aare-*.apk)
-          SIGNED=$([ "$HAS_KEY" = true ] && echo "signed with AARE's release key" || echo "debug-signed")
+          APK=$(ls alesle-*.apk)
+          SIGNED=$([ "$HAS_KEY" = true ] && echo "signed with Alesle Avto's release key" || echo "debug-signed")
           cat > ../notes.md <<NOTES
           ## Downloads
 
           | File | What |
           |---|---|
           | \`$APK\` | the Android app ($SIGNED): \`adb install -r $APK\` or open it on the phone |
-          | \`aare-$VERSION-magisk.zip\` | rooted phones: installs AARE as a privileged app, for car audio like Android Auto |
-          | \`aare-headunit-$VERSION.zip\` | the desktop head unit, to try AARE without a car (needs Java 17+, ffmpeg and adb) |
+          | \`alesle-$VERSION-magisk.zip\` | rooted phones: installs Alesle Avto as a privileged app, for car audio like Android Auto |
+          | \`alesle-headunit-$VERSION.zip\` | the desktop head unit, to try Alesle Avto without a car (needs Java 17+, ffmpeg and adb) |
           | \`SHA256SUMS\` | checksums |
 
           See the [README](https://github.com/$GITHUB_REPOSITORY#readme) for setup and compatibility.
           NOTES
-          gh release create "$GITHUB_REF_NAME" --title "AARE $VERSION" --notes-file ../notes.md --generate-notes -- *
+          gh release create "$GITHUB_REF_NAME" --title "Alesle Avto $VERSION" --notes-file ../notes.md --generate-notes -- *

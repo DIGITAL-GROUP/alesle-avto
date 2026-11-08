@@ -108,7 +108,7 @@ class MicRouter(
             }
             rec.stop()
             rec.release()
-        }, "aare-phone-mic").apply { start() }
+        }, "alesle-phone-mic").apply { start() }
     }
 
     private fun stopPhoneMic() {
@@ -118,7 +118,7 @@ class MicRouter(
     }
 
     companion object {
-        private const val TAG = "AareMic"
+        private const val TAG = "AlesleMic"
 
         /** Converts 16-bit PCM at any rate/channel count to 16 kHz mono (linear interpolation). */
         fun downmixResample(data: ByteArray, offset: Int, length: Int, rate: Int, channels: Int): ByteArray {

@@ -17,7 +17,7 @@ import java.security.spec.PKCS8EncodedKeySpec
  * The phone certificates offered to head units, in order.
  *
  * Head units built on Google's receiver library only accept a phone certificate issued by
- * Google; open-source and some OEM head units accept any. Release builds carry AARE's own built-in
+ * Google; open-source and some OEM head units accept any. Release builds carry Alesle Avto's own built-in
  * certificate, we always have a generated self-signed one, and the user may import others (PEM
  * certificate chain + PKCS#8 key, or a PKCS#12 file).
  * When a head unit rejects the certificate during the handshake, the next connection offers the
@@ -35,14 +35,14 @@ class CertificateStore(private val context: Context) {
 
     /**
      * All usable identities: imported ones first (they're the reason to import), then the one built
-     * into this build of AARE (release builds), then the generated one, which always works.
+     * into this build of Alesle Avto (release builds), then the generated one, which always works.
      */
     fun entries(): List<Entry> {
         val imported = dir.listFiles { f -> f.isDirectory && f.name != "_generated" }.orEmpty().sortedBy { it.name }.mapNotNull { load(it) }
         return imported + listOfNotNull(builtIn) + Entry(GENERATED, generated(), removable = false)
     }
 
-    /** AARE's own certificate, from the release build's assets; null in builds made without it. */
+    /** Alesle Avto's own certificate, from the release build's assets; null in builds made without it. */
     private val builtIn: Entry? by lazy {
         runCatching {
             val chain = context.assets.open("$BUILT_IN_DIR/cert.pem").use { input ->
@@ -63,7 +63,7 @@ class CertificateStore(private val context: Context) {
     private fun generated(): PhoneIdentity {
         val d = File(dir, "_generated")
         load(d)?.let { return it.identity }
-        val g = SelfSignedCertificate.generate("AARE ${android.os.Build.MODEL}")
+        val g = SelfSignedCertificate.generate("Alesle Avto ${android.os.Build.MODEL}")
         save(d, listOf(g.certificate), g.keyPair.private)
         return PhoneIdentity(g.certificate, g.keyPair.private)
     }
@@ -118,7 +118,7 @@ class CertificateStore(private val context: Context) {
 
     companion object {
         private const val GENERATED = "Generated (self-signed)"
-        private const val BUILT_IN = "AARE (built in)"
+        private const val BUILT_IN = "Alesle Avto (built in)"
         private const val BUILT_IN_DIR = "phone_identity"
 
         fun pem(type: String, der: ByteArray) =

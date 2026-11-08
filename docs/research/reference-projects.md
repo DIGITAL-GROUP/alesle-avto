@@ -9,7 +9,7 @@ Android Auto Projection protocol (Google calls it GAL, "Google Automotive Link")
 
 ---
 
-## 0. TL;DR for the AARE (phone-side) project
+## 0. TL;DR for the Alesle Avto (phone-side) project
 
 * **Open-source phone-side implementations exist**, none of them an Android app:
   * **behead** (khimaros/behead, Rust, GPL-3.0-only, active Oct 2026): the closest match. `no_std` protocol core

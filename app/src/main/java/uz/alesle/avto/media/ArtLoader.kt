@@ -183,7 +183,7 @@ internal class ArtLoader(private val context: Context) {
                 PackageManager.PERMISSION_GRANTED
         }
 
-        private const val TAG = "AareArt"
+        private const val TAG = "AlesleArt"
         private const val CACHE_BYTES = 32 * 1024 * 1024
         private const val MAX_DOWNLOAD = 10 * 1024 * 1024
 

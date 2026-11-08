@@ -20,7 +20,7 @@ data class AssistantApp(
 /**
  * Finds voice assistants and the phone's default one.
  *
- * The voice button opens the assistant the user picked in AARE, or by default the phone's own
+ * The voice button opens the assistant the user picked in Alesle Avto, or by default the phone's own
  * default digital assistant. An assistant with a car app (Lapin, for example) runs on the car
  * screen; any other one is opened on the phone.
  */
@@ -28,7 +28,7 @@ object Assistants {
 
     /**
      * The app allowed to act on the car and read messages through [CarControlProvider]: the one
-     * chosen in AARE ([chosen]), or else the phone's default digital assistant as set by the user.
+     * chosen in Alesle Avto ([chosen]), or else the phone's default digital assistant as set by the user.
      * Never a guess from the assist intent: any app can declare that intent filter.
      */
     fun authorized(context: Context, chosen: String?): String? = chosen ?: phoneDefaultSetting(context)
@@ -90,7 +90,7 @@ object Assistants {
     /**
      * Opens [packageName]'s voice input on the phone, for an assistant without a car app.
      * Returns false if it has nothing to open. Android may still keep it in the background
-     * when AARE isn't in the foreground on the phone.
+     * when Alesle Avto isn't in the foreground on the phone.
      */
     fun startOnPhone(context: Context, packageName: String): Boolean {
         val pm = context.packageManager

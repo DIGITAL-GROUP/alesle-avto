@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
     val file = File(args.getOrElse(0) { "test.h264" })
     val port = args.getOrNull(1)?.toInt() ?: 5277
     val identity = if (args.size >= 4) loadPem(File(args[2]), File(args[3])) else
-        SelfSignedCertificate.generate("AARE phone").let { PhoneIdentity(it.certificate, it.keyPair.private) }
+        SelfSignedCertificate.generate("Alesle Avto phone").let { PhoneIdentity(it.certificate, it.keyPair.private) }
     val units = AnnexB.accessUnits(file.readBytes())
     println("loaded ${units.config.size} bytes of SPS/PPS and ${units.frames.size} frames from $file")
 
@@ -53,7 +53,7 @@ fun main(args: Array<String>) {
             var video: VideoChannel? = null
             val session = AapSession(
                 SocketTransport(socket), identity,
-                PhoneDescription("AARE PhoneSim", "Android", instanceId = "aare-phonesim"),
+                PhoneDescription("Alesle Avto PhoneSim", "Android", instanceId = "alesle-phonesim"),
                 object : AapSession.Callbacks {
                     override fun onServiceDiscovery(session: AapSession, response: ServiceDiscoveryResponse): List<ServiceChannel> =
                         response.channelsList.mapNotNull { s ->

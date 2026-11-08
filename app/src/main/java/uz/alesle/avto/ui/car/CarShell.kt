@@ -585,7 +585,7 @@ fun RoundIcon(icon: ImageVector, label: String, filled: Boolean, onClick: () -> 
 // ---------------------------------------------------------------- launcher
 
 /**
- * The app grid, in two tabs: the car apps (hosted car apps, media, AARE's own) and the phone's
+ * The app grid, in two tabs: the car apps (hosted car apps, media, Alesle Avto's own) and the phone's
  * own launcher apps, which run as themselves on a display of their own ([PhoneAppsGrid]).
  */
 @Composable

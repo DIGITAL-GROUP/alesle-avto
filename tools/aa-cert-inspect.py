@@ -18,7 +18,7 @@ saves them as PEM, so you can:
 key material: it only matches PEM certificate blocks and skips anything that looks like
 a key. The private half of the CarService certificate is Google's, and extracting it is
 how you'd forge the authentication Android Auto is built on — that is out of scope here,
-see docs/certificates.md ("AARE does not ship, download or extract Google's certificate
+see docs/certificates.md ("Alesle Avto does not ship, download or extract Google's certificate
 or key"). A certificate proves nothing on its own; it only helps if you hold a key you
 are entitled to.
 
@@ -246,7 +246,7 @@ def main() -> int:
         print(f"    saved    : {out}\n")
 
     print(f"{count} unique certificate(s); PEM files in {outdir}")
-    print("To compare with your own AARE build's signing key: "
+    print("To compare with your own Alesle Avto build's signing key: "
           "apksigner verify --print-certs app.apk")
     return 0
 

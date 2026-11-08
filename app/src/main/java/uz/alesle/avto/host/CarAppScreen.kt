@@ -69,13 +69,13 @@ fun CarAppScreen(conn: CarAppConnection, runtime: CarRuntime, modifier: Modifier
         // The map surface outlives template changes: recreating it with each new template (as a
         // navigation app sends them every second or so) blanks the map until the app redraws.
         // Only an app with a SurfaceCallback draws on it; otherwise (PlaceListMapTemplate expects
-        // the host to draw the map, which AARE can't) a plain background instead of a black hole.
+        // the host to draw the map, which Alesle Avto can't) a plain background instead of a black hole.
         if (usesMap(template)) {
             if (conn.wantsSurface) host.MapSurface(Modifier.fillMaxSize())
             else Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainer))
         }
         when {
-            // An app that won't work with AARE as its host (Yandex Maps: "Could not start Maps") can still
+            // An app that won't work with Alesle Avto as its host (Yandex Maps: "Could not start Maps") can still
             // run as itself on the car screen.
             conn.status == CarAppConnection.Status.FAILED -> AppMessage(conn, conn.error ?: "Something went wrong", retry = { conn.connect() },
                 openItself = if (canOpenItself) ({ runtime.phoneAppFor(conn.info.packageName)?.let(runtime.actions::openApp) }) else null)

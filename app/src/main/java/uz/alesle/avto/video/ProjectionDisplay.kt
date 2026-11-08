@@ -52,7 +52,7 @@ class ProjectionDisplay(
     init {
         val dm = context.getSystemService(DisplayManager::class.java)
         display = dm.createVirtualDisplay(
-            "AARE car", width, height, densityDpi, surface,
+            "Alesle Avto car", width, height, densityDpi, surface,
             DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION or DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY,
         )
     }

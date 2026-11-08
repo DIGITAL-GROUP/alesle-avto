@@ -41,7 +41,7 @@ class AppDisplay(private val context: Context) {
         private set
 
     private val main = Handler(Looper.getMainLooper())
-    private val worker = HandlerThread("aare-app-display").apply { start() }
+    private val worker = HandlerThread("alesle-app-display").apply { start() }
     private val bg = Handler(worker.looper)
 
     @Volatile private var service: IShellDisplay? = null
@@ -192,11 +192,11 @@ class AppDisplay(private val context: Context) {
         main.post { state = State.Failed(reason) }
     }
 
-    /** Whether AARE may use Shizuku now. */
+    /** Whether Alesle Avto may use Shizuku now. */
     enum class Access { READY, NEEDS_PERMISSION, NOT_RUNNING, UNSUPPORTED }
 
     companion object {
-        private const val TAG = "AareAppDisplay"
+        private const val TAG = "AlesleAppDisplay"
 
         fun access(): Access = when {
             // Root task queries and IME policies on other displays: Android 12+.

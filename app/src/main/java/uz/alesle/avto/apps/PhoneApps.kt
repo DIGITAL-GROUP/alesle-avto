@@ -20,7 +20,7 @@ object PhoneApps {
     /** Pinned first, in this order. */
     val PINNED = listOf("ru.yandex.yandexnavi", "ru.yandex.yandexmaps", "ru.yandex.music")
 
-    /** Every launcher activity but AARE's own, arranged by [arrange]. Package manager work: not on the main thread. */
+    /** Every launcher activity but Alesle Avto's own, arranged by [arrange]. Package manager work: not on the main thread. */
     fun query(context: Context, iconSizePx: Int = 112): List<LaunchableApp> {
         val pm = context.packageManager
         val launcher = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
@@ -68,7 +68,7 @@ object PhoneApps {
 
     /**
      * Apps the car may show while driving: navigation and music, as the phone screen mirror
-     * allows. [extra] adds the packages AARE knows as navigation or media apps.
+     * allows. [extra] adds the packages Alesle Avto knows as navigation or media apps.
      */
     fun drivingAllowed(packageName: String, extra: Set<String> = emptySet()): Boolean =
         packageName in PINNED || packageName in KNOWN_NAVIGATION || packageName in extra

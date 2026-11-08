@@ -101,12 +101,12 @@ class Settings(context: Context) {
         get() = prefs.getString("assistant_pkg", null)
         set(v) = prefs.edit { if (v == null) remove("assistant_pkg") else putString("assistant_pkg", v) }
 
-    /** Offer "Phone screen" in the car: the phone's own screen, for apps AARE can't host (Google Maps, Waze). */
+    /** Offer "Phone screen" in the car: the phone's own screen, for apps Alesle Avto can't host (Google Maps, Waze). */
     var phoneScreen: Boolean
         get() = prefs.getBoolean("phone_screen", false)
         set(v) = prefs.edit { putBoolean("phone_screen", v) }
 
-    /** While connected, the car's GPS becomes the phone's location (needs AARE as mock location app). */
+    /** While connected, the car's GPS becomes the phone's location (needs Alesle Avto as mock location app). */
     var carGpsForPhone: Boolean
         get() = prefs.getBoolean("car_gps", true)
         set(v) = prefs.edit { putBoolean("car_gps", v) }
@@ -145,7 +145,7 @@ class Settings(context: Context) {
         get() = prefs.getBoolean("read_messages", false)
         set(v) = prefs.edit { putBoolean("read_messages", v) }
 
-    /** Cars AARE connected to: name to the last connection time (ms). */
+    /** Cars Alesle Avto connected to: name to the last connection time (ms). */
     val knownCars: Map<String, Long>
         get() = prefs.getStringSet("known_cars", emptySet()).orEmpty().mapNotNull { e ->
             val i = e.lastIndexOf('\t')

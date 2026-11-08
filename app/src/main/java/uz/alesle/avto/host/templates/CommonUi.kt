@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import uz.alesle.avto.ui.theme.LocalCarDimens
 
-private const val TAG = "AareTemplates"
+private const val TAG = "AlesleTemplates"
 
 /** The host of the template being rendered (provided by [RenderTemplate]). */
 internal val LocalTemplateHost = staticCompositionLocalOf<TemplateHost> { error("RenderTemplate not in the hierarchy") }

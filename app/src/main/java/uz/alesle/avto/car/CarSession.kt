@@ -621,7 +621,7 @@ class CarSession(
     }.getOrNull()
 
     companion object {
-        private const val TAG = "AareSession"
+        private const val TAG = "AlesleSession"
         const val KEYCODE_MEDIA = 65537
         const val KEYCODE_NAVIGATION = 65538
 

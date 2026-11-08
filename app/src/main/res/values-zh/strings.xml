@@ -102,7 +102,7 @@
     <string name="setup_app_kind_media">音乐、播客、广播</string>
     <string name="setup_app_group_messaging">消息</string>
     <string name="setup_app_kind_messaging">来自其通知的消息</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">Alesle Avto 无法显示的 Android Auto 应用</string>
     <string name="setup_hint_allowlist">使用较新版本 Google 车载库构建的应用，仅接受其允许列表中的宿主；详见 README。</string>
     <string name="setup_app_entry_phone">电话</string>
@@ -110,7 +110,7 @@
     <string name="setup_app_entry_notifications">通知</string>
     <string name="setup_section_app_order">车机中的排列顺序</string>
     <string name="setup_section_connection_log">连接日志</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · 与 Google 无关联。Android Auto 是 Google LLC 的商标。</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. 与 Google 无关联。Android Auto 是 Google LLC 的商标。</string>
     <string name="setup_choice_style">样式</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -129,7 +129,7 @@
     <string name="cert_imported_fallback">已导入</string>
 
     <string name="huserver_label">车机服务器</string>
-    <string name="huserver_toggle_subtitle">类似 Android Auto 的开发者模式，供桌面车机模拟器 DHU、openauto、Headunit Revived 使用。仅可通过 adb 访问：adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">类似 Android Auto 的开发者模式，供桌面车机模拟器 DHU、openauto、Headunit Revived 使用。仅可通过 adb 访问：adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">允许来自网络的连接</string>
     <string name="huserver_toggle_network_subtitle">同时在所有网络上监听 TCP 端口 5277，且无需密码。同一 Wi-Fi 下的任何人都能连接并查看车机屏幕、使用麦克风。</string>
     <string name="huserver_toggle_lanonce_title">会话结束后关闭网络模式</string>

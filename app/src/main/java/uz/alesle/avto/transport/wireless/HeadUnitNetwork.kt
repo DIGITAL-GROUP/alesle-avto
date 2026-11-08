@@ -131,7 +131,7 @@ internal class HeadUnitNetwork(
         callback?.let { runCatching { connectivity.unregisterNetworkCallback(it) } }
         callback = null
         network = null
-        // Android 8/9: forget the network AARE added for this session.
+        // Android 8/9: forget the network Alesle Avto added for this session.
         legacyNetworkId?.let { id -> @Suppress("DEPRECATION") runCatching { wifi?.removeNetwork(id) } }
         legacyNetworkId = null
     }

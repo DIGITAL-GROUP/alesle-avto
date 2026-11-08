@@ -104,7 +104,7 @@
     <string name="setup_app_kind_media">Música, podcasts, rádio</string>
     <string name="setup_app_group_messaging">Mensagens</string>
     <string name="setup_app_kind_messaging">Mensagens a partir das suas notificações</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">Aplicações Android Auto que a Alesle Avto não consegue mostrar</string>
     <string name="setup_hint_allowlist">As aplicações criadas com versões recentes da biblioteca de carro da Google só aceitam anfitriões incluídos na sua lista de permissões; consulte o README.</string>
     <string name="setup_app_entry_phone">Telefone</string>
@@ -112,7 +112,7 @@
     <string name="setup_app_entry_notifications">Notificações</string>
     <string name="setup_section_app_order">Ordem no carro</string>
     <string name="setup_section_connection_log">Registo de ligação</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Não afiliada com a Google. Android Auto é uma marca comercial da Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. Não afiliada com a Google. Android Auto é uma marca comercial da Google LLC.</string>
     <string name="setup_choice_style">Estilo</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -133,7 +133,7 @@
 
     <!-- huserver: developer head unit server -->
     <string name="huserver_label">Servidor da unidade principal</string>
-    <string name="huserver_toggle_subtitle">Como o modo de programador do Android Auto, para a unidade principal de computador, DHU, openauto, Headunit Revived. Só acessível através de adb: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">Como o modo de programador do Android Auto, para a unidade principal de computador, DHU, openauto, Headunit Revived. Só acessível através de adb: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">Aceitar a partir da rede</string>
     <string name="huserver_toggle_network_subtitle">Também escutar na porta TCP 5277 em qualquer rede, sem palavra-passe. Qualquer pessoa na mesma rede Wi-Fi pode ligar-se, ver o ecrã do carro e utilizar o microfone.</string>
     <string name="huserver_toggle_lanonce_title">Desativar o modo de rede após cada sessão</string>

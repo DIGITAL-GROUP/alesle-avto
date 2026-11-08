@@ -11,13 +11,13 @@ import android.view.Surface
 
 /**
  * The phone's own screen, mirrored into a surface of the car screen through the screen-capture
- * consent AARE already holds for car audio.
+ * consent Alesle Avto already holds for car audio.
  *
  * Android 14 lets one consent create a single virtual display, so the display is created once
  * per consent and only its surface and size change afterwards. Main thread only.
  */
 object PhoneMirror {
-    private const val TAG = "AareMirror"
+    private const val TAG = "AlesleMirror"
     private var display: VirtualDisplay? = null
     private var owner: MediaProjection? = null
 
@@ -32,7 +32,7 @@ object PhoneMirror {
             return true
         }
         return runCatching {
-            display = projection.createVirtualDisplay("aare-phone-screen", width, height, dpi,
+            display = projection.createVirtualDisplay("alesle-phone-screen", width, height, dpi,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, surface, null, null)
             owner = projection
         }.onFailure { Log.w(TAG, "can't mirror the phone screen", it) }.isSuccess

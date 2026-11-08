@@ -44,7 +44,7 @@ class PhoneStatusBridge(
     /** Null when the head unit has no phone status service: battery and call availability still go out. */
     private val channel: PhoneStatusChannel?,
 ) {
-    private val thread = HandlerThread("aare-phonestatus").apply { start() }
+    private val thread = HandlerThread("alesle-phonestatus").apply { start() }
     private val handler = Handler(thread.looper)
     @Volatile private var running = false
 
@@ -227,7 +227,7 @@ class PhoneStatusBridge(
     }.getOrNull()
 
     companion object {
-        private const val TAG = "AarePhoneStatus"
+        private const val TAG = "AleslePhoneStatus"
         private const val CALL_TICK_MS = 1_000L
         private const val IDLE_TICK_MS = 10_000L
         /** Android's own low-battery "critical" level. */

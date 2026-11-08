@@ -38,7 +38,7 @@ import uz.alesle.avto.media.Placeholder
 import uz.alesle.avto.notify.CarNotificationListener
 
 /**
- * The phone's screen on the car screen, for apps AARE can't host (Google Maps, Waze…). Touches
+ * The phone's screen on the car screen, for apps Alesle Avto can't host (Google Maps, Waze…). Touches
  * go back to the phone through [MirrorTouchService]. While driving it only shows a navigation
  * app, which needs [MirrorTouchService] to know the app in front. It is paused, with no frames
  * sent and no touch replayed, while the phone is locked.

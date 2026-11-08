@@ -104,7 +104,7 @@
     <string name="setup_app_kind_media">Hudba, podcasty, rádio</string>
     <string name="setup_app_group_messaging">Zprávy</string>
     <string name="setup_app_kind_messaging">Zprávy z jejích oznámení</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">Aplikace Android Auto, které Alesle Avto nemůže zobrazit</string>
     <string name="setup_hint_allowlist">Aplikace vytvořené s novějšími verzemi knihovny Google pro auta akceptují jen hostitele na seznamu povolených; viz README.</string>
     <string name="setup_app_entry_phone">Telefon</string>
@@ -112,7 +112,7 @@
     <string name="setup_app_entry_notifications">Oznámení</string>
     <string name="setup_section_app_order">Pořadí v autě</string>
     <string name="setup_section_connection_log">Protokol připojení</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Nesouvisí s Google. Android Auto je ochranná známka společnosti Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. Nesouvisí s Google. Android Auto je ochranná známka společnosti Google LLC.</string>
     <string name="setup_choice_style">Styl</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -133,7 +133,7 @@
 
     <!-- huserver: developer head unit server -->
     <string name="huserver_label">Server hlavní jednotky</string>
-    <string name="huserver_toggle_subtitle">Jako vývojářský režim Android Auto, pro stolní hlavní jednotku, DHU, openauto, Headunit Revived. Dostupný pouze přes adb: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">Jako vývojářský režim Android Auto, pro stolní hlavní jednotku, DHU, openauto, Headunit Revived. Dostupný pouze přes adb: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">Přijímat ze sítě</string>
     <string name="huserver_toggle_network_subtitle">Poslouchat také na portu TCP 5277 v každé síti, bez hesla. Kdokoli ve stejné síti Wi-Fi se může připojit, vidět obrazovku auta a používat mikrofon.</string>
     <string name="huserver_toggle_lanonce_title">Po relaci vypnout síťový režim</string>

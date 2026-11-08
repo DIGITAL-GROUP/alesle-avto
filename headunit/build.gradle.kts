@@ -1,5 +1,5 @@
 // A desktop head unit: shows a phone's projection in a window, with touch, keys, audio,
-// microphone and a simulated drive. For testing AARE (and other phone implementations).
+// microphone and a simulated drive. For testing Alesle Avto (and other phone implementations).
 plugins {
     alias(libs.plugins.kotlin.jvm)
     application
@@ -15,7 +15,7 @@ kotlin {
 
 application {
     mainClass.set("uz.alesle.avto.headunit.MainKt")
-    applicationName = "aare-headunit"
+    applicationName = "alesle-headunit"
     applicationDefaultJvmArgs = listOf("-Xmx384m", "-Dsun.java2d.opengl=false")
 }
 

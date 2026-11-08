@@ -60,7 +60,7 @@ class SessionLoopbackTest {
         phone = AapSession(
             SocketTransport(phoneSocket),
             PhoneIdentity(id.certificate, id.keyPair.private),
-            PhoneDescription(deviceName = "Test phone", label = "AARE", instanceId = "test-1"),
+            PhoneDescription(deviceName = "Test phone", label = "Alesle Avto", instanceId = "test-1"),
             callbacks = Callbacks(),
         )
         phone.start()

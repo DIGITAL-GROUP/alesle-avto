@@ -81,7 +81,7 @@ class PhoneGuidance(
                 extras.getCharSequence(Notification.EXTRA_TEXT),
                 extras.getCharSequence(Notification.EXTRA_SUB_TEXT) ?: extras.getCharSequence(Notification.EXTRA_INFO_TEXT),
             ).map { it.toString().trim() }.filter { it.isNotEmpty() }
-            // The icon and the layout can point at a URI, which we'd open as AARE: only let them
+            // The icon and the layout can point at a URI, which we'd open as Alesle Avto: only let them
             // reach the posting app's own content. From Q a scoped resolver does it (an icon's file
             // URI skips the resolver: refused too); before Q, LegacyLayoutLinks checks them first.
             val scoped = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) PosterContext(context, sbn.packageName) else null
@@ -180,9 +180,9 @@ class PhoneGuidance(
 
 /**
  * [base] with a ContentResolver that opens only content URIs provided by [pkg]: an icon or a
- * layout image in its notification can't make us read, with our permissions, what only AARE may
+ * layout image in its notification can't make us read, with our permissions, what only Alesle Avto may
  * (a contact photo, say). Files and plain paths don't go through the resolver; they only reach
- * AARE's own files, as we hold no storage permission.
+ * Alesle Avto's own files, as we hold no storage permission.
  */
 @RequiresApi(Build.VERSION_CODES.Q)
 private class PosterContext(base: Context, private val pkg: String) : ContextWrapper(base) {
@@ -225,7 +225,7 @@ private class PosterContext(base: Context, private val pkg: String) : ContextWra
  * read, counts as not allowed, and the guidance falls back to the notification's text.
  */
 private object LegacyLayoutLinks {
-    private const val TAG = "AareGuidance"
+    private const val TAG = "AlesleGuidance"
     private const val MAX_DEPTH = 32
 
     // HiddenApiBypass keeps one set of prefixes and re-applies all of them, so the car audio's own

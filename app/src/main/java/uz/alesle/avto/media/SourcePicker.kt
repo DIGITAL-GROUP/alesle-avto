@@ -49,7 +49,7 @@ fun errorText(code: Int, appLabel: String): String = when (code) {
     SessionError.ERROR_SESSION_SKIP_LIMIT_REACHED -> "Skip limit reached"
     SessionError.ERROR_SESSION_SETUP_REQUIRED -> "Finish setting up $appLabel on your phone"
     SessionError.ERROR_SESSION_END_OF_PLAYLIST -> "End of the playlist"
-    SessionError.ERROR_PERMISSION_DENIED -> "$appLabel does not allow AARE to browse it"
+    SessionError.ERROR_PERMISSION_DENIED -> "$appLabel does not allow Alesle Avto to browse it"
     SessionError.ERROR_IO -> "Network or storage problem"
     SessionError.ERROR_NOT_SUPPORTED -> "Not supported by $appLabel"
     SessionError.ERROR_SESSION_DISCONNECTED -> "$appLabel disconnected"

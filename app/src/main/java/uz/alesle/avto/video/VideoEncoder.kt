@@ -45,7 +45,7 @@ class VideoEncoder(
     private val pool = ArrayDeque<ByteArray>()
 
     fun start() {
-        val t = HandlerThread("aare-video-enc", android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY).also { it.start() }
+        val t = HandlerThread("alesle-video-enc", android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY).also { it.start() }
         thread = t
         // Built afresh for each attempt (MediaFormat.removeKey is Android 10+).
         fun format(dropped: Set<String>) = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height).apply {
@@ -183,7 +183,7 @@ class VideoEncoder(
     }
 
     companion object {
-        private const val TAG = "AareVideoEnc"
+        private const val TAG = "AlesleVideoEnc"
 
         fun defaultBitrate(w: Int, h: Int, fps: Int): Int {
             // ~0.12 bits per pixel per frame: crisp UI text without saturating USB 2 / Wi-Fi,

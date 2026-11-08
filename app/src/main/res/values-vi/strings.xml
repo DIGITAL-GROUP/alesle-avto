@@ -104,7 +104,7 @@
     <string name="setup_app_kind_media">Nhạc, podcast, radio</string>
     <string name="setup_app_group_messaging">Tin nhắn</string>
     <string name="setup_app_kind_messaging">Tin nhắn từ thông báo của ứng dụng</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">Ứng dụng Android Auto mà Alesle Avto không thể hiển thị</string>
     <string name="setup_hint_allowlist">Các ứng dụng được xây dựng với phiên bản mới của thư viện xe hơi của Google chỉ chấp nhận các host trong danh sách cho phép của họ; xem README.</string>
     <string name="setup_app_entry_phone">Điện thoại</string>
@@ -112,7 +112,7 @@
     <string name="setup_app_entry_notifications">Thông báo</string>
     <string name="setup_section_app_order">Thứ tự trên xe</string>
     <string name="setup_section_connection_log">Nhật ký kết nối</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Không liên kết với Google. Android Auto là thương hiệu của Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. Không liên kết với Google. Android Auto là thương hiệu của Google LLC.</string>
     <string name="setup_choice_style">Kiểu</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -133,7 +133,7 @@
 
     <!-- huserver: developer head unit server -->
     <string name="huserver_label">Máy chủ đầu đĩa</string>
-    <string name="huserver_toggle_subtitle">Giống chế độ nhà phát triển của Android Auto, dùng cho đầu đĩa desktop, DHU, openauto, Headunit Revived. Chỉ truy cập được qua adb: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">Giống chế độ nhà phát triển của Android Auto, dùng cho đầu đĩa desktop, DHU, openauto, Headunit Revived. Chỉ truy cập được qua adb: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">Chấp nhận từ mạng</string>
     <string name="huserver_toggle_network_subtitle">Cũng lắng nghe trên cổng TCP 5277 trên mọi mạng, không cần mật khẩu. Bất kỳ ai dùng chung Wi-Fi đều có thể kết nối, xem màn hình xe và dùng micro.</string>
     <string name="huserver_toggle_lanonce_title">Tắt chế độ mạng sau mỗi phiên</string>

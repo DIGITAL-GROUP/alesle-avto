@@ -33,7 +33,7 @@ import uz.alesle.avto.ui.theme.LocalCarDimens
 
 /**
  * The car's own settings app: what drivers change from the car, like Android Auto's. The rest
- * stays in AARE on the phone.
+ * stays in Alesle Avto on the phone.
  */
 @Composable
 internal fun CarSettingsScreen(settings: Settings, modifier: Modifier) {

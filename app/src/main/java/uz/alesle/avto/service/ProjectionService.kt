@@ -191,7 +191,7 @@ class ProjectionService : Service() {
     }
 
     /**
-     * The car was already connected over Bluetooth when AARE opened, so the ACL-connect broadcast
+     * The car was already connected over Bluetooth when Alesle Avto opened, so the ACL-connect broadcast
      * that normally starts wireless never fired (#56). Find a connected wireless head unit and
      * start the flow. No-op (with a clear log) if a session is up or nothing is connected.
      */
@@ -401,7 +401,7 @@ class ProjectionService : Service() {
 
     private fun acquireWakeLock() {
         if (wakeLock?.isHeld == true) return
-        wakeLock = getSystemService(PowerManager::class.java).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "aare:projection").apply {
+        wakeLock = getSystemService(PowerManager::class.java).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "alesle:projection").apply {
             setReferenceCounted(false)
             acquire(12 * 60 * 60 * 1000L)
         }
@@ -427,7 +427,7 @@ class ProjectionService : Service() {
     private fun log(line: String) = DiagLog.add(line)
 
     companion object {
-        private const val TAG = "AareService"
+        private const val TAG = "AlesleService"
         private const val CHANNEL = "connection"
         private const val NOTIFICATION_ID = 1
         const val ACTION_USB = "uz.alesle.avto.USB"
@@ -470,7 +470,7 @@ class ProjectionService : Service() {
          * A wireless head unit appeared. Starting a foreground service from the background can be
          * refused; then a notification lets the driver start it with one tap.
          */
-        /** Try to connect to a car already on Bluetooth (#56): opening AARE, or enabling wireless. */
+        /** Try to connect to a car already on Bluetooth (#56): opening Alesle Avto, or enabling wireless. */
         fun probeWireless(context: Context) {
             if (!Settings(context).wireless) return
             context.startForegroundService(Intent(context, ProjectionService::class.java).setAction(ACTION_PROBE_WIRELESS))
@@ -482,7 +482,7 @@ class ProjectionService : Service() {
                 context.startForegroundService(intent)
             } catch (e: Exception) {
                 Log.w(TAG, "can't start from background, asking the user", e)
-                DiagLog.add("wireless: Android didn't let AARE start in the background; tap the notification to connect")
+                DiagLog.add("wireless: Android didn't let Alesle Avto start in the background; tap the notification to connect")
                 val nm = context.getSystemService(NotificationManager::class.java)
                 nm.createNotificationChannel(NotificationChannel(CHANNEL, context.getString(R.string.notif_channel_connection), NotificationManager.IMPORTANCE_LOW))
                 val pi = PendingIntent.getForegroundService(context, 2, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)

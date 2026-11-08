@@ -77,7 +77,7 @@ class HeadUnitSimulator(
     /** Raw H.264 (Annex-B) of the projection is written here if set. */
     private val videoOut: OutputStream? = null,
 ) {
-    val huCert = SelfSignedCertificate.generate("AARE simulated head unit")
+    val huCert = SelfSignedCertificate.generate("Alesle Avto simulated head unit")
     private val cryptor = Cryptor(huCert.certificate, huCert.keyPair.private, client = true)
     @Volatile private var tlsUp = false
     private val reader = FrameReader(transport.input) { if (tlsUp) cryptor else null }
@@ -273,8 +273,8 @@ class HeadUnitSimulator(
             MediaSinkService.newBuilder().setAvailableType(MediaCodecType.MEDIA_CODEC_AUDIO_PCM).setAudioType(type)
                 .addAudioConfigs(AudioConfiguration.newBuilder().setSamplingRate(rate).setNumberOfBits(16).setNumberOfChannels(ch)))
         return ServiceDiscoveryResponse.newBuilder()
-            .setHeadunitInfo(HeadUnitInfo.newBuilder().setMake("AARE").setModel("Simulator").setYear("2026")
-                .setHeadUnitMake("AARE").setHeadUnitModel("hu-sim").setHeadUnitSoftwareVersion("1"))
+            .setHeadunitInfo(HeadUnitInfo.newBuilder().setMake("Alesle Avto").setModel("Simulator").setYear("2026")
+                .setHeadUnitMake("Alesle Avto").setHeadUnitModel("hu-sim").setHeadUnitSoftwareVersion("1"))
             .setDisplayName("Simulated car")
             .setConnectionConfiguration(ConnectionConfiguration.newBuilder().setPingConfiguration(
                 PingConfiguration.newBuilder().setIntervalMs(1000).setTimeoutMs(3000).setTrackedPingCount(5)))

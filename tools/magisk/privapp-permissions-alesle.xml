@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Privileged permissions AARE uses when installed as a system app (tools/magisk). -->
+<!-- Privileged permissions Alesle Avto uses when installed as a system app (tools/magisk). -->
 <permissions>
     <privapp-permissions package="uz.alesle.avto">
         <!-- Capture the phone's audio by usage (music, navigation voice), like Android Auto. -->

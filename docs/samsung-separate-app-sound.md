@@ -1,8 +1,8 @@
 # Samsung Galaxy: car audio via Separate app sound and Bluetooth
 
-On compatible Samsung Galaxy phones, **Separate app sound** is a phone/One UI audio-output setting that can send audio from selected apps directly to a **paired Bluetooth audio device** (for example, the car's Bluetooth media input). This is a possible alternative when navigation speech is **not** carried by AARE's regular screen-capture audio source.
+On compatible Samsung Galaxy phones, **Separate app sound** is a phone/One UI audio-output setting that can send audio from selected apps directly to a **paired Bluetooth audio device** (for example, the car's Bluetooth media input). This is a possible alternative when navigation speech is **not** carried by Alesle Avto's regular screen-capture audio source.
 
-**This is phone-to-car Bluetooth audio, not audio sent over AARE's Android Auto Projection (AAP) media or guidance channel.** It does not alter AARE's connection handshake or make an unsupported head unit compatible.
+**This is phone-to-car Bluetooth audio, not audio sent over Alesle Avto's Android Auto Projection (AAP) media or guidance channel.** It does not alter Alesle Avto's connection handshake or make an unsupported head unit compatible.
 
 ## Configure on the phone
 
@@ -18,29 +18,29 @@ Official Samsung reference: [Use separate apps simultaneously on your Galaxy pho
 
 ## Owner-reported field observation (2026-10-26)
 
-A Galaxy S23 user reported that **music and navigation guidance speech are both audible through their actual vehicle's Bluetooth sound system** with Samsung **Separate app sound** enabled during their AARE-oriented testing. The user had also enabled AARE's screen-capture audio setting.
+A Galaxy S23 user reported that **music and navigation guidance speech are both audible through their actual vehicle's Bluetooth sound system** with Samsung **Separate app sound** enabled during their Alesle Avto-oriented testing. The user had also enabled Alesle Avto's screen-capture audio setting.
 
 **What that confirms:** the user could hear both kinds of sound on the car speakers with their particular Galaxy/vehicle Bluetooth configuration.
 
 **What it does not confirm:**
-- That AARE's `MediaProjection` audio capture collected `USAGE_ASSISTANCE_NAVIGATION_GUIDANCE` PCM, or that the head unit received native AARE AAP GUIDANCE frames. Android's ordinary playback-capture API does not include navigation guidance usage.
-- That the AARE display was successfully projected to the tested head unit, or that AARE delivered the audio over an Android Auto channel. The direct phone Bluetooth audio path is distinct from AAP.
-- That factory Google Android Auto can run *concurrently* with AARE projection on another screen while preserving Bluetooth music, HFP calls, microphone, and audio focus. This needs its own parked device test.
+- That Alesle Avto's `MediaProjection` audio capture collected `USAGE_ASSISTANCE_NAVIGATION_GUIDANCE` PCM, or that the head unit received native Alesle Avto AAP GUIDANCE frames. Android's ordinary playback-capture API does not include navigation guidance usage.
+- That the Alesle Avto display was successfully projected to the tested head unit, or that Alesle Avto delivered the audio over an Android Auto channel. The direct phone Bluetooth audio path is distinct from AAP.
+- That factory Google Android Auto can run *concurrently* with Alesle Avto projection on another screen while preserving Bluetooth music, HFP calls, microphone, and audio focus. This needs its own parked device test.
 - That all Galaxy versions, navigation apps, vehicle Bluetooth receivers, and head-unit combinations behave alike.
 
-Evidence status: **user-reported audible phone→vehicle Bluetooth result**; no matched AAP packet/PCM/receiver capture or official AARE build SHA was supplied for this audio observation. It is deliberately **not** added to the list of head units proven compatible with AARE projection.
+Evidence status: **user-reported audible phone→vehicle Bluetooth result**; no matched AAP packet/PCM/receiver capture or official Alesle Avto build SHA was supplied for this audio observation. It is deliberately **not** added to the list of head units proven compatible with Alesle Avto projection.
 
-## Relationship to AARE's own Car audio setting
+## Relationship to Alesle Avto's own Car audio setting
 
-AARE has separate methods for carrying phone audio **over AAP**:
+Alesle Avto has separate methods for carrying phone audio **over AAP**:
 
 | Audio path | Where it is routed | What has been established |
 |---|---|---|
 | Samsung Separate app sound → car Bluetooth | Galaxy OS routes chosen app sound straight to the paired car Bluetooth audio device | Available in Samsung One UI; owner has heard music + nav prompts in this configuration |
-| AARE screen-capture audio | Captured media/game/unknown-use audio → head unit's AAP media stream | Does **not** capture ordinary `USAGE_ASSISTANCE_NAVIGATION_GUIDANCE` |
-| AARE Shizuku capture | Phone-wide PCM via AAP (combined media) | Separate AARE implementation; not required to explain the phone Bluetooth result |
-| AARE privileged system routing | AAP media and guidance streams | Requires a privileged/root setup; not shown working in this field report |
+| Alesle Avto screen-capture audio | Captured media/game/unknown-use audio → head unit's AAP media stream | Does **not** capture ordinary `USAGE_ASSISTANCE_NAVIGATION_GUIDANCE` |
+| Alesle Avto Shizuku capture | Phone-wide PCM via AAP (combined media) | Separate Alesle Avto implementation; not required to explain the phone Bluetooth result |
+| Alesle Avto privileged system routing | AAP media and guidance streams | Requires a privileged/root setup; not shown working in this field report |
 
-If **both** AARE's AAP audio streaming and the independent Bluetooth output are enabled, test whether sound is doubled or audio focus changes before using it in a car. If the vehicle already receives the desired sound directly from Bluetooth, AARE's **Car audio** setting may not be needed; it does **not** control Samsung's separate app sound settings.
+If **both** Alesle Avto's AAP audio streaming and the independent Bluetooth output are enabled, test whether sound is doubled or audio focus changes before using it in a car. If the vehicle already receives the desired sound directly from Bluetooth, Alesle Avto's **Car audio** setting may not be needed; it does **not** control Samsung's separate app sound settings.
 
-This is a **documentation-only compatibility/workaround note**, not an AARE feature implementation or head-unit audio fix. Always assess audio while parked; do not interfere with essential vehicle safety alerts.
+This is a **documentation-only compatibility/workaround note**, not an Alesle Avto feature implementation or head-unit audio fix. Always assess audio while parked; do not interfere with essential vehicle safety alerts.

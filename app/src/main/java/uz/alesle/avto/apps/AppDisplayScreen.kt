@@ -169,7 +169,7 @@ private fun AppSurface(runtime: CarRuntime, app: CarAppEntry) {
     }
 }
 
-/** Shizuku isn't there or AARE isn't allowed: what to do, and the phone screen mirror as a way out. */
+/** Shizuku isn't there or Alesle Avto isn't allowed: what to do, and the phone screen mirror as a way out. */
 @Composable
 private fun ShizukuCard(runtime: CarRuntime, app: CarAppEntry, access: AppDisplay.Access) {
     val mirror = runtime.ui.apps.firstOrNull { it.kind == CarAppKind.PHONE_SCREEN }

@@ -14,14 +14,14 @@ import java.util.Locale
  * attempt, a refused certificate…) can still be read on the phone afterwards. Thread-safe.
  */
 object DiagLog {
-    private const val TAG = "Aare"
+    private const val TAG = "Alesle"
     private const val MAX_LINES = 300
 
     private val _lines = MutableStateFlow<List<String>>(emptyList())
     val lines: StateFlow<List<String>> = _lines
     private var file: File? = null
 
-    /** Loads the saved log. Called by [AareApp]; lines added before go to logcat only. */
+    /** Loads the saved log. Called by [AlesleApp]; lines added before go to logcat only. */
     @Synchronized
     fun init(context: Context) {
         if (file != null) return

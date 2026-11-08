@@ -9,7 +9,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * What a voice assistant may do with the car: the tools its LLM can call while it runs on AARE
+ * What a voice assistant may do with the car: the tools its LLM can call while it runs on Alesle Avto
  * (see CarControlProvider). Specs use the function-calling JSON schema: name, description,
  * parameters, plus "confirm" and "silent" flags in the style of Lapin's device tools.
  */
@@ -139,7 +139,7 @@ object CarTools {
         val listener = CarNotificationListener.instance ?: return if (CarNotificationListener.accessGranted(rt.context)) {
             CarNotificationListener.rebind(rt.context)
             error("the messages aren't available yet, try again in a moment")
-        } else error("AARE has no notification access on the phone")
+        } else error("Alesle Avto has no notification access on the phone")
         if (message.isBlank()) return error("empty message")
         val c = conversation(name) ?: return error("no conversation called \"$name\" among the unread messages")
         if (!c.canReply) return error("${c.title}'s app doesn't allow replies from notifications")
@@ -168,7 +168,7 @@ object CarTools {
         if (CarNotificationListener.accessGranted(context)) {
             CarNotificationListener.rebind(context)
             JSONObject().put("conversations", JSONArray()).put("count", 0)
-        } else error("AARE has no notification access on the phone")
+        } else error("Alesle Avto has no notification access on the phone")
 
     private fun ok(what: String) = JSONObject().put("ok", true).put("result", what)
     private fun error(what: String) = JSONObject().put("ok", false).put("error", what)

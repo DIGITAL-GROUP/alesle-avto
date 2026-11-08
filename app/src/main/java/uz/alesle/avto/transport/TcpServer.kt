@@ -17,7 +17,7 @@ import java.net.SocketException
 /**
  * The developer "head unit server": the phone listens and the head unit connects, the way
  * Android Auto's developer mode works with Google's DHU (here through
- * `adb forward tcp:5277 localabstract:aare_hu`), openauto or headunit-revived.
+ * `adb forward tcp:5277 localabstract:alesle_hu`), openauto or headunit-revived.
  *
  * The adb path is a unix socket in the abstract namespace, not a TCP port: other apps on the phone
  * can't reach a loopback port that way, and only adb (uid shell or root) is accepted. With [lan] set
@@ -61,13 +61,13 @@ class TcpServer(
                     if (e is java.io.IOException) Thread.sleep(500) // e.g. out of fds: don't spin, don't die
                 }
             }
-        }, "aare-hu-local-server").apply { isDaemon = true; localThread = this; start() }
+        }, "alesle-hu-local-server").apply { isDaemon = true; localThread = this; start() }
         if (s != null) Thread({
             Log.i(TAG, "listening on ${s.localSocketAddress}")
             while (!s.isClosed) {
                 try {
                     val socket = s.accept()
-                    // The wildcard bind includes loopback and this phone's own addresses, but adb now uses @aare_hu:
+                    // The wildcard bind includes loopback and this phone's own addresses, but adb now uses @alesle_hu:
                     // a peer with one of those addresses is an app on this phone.
                     if (isLocalPeer(socket)) {
                         DiagLog.add("head unit server: refused a TCP connection from this phone")
@@ -82,7 +82,7 @@ class TcpServer(
                     Log.w(TAG, "accept failed", e)
                 }
             }
-        }, "aare-tcp-server").apply { isDaemon = true; start() }
+        }, "alesle-tcp-server").apply { isDaemon = true; start() }
     }
 
     /** True for loopback, wildcard, this connection's own address or any local interface address; a failed lookup counts as local. */
@@ -119,10 +119,10 @@ class TcpServer(
 
     companion object {
         const val PORT = 5277
-        /** Abstract unix socket name: `adb forward tcp:5277 localabstract:aare_hu`. */
-        const val LOCAL_NAME = "aare_hu"
+        /** Abstract unix socket name: `adb forward tcp:5277 localabstract:alesle_hu`. */
+        const val LOCAL_NAME = "alesle_hu"
         private const val SHELL_UID = 2000
         private const val ROOT_UID = 0
-        private const val TAG = "AareTcpServer"
+        private const val TAG = "AlesleTcpServer"
     }
 }

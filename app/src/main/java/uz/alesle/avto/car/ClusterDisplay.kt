@@ -23,7 +23,7 @@ import uz.alesle.avto.video.VideoEncoder
 /**
  * The instrument cluster's own video, for head units that offer a cluster display (a second
  * video sink with display_type CLUSTER): the navigation app's cluster session when it has one
- * (FEATURE_CLUSTER), otherwise AARE's turn card (next maneuver, distance, road, arrival).
+ * (FEATURE_CLUSTER), otherwise Alesle Avto's turn card (next maneuver, distance, road, arrival).
  */
 class ClusterDisplay(private val context: Context, private val runtime: CarRuntime) : VideoChannel.Listener {
     private val main = Handler(Looper.getMainLooper())
@@ -94,6 +94,6 @@ class ClusterDisplay(private val context: Context, private val runtime: CarRunti
     }
 
     private companion object {
-        const val TAG = "AareCluster"
+        const val TAG = "AlesleCluster"
     }
 }

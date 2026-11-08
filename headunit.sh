@@ -1,10 +1,10 @@
 #!/bin/sh
 # Pseudo head unit on the desktop, for a phone (or emulator) connected with adb.
 #
-#   ./headunit.sh                 AARE on the phone, through AARE's own desktop head unit
+#   ./headunit.sh                 Alesle Avto on the phone, through Alesle Avto's own desktop head unit
 #   ./headunit.sh google          the official Android Auto app, through Google's Desktop Head Unit
 #
-# Both follow a simulated Paris -> Marseille drive: AARE's head unit sends it as the car's GPS,
+# Both follow a simulated Paris -> Marseille drive: Alesle Avto's head unit sends it as the car's GPS,
 # and on an emulator the phone's own GPS is moved along it too (so apps using the phone's location
 # follow as well). Extra options are passed to the head unit, e.g.:
 #   ./headunit.sh --res 1920x1080 --time-scale 10 --speed 110 --rhd
@@ -13,10 +13,10 @@ set -e
 cd "$(dirname "$0")"
 ROOT=$(pwd)
 
-MODE=aare
+MODE=alesle
 case "$1" in
     google|official|aa) MODE=google; shift ;;
-    aare) shift ;;
+    alesle) shift ;;
     -h|--help)
         sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
         exit 0 ;;
@@ -28,27 +28,27 @@ SERIAL=${ANDROID_SERIAL:-$(adb devices | awk 'NR>1 && $2=="device" {print $1; ex
 export ANDROID_SERIAL=$SERIAL
 echo "Phone: $SERIAL"
 
-# AARE listens on the abstract unix socket @aare_hu (only adb may connect); the official app listens on TCP 5277.
-if [ "$MODE" = aare ]; then
-    adb forward tcp:5277 localabstract:aare_hu >/dev/null
+# Alesle Avto listens on the abstract unix socket @alesle_hu (only adb may connect); the official app listens on TCP 5277.
+if [ "$MODE" = alesle ]; then
+    adb forward tcp:5277 localabstract:alesle_hu >/dev/null
     command -v ffmpeg >/dev/null || { echo "ffmpeg not found: install it (it decodes the car screen)" >&2; exit 1; }
     if ! adb shell pm path uz.alesle.avto >/dev/null 2>&1; then
-        echo "AARE isn't installed on $SERIAL: ./build.sh && adb install -r app/build/outputs/apk/debug/app-debug.apk" >&2
+        echo "Alesle Avto isn't installed on $SERIAL: ./build.sh && adb install -r app/build/outputs/apk/debug/app-debug.apk" >&2
         exit 1
     fi
-    # Debug builds of AARE turn their head unit server on when asked (release builds: toggle it in the app).
+    # Debug builds of Alesle Avto turn their head unit server on when asked (release builds: toggle it in the app).
     adb shell am start -n uz.alesle.avto/.ui.MainActivity --ez hu_server true >/dev/null 2>&1 || true
     # adb forward accepts connections even when nothing listens on the phone, so check the phone itself
-    # (an abstract socket shows as @aare_hu in /proc/net/unix).
-    listening() { adb shell cat /proc/net/unix 2>/dev/null | grep -q '@aare_hu'; }
+    # (an abstract socket shows as @alesle_hu in /proc/net/unix).
+    listening() { adb shell cat /proc/net/unix 2>/dev/null | grep -q '@alesle_hu'; }
     i=0
     while ! listening && [ $i -lt 10 ]; do sleep 1; i=$((i + 1)); done
     if ! listening; then
-        echo "AARE's head unit server isn't listening on the phone yet. On the phone, open AARE and turn on" >&2
+        echo "Alesle Avto's head unit server isn't listening on the phone yet. On the phone, open Alesle Avto and turn on" >&2
         echo "\"Head unit server\" (release builds always need this). The head unit keeps retrying." >&2
     fi
 
-    BIN="$ROOT/headunit/build/install/aare-headunit/bin/aare-headunit"
+    BIN="$ROOT/headunit/build/install/alesle-headunit/bin/alesle-headunit"
     # Rebuild when the sources' contents changed (not their dates: copies and syncs keep old dates).
     STAMP="$ROOT/headunit/build/sources.cksum"
     SUM=$(find "$ROOT/headunit/src" "$ROOT/aap/src" "$ROOT/headunit/build.gradle.kts" "$ROOT/aap/build.gradle.kts" -type f | sort | xargs cat | cksum)
@@ -63,12 +63,12 @@ fi
 # ---- official Android Auto, with Google's Desktop Head Unit (DHU)
 adb forward tcp:5277 tcp:5277 >/dev/null
 DHU=""
-for d in "${ANDROID_HOME:-$HOME/Android/Sdk}/extras/google/auto" "$HOME/.cache/aare/dhu"; do
+for d in "${ANDROID_HOME:-$HOME/Android/Sdk}/extras/google/auto" "$HOME/.cache/alesle-avto/dhu"; do
     [ -x "$d/desktop-head-unit" ] && DHU="$d" && break
 done
 if [ -z "$DHU" ]; then
     echo "Downloading Google's Desktop Head Unit (Android SDK package extras;google;auto)…"
-    DHU="$HOME/.cache/aare/dhu"
+    DHU="$HOME/.cache/alesle-avto/dhu"
     mkdir -p "$DHU"
     curl -fsSL -o "$DHU/dhu.zip" https://dl.google.com/android/repository/desktop-head-unit-linux-x64_r02.1.zip
     unzip -q -o "$DHU/dhu.zip" -d "$DHU" && rm "$DHU/dhu.zip"
@@ -88,9 +88,9 @@ EOF
 # The route through the phone's GPS (emulators only: real phones need a mock-location app).
 GPS_PID=""
 case "$SERIAL" in emulator-*)
-    BIN="$ROOT/headunit/build/install/aare-headunit/bin/aare-headunit"
+    BIN="$ROOT/headunit/build/install/alesle-headunit/bin/alesle-headunit"
     [ -x "$BIN" ] || "$ROOT/build.sh" :headunit:installDist --console=plain -q
-    AARE_HEADUNIT_GPS_ONLY=1 "$BIN" --gps-only --serial "$SERIAL" "$@" &
+    ALESLE_HEADUNIT_GPS_ONLY=1 "$BIN" --gps-only --serial "$SERIAL" "$@" &
     GPS_PID=$!
     trap '[ -n "$GPS_PID" ] && kill $GPS_PID 2>/dev/null' EXIT INT TERM
     echo "Driving the emulator's GPS from Paris to Marseille (pid $GPS_PID)."

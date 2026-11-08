@@ -6,7 +6,7 @@
 #
 # Gradle and the Android Gradle plugin want a JDK 17-21: JAVA_HOME is used if it is one, otherwise
 # the usual install locations are searched.
-# Set AARE_BUILD_MEMORY (e.g. 5G) to run the build in a memory-capped systemd scope, so that on a
+# Set ALESLE_BUILD_MEMORY (e.g. 5G) to run the build in a memory-capped systemd scope, so that on a
 # machine without swap only the build dies if it grows too much.
 set -e
 cd "$(dirname "$0")"
@@ -30,7 +30,7 @@ fi
 export JAVA_HOME
 [ $# -eq 0 ] && set -- assembleDebug
 
-if [ -n "$AARE_BUILD_MEMORY" ] && command -v systemd-run >/dev/null 2>&1; then
-    exec systemd-run --user --scope --quiet -p MemoryMax="$AARE_BUILD_MEMORY" -p MemorySwapMax=0 ./gradlew "$@"
+if [ -n "$ALESLE_BUILD_MEMORY" ] && command -v systemd-run >/dev/null 2>&1; then
+    exec systemd-run --user --scope --quiet -p MemoryMax="$ALESLE_BUILD_MEMORY" -p MemorySwapMax=0 ./gradlew "$@"
 fi
 exec ./gradlew "$@"

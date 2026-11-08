@@ -32,7 +32,7 @@ import kotlin.system.exitProcess
  * Device.startApp, the InputManager and ActivityManager wrappers), which does the same as shell.
  *
  * Everything here is hidden API, reached through reflection with the hidden-API checks lifted
- * (this process isn't an app, nothing else of AARE runs in it).
+ * (this process isn't an app, nothing else of Alesle Avto runs in it).
  */
 class ShellDisplayService : IShellDisplay.Stub {
     private val context: Context
@@ -52,7 +52,7 @@ class ShellDisplayService : IShellDisplay.Stub {
     }
 
     override fun create(surface: Surface?, width: Int, height: Int, densityDpi: Int): Int = try {
-        val vd = displayManager.createVirtualDisplay("AARE apps", width, height, densityDpi, surface, flags())
+        val vd = displayManager.createVirtualDisplay("Alesle Avto apps", width, height, densityDpi, surface, flags())
         val id = vd.display.displayId
         synchronized(displays) { displays[id] = vd }
         keepUpright(id)
@@ -271,7 +271,7 @@ class ShellDisplayService : IShellDisplay.Stub {
     }
 
     private companion object {
-        const val TAG = "AareShellDisplay"
+        const val TAG = "AlesleShellDisplay"
         // Hidden DisplayManager flags (the values scrcpy uses).
         const val FLAG_SUPPORTS_TOUCH = 1 shl 6
         const val FLAG_DESTROY_CONTENT_ON_REMOVAL = 1 shl 8
@@ -285,7 +285,7 @@ class ShellDisplayService : IShellDisplay.Stub {
         const val WINDOWING_MODE_FULLSCREEN = 1
         const val WINDOWING_MODE_PINNED = 2
         /** Shell-writable: the PiP app-op modes to put back (package and mode per line). */
-        const val PIP_FILE = "/data/local/tmp/aare-pip-modes.txt"
+        const val PIP_FILE = "/data/local/tmp/alesle-pip-modes.txt"
         const val INJECT_INPUT_EVENT_MODE_ASYNC = 0
         const val USER_CURRENT = -2
     }

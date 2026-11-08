@@ -64,11 +64,11 @@ class ShellAudioService : IShellAudio.Stub {
                             if (n > 0) out.write(buf, 0, n)
                         }
                     } catch (_: Exception) {
-                        // AARE closed its end of the pipe
+                        // Alesle Avto closed its end of the pipe
                     }
                 }
                 write.close()
-            }, "aare-shell-audio").apply { start() }
+            }, "alesle-shell-audio").apply { start() }
             read
         } catch (e: Exception) {
             Log.w(TAG, "remote submix capture failed", e)
@@ -92,6 +92,6 @@ class ShellAudioService : IShellAudio.Stub {
     }
 
     private companion object {
-        const val TAG = "AareShellAudio"
+        const val TAG = "AlesleShellAudio"
     }
 }

@@ -45,12 +45,12 @@ import javax.swing.SwingUtilities
 import javax.swing.UIManager
 import kotlin.concurrent.thread
 
-private const val USAGE = """AARE desktop head unit: a car screen on your desktop for a phone running AARE.
+private const val USAGE = """Alesle Avto desktop head unit: a car screen on your desktop for a phone running Alesle Avto.
 
-  aare-headunit [options]
+  alesle-headunit [options]
 
-  --host H --port P      phone to connect to (default 127.0.0.1:5277; use `adb forward tcp:5277 localabstract:aare_hu`)
-  --adb-target T         what the adb forward points at on the phone (default localabstract:aare_hu; use tcp:5277
+  --host H --port P      phone to connect to (default 127.0.0.1:5277; use `adb forward tcp:5277 localabstract:alesle_hu`)
+  --adb-target T         what the adb forward points at on the phone (default localabstract:alesle_hu; use tcp:5277
                          for the official Android Auto app's head unit server)
   --res WxH              800x480, 1280x720 (default), 1920x1080
   --portrait             portrait screen, like a tall center display: offers VIDEO_720x1280 (default), or
@@ -63,7 +63,7 @@ private const val USAGE = """AARE desktop head unit: a car screen on your deskto
   --speed KMH            cruising speed on open road (default 130)
   --time-scale X         drive X times faster than real time (default 1)
   --serial S             adb serial of an emulator, to move its GPS along the route too
-  --hu-cert PEM --hu-key PEM   head-unit certificate chain + PKCS#8 key to present (default: one made on first run, kept in ~/.config/aare/headunit)
+  --hu-cert PEM --hu-key PEM   head-unit certificate chain + PKCS#8 key to present (default: one made on first run, kept in ~/.config/alesle-avto/headunit)
   --headless DIR         no window: save a PNG of the screen to DIR every few seconds (for tests)
   --script "EV@S ..."    scripted input, seconds after connecting: tap:X,Y  key:CODE  rotate:N  night  day  park  drive
 
@@ -136,8 +136,8 @@ private class DesktopHeadUnit(val opts: Map<String, String>) {
     val route: RouteDrive? = opts["route"].let { r -> if (r == "none") null else runCatching { RouteDrive.load(r ?: "paris-marseille") }.getOrNull() }
     val gps = EmulatorGps(opts["serial"])
 
-    val frame by lazy { JFrame("AARE head unit") }
-    val clusterFrame by lazy { JFrame("AARE head unit: instrument cluster") }
+    val frame by lazy { JFrame("Alesle Avto head unit") }
+    val clusterFrame by lazy { JFrame("Alesle Avto head unit: instrument cluster") }
     val screen by lazy { ScreenPanel() }
     val status = label("Waiting for the phone…", 15f, bold = true)
     val phone = label("", 13f)
@@ -232,9 +232,9 @@ private class DesktopHeadUnit(val opts: Map<String, String>) {
 
     // ------------------------------------------------------------------ connection
 
-    /** `adb forward tcp:[port] <--adb-target>` (default localabstract:aare_hu) to the phone (quietly: the phone may not be there yet). */
+    /** `adb forward tcp:[port] <--adb-target>` (default localabstract:alesle_hu) to the phone (quietly: the phone may not be there yet). */
     private fun adbForward(port: Int) {
-        val cmd = listOfNotNull("adb", opts["serial"]?.let { "-s" }, opts["serial"], "forward", "tcp:$port", opts["adb-target"] ?: "localabstract:aare_hu")
+        val cmd = listOfNotNull("adb", opts["serial"]?.let { "-s" }, opts["serial"], "forward", "tcp:$port", opts["adb-target"] ?: "localabstract:alesle_hu")
         runCatching {
             val p = ProcessBuilder(cmd).redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.DISCARD).start()
             if (!p.waitFor(3, java.util.concurrent.TimeUnit.SECONDS)) p.destroyForcibly()
@@ -363,7 +363,7 @@ private class DesktopHeadUnit(val opts: Map<String, String>) {
         val keyPath = opts["hu-key"]
         if (certPath != null && keyPath != null) return readIdentity(File(certPath), File(keyPath))
         // no certificate given: keep one per user, so the phone's Trust sticks across runs
-        val dir = File(configHome(), "aare/headunit")
+        val dir = File(configHome(), "alesle-avto/headunit")
         val certFile = File(dir, "cert.pem")
         val keyFile = File(dir, "key.pem")
         if (certFile.isFile && keyFile.isFile) {
@@ -376,7 +376,7 @@ private class DesktopHeadUnit(val opts: Map<String, String>) {
                 System.err.println("can't use ${certFile.path} / ${keyFile.path} (${e.message}); making a new certificate")
             }
         }
-        val g = SelfSignedCertificate.generate("AARE desktop head unit")
+        val g = SelfSignedCertificate.generate("Alesle Avto desktop head unit")
         try {
             if (posix()) java.nio.file.Files.createDirectories(dir.toPath(), ownerOnlyAttr("rwx------")) else dir.mkdirs()
             writePem(certFile, "CERTIFICATE", g.certificate.encoded)
@@ -454,7 +454,7 @@ private class DesktopHeadUnit(val opts: Map<String, String>) {
         p.preferredSize = Dimension(300, 0)
         fun section(title: String) { p.add(gap(14)); p.add(label(title.uppercase(), 11f, color = MUTED)); p.add(gap(4)) }
 
-        p.add(label("AARE head unit", 18f, bold = true, color = ACCENT))
+        p.add(label("Alesle Avto head unit", 18f, bold = true, color = ACCENT))
         p.add(gap(6)); p.add(status); p.add(phone)
         section("Navigation"); p.add(nav)
         section("Now playing"); p.add(playing)
@@ -555,7 +555,7 @@ private class DesktopHeadUnit(val opts: Map<String, String>) {
             } else {
                 g2.color = MUTED
                 g2.font = Font(Font.SANS_SERIF, Font.PLAIN, 18)
-                val msg = "Connect a phone running AARE (head unit server on), or the official app's head unit server"
+                val msg = "Connect a phone running Alesle Avto (head unit server on), or the official app's head unit server"
                 val fm = g2.fontMetrics
                 g2.drawString(msg, (getWidth() - fm.stringWidth(msg)) / 2, getHeight() / 2)
             }

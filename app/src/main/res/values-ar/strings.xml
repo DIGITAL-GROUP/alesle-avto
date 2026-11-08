@@ -102,7 +102,7 @@
     <string name="setup_app_kind_media">الموسيقى، البودكاست، الراديو</string>
     <string name="setup_app_group_messaging">المراسلة</string>
     <string name="setup_app_kind_messaging">رسائل من إشعاراته</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">تطبيقات Android Auto التي لا يمكن لـ Alesle Avto عرضها</string>
     <string name="setup_hint_allowlist">التطبيقات المبنية بإصدارات حديثة من مكتبة السيارات الخاصة بـ Google لا تقبل إلا المضيفين في قائمتها المسموحة؛ راجع ملف README.</string>
     <string name="setup_app_entry_phone">الهاتف</string>
@@ -110,7 +110,7 @@
     <string name="setup_app_entry_notifications">الإشعارات</string>
     <string name="setup_section_app_order">الترتيب في السيارة</string>
     <string name="setup_section_connection_log">سجل الاتصال</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · غير مرتبط بشركة Google. Android Auto علامة تجارية مملوكة لشركة Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. غير مرتبط بشركة Google. Android Auto علامة تجارية مملوكة لشركة Google LLC.</string>
     <string name="setup_choice_style">النمط</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -129,7 +129,7 @@
     <string name="cert_imported_fallback">مستوردة</string>
 
     <string name="huserver_label">خادم وحدة التحكم</string>
-    <string name="huserver_toggle_subtitle">كوضع المطوّرين في Android Auto، لوحدة التحكم المكتبية DHU وopenauto وHeadunit Revived. يمكن الوصول إليه عبر adb فقط: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">كوضع المطوّرين في Android Auto، لوحدة التحكم المكتبية DHU وopenauto وHeadunit Revived. يمكن الوصول إليه عبر adb فقط: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">القبول من الشبكة</string>
     <string name="huserver_toggle_network_subtitle">الاستماع أيضًا على منفذ TCP 5277 على كل شبكة، بلا كلمة مرور. يمكن لأي شخص على نفس شبكة Wi-Fi الاتصال ورؤية شاشة السيارة واستخدام الميكروفون.</string>
     <string name="huserver_toggle_lanonce_title">إيقاف وضع الشبكة بعد كل جلسة</string>

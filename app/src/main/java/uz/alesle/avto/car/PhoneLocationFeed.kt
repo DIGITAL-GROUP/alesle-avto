@@ -14,7 +14,7 @@ import android.util.Log
 /**
  * Feeds the car's GPS to the phone's own location providers while connected, so every app
  * (CoMaps, Google Maps…) sees one position. Otherwise a navigation app mixes the car's position,
- * which AARE gives car apps, with the phone's own fix, and the map jumps between the two.
+ * which Alesle Avto gives car apps, with the phone's own fix, and the map jumps between the two.
  *
  * Android only allows it for the app chosen as "mock location app" in Developer options.
  */
@@ -68,9 +68,9 @@ class PhoneLocationFeed(context: Context) {
     }
 
     companion object {
-        private const val TAG = "AareLocation"
+        private const val TAG = "AlesleLocation"
 
-        /** AARE is the phone's mock location app (Developer options > Select mock location app). */
+        /** Alesle Avto is the phone's mock location app (Developer options > Select mock location app). */
         fun allowed(context: Context): Boolean = runCatching {
             val ops = context.getSystemService(AppOpsManager::class.java)
             val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ops.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_MOCK_LOCATION, Process.myUid(), context.packageName)

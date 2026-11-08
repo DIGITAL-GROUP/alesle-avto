@@ -104,7 +104,7 @@
     <string name="setup_app_kind_media">Zene, podcastok, rádió</string>
     <string name="setup_app_group_messaging">Üzenetek</string>
     <string name="setup_app_kind_messaging">Üzenetek az értesítéseiből</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">Android Auto alkalmazások, amelyeket az Alesle Avto nem tud megjeleníteni</string>
     <string name="setup_hint_allowlist">A Google autós könyvtárának újabb verzióival készült alkalmazások csak az engedélyezési listájukon lévő hosztokat fogadják el; lásd a README-t.</string>
     <string name="setup_app_entry_phone">Telefon</string>
@@ -112,7 +112,7 @@
     <string name="setup_app_entry_notifications">Értesítések</string>
     <string name="setup_section_app_order">Sorrend az autóban</string>
     <string name="setup_section_connection_log">Kapcsolati napló</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Nem áll kapcsolatban a Google-lel. Az Android Auto a Google LLC védjegye.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. Nem áll kapcsolatban a Google-lel. Az Android Auto a Google LLC védjegye.</string>
     <string name="setup_choice_style">Stílus</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -133,7 +133,7 @@
 
     <!-- huserver: developer head unit server -->
     <string name="huserver_label">Fejegység-szerver</string>
-    <string name="huserver_toggle_subtitle">Mint az Android Auto fejlesztői módja, az asztali fejegységhez, a DHU, openauto, Headunit Revived számára. Csak adb-n keresztül elérhető: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">Mint az Android Auto fejlesztői módja, az asztali fejegységhez, a DHU, openauto, Headunit Revived számára. Csak adb-n keresztül elérhető: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">Fogadás a hálózatról</string>
     <string name="huserver_toggle_network_subtitle">Figyelés a TCP 5277-es porton minden hálózaton, jelszó nélkül is. Bárki, aki azonos Wi-Fi-n van, csatlakozhat, láthatja az autó képernyőjét, és használhatja a mikrofont.</string>
     <string name="huserver_toggle_lanonce_title">Hálózati mód kikapcsolása a munkamenet után</string>

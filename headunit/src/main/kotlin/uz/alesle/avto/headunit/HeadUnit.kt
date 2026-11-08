@@ -101,7 +101,7 @@ class HeadUnit(
         val height: Int = 720,
         val dpi: Int = 160,
         val fps60: Boolean = false,
-        val name: String = "AARE desktop head unit",
+        val name: String = "Alesle Avto desktop head unit",
         val rightHandDrive: Boolean = false,
         /** Also offer an 800x480 instrument-cluster display (a second video sink, display_type CLUSTER). */
         val cluster: Boolean = false,
@@ -180,7 +180,7 @@ class HeadUnit(
                     closed.get() -> "closed"
                     // The phone hung up in the middle of the TLS handshake: it didn't trust our certificate.
                     tlsStarted && !tlsUp -> "the phone refused the head unit's certificate. Google's Android Auto only accepts " +
-                        "head units with a certificate issued by Google (give one with --hu-cert/--hu-key); AARE asks first: tap Trust on its \"New head unit\" notification or home screen, then connect again"
+                        "head units with a certificate issued by Google (give one with --hu-cert/--hu-key); Alesle Avto asks first: tap Trust on its \"New head unit\" notification or home screen, then connect again"
                     else -> "connection lost: ${e.message}"
                 })
             }
@@ -492,8 +492,8 @@ class HeadUnit(
         fun audio(id: Int, type: AudioStreamType, rate: Int, ch: Int) = Service.newBuilder().setId(id).setMediaSinkService(
             MediaSinkService.newBuilder().setAvailableType(MediaCodecType.MEDIA_CODEC_AUDIO_PCM).setAudioType(type).addAudioConfigs(pcm(rate, ch)))
         return ServiceDiscoveryResponse.newBuilder()
-            .setHeadunitInfo(HeadUnitInfo.newBuilder().setMake("AARE").setModel("Desktop").setYear("2026")
-                .setHeadUnitMake("AARE").setHeadUnitModel("desktop head unit").setHeadUnitSoftwareVersion("1.0"))
+            .setHeadunitInfo(HeadUnitInfo.newBuilder().setMake("Alesle Avto").setModel("Desktop").setYear("2026")
+                .setHeadUnitMake("Alesle Avto").setHeadUnitModel("desktop head unit").setHeadUnitSoftwareVersion("1.0"))
             .setDisplayName(config.name)
             .setDriverPosition(if (config.rightHandDrive) DriverPosition.DRIVER_POSITION_RIGHT else DriverPosition.DRIVER_POSITION_LEFT)
             .setConnectionConfiguration(ConnectionConfiguration.newBuilder().setPingConfiguration(

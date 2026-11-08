@@ -104,7 +104,7 @@
     <string name="setup_app_kind_media">Musica, podcast, radio</string>
     <string name="setup_app_group_messaging">Messaggistica</string>
     <string name="setup_app_kind_messaging">Messaggi dalle sue notifiche</string>
-    <string name="setup_app_group_aare">Alesle Avto</string>
+    <string name="setup_app_group_alesle">Alesle Avto</string>
     <string name="setup_section_unsupported_apps">App Android Auto che Alesle Avto non può mostrare</string>
     <string name="setup_hint_allowlist">Le app create con versioni recenti della libreria auto di Google accettano solo host nella loro lista consentita; consulta il README.</string>
     <string name="setup_app_entry_phone">Telefono</string>
@@ -112,7 +112,7 @@
     <string name="setup_app_entry_notifications">Notifiche</string>
     <string name="setup_section_app_order">Ordine in auto</string>
     <string name="setup_section_connection_log">Log delle connessioni</string>
-    <string name="setup_about_text">Alesle Avto %1$s (AARE) · GPL-3.0-or-later · Non affiliato con Google. Android Auto è un marchio di Google LLC.</string>
+    <string name="setup_about_text">Alesle Avto %1$s · Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later. Non affiliato con Google. Android Auto è un marchio di Google LLC.</string>
     <string name="setup_choice_style">Stile</string>
     <string name="setup_style_android_auto">Android Auto</string>
     <string name="setup_style_carplay">CarPlay</string>
@@ -133,7 +133,7 @@
 
     <!-- huserver: developer head unit server -->
     <string name="huserver_label">Server head unit</string>
-    <string name="huserver_toggle_subtitle">Come la modalità sviluppatore di Android Auto, per la head unit desktop, DHU, openauto, Headunit Revived. Raggiungibile solo tramite adb: adb forward tcp:5277 localabstract:aare_hu</string>
+    <string name="huserver_toggle_subtitle">Come la modalità sviluppatore di Android Auto, per la head unit desktop, DHU, openauto, Headunit Revived. Raggiungibile solo tramite adb: adb forward tcp:5277 localabstract:alesle_hu</string>
     <string name="huserver_toggle_network_title">Accetta dalla rete</string>
     <string name="huserver_toggle_network_subtitle">Resta in ascolto anche sulla porta TCP 5277 su ogni rete, senza password. Chiunque sia sulla stessa Wi-Fi può connettersi, vedere lo schermo dell\'auto e usare il microfono.</string>
     <string name="huserver_toggle_lanonce_title">Disattiva la modalità rete dopo ogni sessione</string>

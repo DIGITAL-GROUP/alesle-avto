@@ -137,7 +137,7 @@ class MainActivity : ComponentActivity() {
         setContent { PhoneTheme(dark = isSystemInDarkTheme()) { Surface(Modifier.fillMaxSize()) { Home() } } }
     }
 
-    // singleTask: when AARE is already open, ./headunit.sh's intent arrives here.
+    // singleTask: when Alesle Avto is already open, ./headunit.sh's intent arrives here.
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -591,7 +591,7 @@ private fun CarScreenSettings(settings: Settings, refresh: Int) {
     }
 }
 
-/** Copies the chosen photo into AARE's files, at most 1920 pixels wide, as the car's wallpaper. */
+/** Copies the chosen photo into Alesle Avto's files, at most 1920 pixels wide, as the car's wallpaper. */
 private fun saveWallpaper(context: android.content.Context, uri: Uri): Boolean = runCatching {
     val src = context.contentResolver.openInputStream(uri)!!.use { android.graphics.BitmapFactory.decodeStream(it) }
     val scale = minOf(1f, 1920f / maxOf(src.width, src.height))
@@ -729,7 +729,7 @@ private fun AppsCard(settings: Settings) {
                 val messagingKind = stringResource(R.string.setup_app_kind_messaging)
                 l.messaging.forEach { app -> AppRow(app.icon, app.label, messagingKind, app.packageName !in hidden) { toggle(app.packageName, it) } }
             }
-            AppGroup(stringResource(R.string.setup_app_group_aare))
+            AppGroup(stringResource(R.string.setup_app_group_alesle))
             AppRow(null, stringResource(R.string.phone_section_title), stringResource(R.string.phone_app_row_subtitle), phoneScreen) { phoneScreen = it; settings.phoneScreen = it }
         }
         if (l != null) AppOrder(settings, l, hidden, phoneScreen)

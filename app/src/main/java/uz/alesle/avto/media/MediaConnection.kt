@@ -562,7 +562,7 @@ internal class MediaConnection(
     }
 
     companion object {
-        private const val TAG = "AareMedia"
+        private const val TAG = "AlesleMedia"
         private const val CONNECT_TIMEOUT_MS = 10_000L
         private const val SEARCH_NOTIFY_TIMEOUT_MS = 3_000L
         private const val NOTICE_MS = 10_000L
