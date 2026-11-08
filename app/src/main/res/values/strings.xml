@@ -314,4 +314,13 @@
 
     <!-- search: media search view -->
     <string name="search_parked_only">Search is available when parked</string>
+
+    <!-- launcher: car apps / phone apps tabs -->
+    <string name="launcher_tab_car">Car apps</string>
+    <string name="launcher_tab_phone">Phone apps</string>
+    <string name="phone_apps_search_hint">Search apps</string>
+    <string name="phone_apps_clear_search">Clear search</string>
+    <string name="phone_apps_loading">Loading the phone\'s apps…</string>
+    <string name="phone_apps_none_found">No app matches</string>
+    <string name="phone_apps_driving_only">While driving, only navigation and music apps are shown.</string>
 </resources>

@@ -72,6 +72,15 @@
     <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
     <uses-feature android:name="android.hardware.wifi" android:required="false" />
 
+    <!-- The car's "Phone apps" tab lists the phone's launcher apps (QUERY_ALL_PACKAGES above already
+         covers it; this keeps the list working where that permission is refused). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:name=".AareApp"
         android:allowBackup="false"

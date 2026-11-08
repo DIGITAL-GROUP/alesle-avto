@@ -11,7 +11,11 @@ import net.prototux.aare.car.Weather
 import net.prototux.aare.notify.PhoneGuidance
 
 /** What kind of app an entry in the launcher is, which decides where its UI goes. */
-enum class CarAppKind { NAVIGATION, MEDIA, TEMPLATED, ASSISTANT, MESSAGING, PHONE_SCREEN, PHONE, SETTINGS, NOTIFICATIONS }
+enum class CarAppKind {
+    NAVIGATION, MEDIA, TEMPLATED, ASSISTANT, MESSAGING, PHONE_SCREEN, PHONE, SETTINGS, NOTIFICATIONS,
+    /** A phone app run as itself on a display of its own ([net.prototux.aare.apps.AppDisplay]). */
+    PHONE_APP,
+}
 
 /** One launchable app on the car screen. */
 @Stable
@@ -41,6 +45,8 @@ sealed interface CarScreen {
     data object Launcher : CarScreen
     data class App(val appId: String) : CarScreen
 }
+
+enum class LauncherTab { CAR, PHONE }
 
 /** A transient card, e.g. an incoming message or a toast from a car app. */
 @Stable
@@ -117,8 +123,12 @@ class CarUiState {
     var carPlayStyle by mutableStateOf(false)
     /** The rail runs along the bottom instead of a side. */
     var railBottom by mutableStateOf(false)
+    /** The phone's launcher apps ([CarAppKind.PHONE_APP]), for the launcher's second tab. */
+    val phoneApps = mutableStateListOf<CarAppEntry>()
+    /** The launcher's tab: car apps or phone apps. */
+    var launcherTab by mutableStateOf(LauncherTab.CAR)
 
-    fun app(id: String?): CarAppEntry? = apps.firstOrNull { it.id == id }
+    fun app(id: String?): CarAppEntry? = apps.firstOrNull { it.id == id } ?: phoneApps.firstOrNull { it.id == id }
 }
 
 /** A phone call, ringing or on, for the car's call card. */

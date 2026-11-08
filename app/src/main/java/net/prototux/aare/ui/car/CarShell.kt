@@ -532,8 +532,39 @@ fun RoundIcon(icon: ImageVector, label: String, filled: Boolean, onClick: () -> 
 
 // ---------------------------------------------------------------- launcher
 
+/**
+ * The app grid, in two tabs: the car apps (hosted car apps, media, AARE's own) and the phone's
+ * own launcher apps, which run as themselves on a display of their own ([PhoneAppsGrid]).
+ */
 @Composable
 private fun Launcher(state: CarUiState, actions: CarActions, modifier: Modifier) {
+    Column(modifier) {
+        Row(Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            LauncherTabPill(stringResource(R.string.launcher_tab_car), state.launcherTab == LauncherTab.CAR) { state.launcherTab = LauncherTab.CAR }
+            LauncherTabPill(stringResource(R.string.launcher_tab_phone), state.launcherTab == LauncherTab.PHONE) { state.launcherTab = LauncherTab.PHONE }
+        }
+        when (state.launcherTab) {
+            LauncherTab.CAR -> CarAppsGrid(state, actions, Modifier.weight(1f).fillMaxWidth())
+            LauncherTab.PHONE -> PhoneAppsGrid(state, actions, Modifier.weight(1f).fillMaxWidth())
+        }
+    }
+}
+
+@Composable
+private fun LauncherTabPill(label: String, selected: Boolean, onClick: () -> Unit) {
+    val bg = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer
+    val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
+    Box(
+        Modifier.height(64.dp).clip(RoundedCornerShape(32.dp)).background(bg)
+            .carFocusHighlight(RoundedCornerShape(32.dp)).clickable(onClick = onClick).padding(horizontal = 28.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(label, style = MaterialTheme.typography.labelLarge, color = fg, maxLines = 1)
+    }
+}
+
+@Composable
+private fun CarAppsGrid(state: CarUiState, actions: CarActions, modifier: Modifier) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(150.dp),
         modifier = modifier,

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Uzbek (Latin). oʻ/gʻ are written with ‘ (U+2018): the car font (Geist) has it, not ʻ (U+02BB). -->
+<resources>
+    <!-- launcher: car apps / phone apps tabs -->
+    <string name="launcher_tab_car">Avto ilovalar</string>
+    <string name="launcher_tab_phone">Telefon ilovalari</string>
+    <string name="phone_apps_search_hint">Ilovalarni qidirish</string>
+    <string name="phone_apps_clear_search">Qidiruvni tozalash</string>
+    <string name="phone_apps_loading">Telefon ilovalari yuklanmoqda…</string>
+    <string name="phone_apps_none_found">Mos ilova topilmadi</string>
+    <string name="phone_apps_driving_only">Haydash paytida faqat navigatsiya va musiqa ilovalari ko‘rsatiladi.</string>
+</resources>

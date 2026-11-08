@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.prototux.aare.R
 import net.prototux.aare.Settings
+import net.prototux.aare.apps.PhoneApps
 import net.prototux.aare.car.Calls
 import net.prototux.aare.car.DashboardInfo
 import net.prototux.aare.media.MediaHub
@@ -348,6 +349,9 @@ class CarRuntime(
                 CarAppCatalog.query(context) to AndroidAutoApps.messagingApps(context)
             }
             applyApps(found, messaging)
+            val launchable = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { PhoneApps.query(context) }
+            ui.phoneApps.clear()
+            ui.phoneApps.addAll(launchable.map { CarAppEntry(phoneAppId(it.component), it.packageName, it.label, it.icon, CarAppKind.PHONE_APP) })
         }
     }
 
@@ -656,6 +660,7 @@ class CarRuntime(
         fun carId(app: CarAppInfo) = "car:${app.service.flattenToShortString()}"
         fun mediaId(pkg: String) = "media:$pkg"
         fun messagingId(pkg: String) = "messages:$pkg"
+        fun phoneAppId(component: android.content.ComponentName) = "phoneapp:${component.flattenToShortString()}"
         const val PHONE_SCREEN_ID = "phone-screen"
         const val PHONE_ID = "phone"
         const val SETTINGS_ID = "car-settings"
