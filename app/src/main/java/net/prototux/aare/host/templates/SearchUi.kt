@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -102,9 +103,11 @@ internal fun SearchTemplateView(t: SearchTemplate) {
                     CarKeyboard(KeyboardMode.Text, sink, Icons.Rounded.Search, Modifier.weight(0.58f).align(Alignment.Bottom), keyHeight = 64.dp)
                 }
             } else {
+                // Full-size keys when there's room; on a short screen the results shrink first.
+                val keyboardMax = maxOf(MIN_KEYBOARD_HEIGHT, maxHeight * 0.7f)
                 Column(Modifier.fillMaxSize()) {
                     results(Modifier.weight(1f).fillMaxWidth())
-                    CarKeyboard(KeyboardMode.Text, sink, Icons.Rounded.Search)
+                    CarKeyboard(KeyboardMode.Text, sink, Icons.Rounded.Search, Modifier.heightIn(max = keyboardMax))
                 }
             }
         }

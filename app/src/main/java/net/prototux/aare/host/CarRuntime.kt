@@ -575,7 +575,10 @@ class CarRuntime(
 
         override fun goHome() { ui.screen = CarScreen.Dashboard }
         override fun back() = this@CarRuntime.back()
-        override fun openLauncher() { ui.screen = CarScreen.Launcher }
+        override fun openLauncher() {
+            ui.closePhoneAppsSearch()
+            ui.screen = CarScreen.Launcher
+        }
         override fun assistant() { this@CarRuntime.assistant() }
         override fun mediaPlayPause() = media.playPause()
         override fun mediaNext() = media.next()
@@ -640,7 +643,7 @@ class CarRuntime(
                     else -> ui.screen = CarScreen.Dashboard
                 }
             }
-            CarScreen.Launcher -> ui.screen = CarScreen.Dashboard
+            CarScreen.Launcher -> if (ui.phoneAppsSearching) ui.closePhoneAppsSearch() else ui.screen = CarScreen.Dashboard
             CarScreen.Dashboard -> Unit
         }
     }

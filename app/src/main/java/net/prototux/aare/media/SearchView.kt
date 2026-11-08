@@ -4,13 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import net.prototux.aare.R
 import net.prototux.aare.ui.car.carFocusHighlight
@@ -54,7 +56,12 @@ internal fun SearchView(ui: MediaUi, driving: Boolean) {
 
 private val ROWS = listOf("1234567890", "qwertyuiop", "asdfghjkl'", "zxcvbnm-")
 
-/** A big-key QWERTY keyboard whose rows share the available height. */
+/**
+ * A big-key QWERTY keyboard whose rows share the available height: keys from [MIN_KEY]
+ * to [MAX_KEY] tall. When five rows of [MIN_KEY] don't fit (a phone held sideways) the digit row
+ * goes; below four rows it still keeps [MIN_KEY], so the caller must give it at least
+ * [CAR_KEYBOARD_MIN_HEIGHT]. Readable keys come before anything placed around it.
+ */
 @Composable
 internal fun CarKeyboard(
     onText: (String) -> Unit,
@@ -64,24 +71,38 @@ internal fun CarKeyboard(
     searchEnabled: Boolean,
     modifier: Modifier,
 ) {
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)) {
-        ROWS.forEachIndexed { r, keys ->
-            KeyRow(Modifier.weight(1f)) {
-                keys.forEach { c -> Key(c.uppercase(), Modifier.weight(1f)) { onText(c.toString()) } }
-                if (r == ROWS.lastIndex) Key(null, Modifier.weight(2f), Icons.AutoMirrored.Rounded.Backspace, onClick = onBackspace)
+    BoxWithConstraints(modifier) {
+        val bounded = constraints.hasBoundedHeight
+        val digits = !bounded || maxHeight >= MIN_KEY * 5 + GAP * 4
+        val rows = if (digits) ROWS else ROWS.drop(1)
+        val n = rows.size + 1
+        val key = if (bounded) ((maxHeight - GAP * (n - 1)) / n).coerceIn(MIN_KEY, MAX_KEY) else 64.dp
+        Column(Modifier.fillMaxWidth().align(Alignment.Center), verticalArrangement = Arrangement.spacedBy(GAP)) {
+            rows.forEachIndexed { r, keys ->
+                KeyRow(key) {
+                    keys.forEach { c -> Key(c.uppercase(), Modifier.weight(1f)) { onText(c.toString()) } }
+                    if (r == rows.lastIndex) Key(null, Modifier.weight(2f), Icons.AutoMirrored.Rounded.Backspace, onClick = onBackspace)
+                }
             }
-        }
-        KeyRow(Modifier.weight(1f)) {
-            Key(null, Modifier.weight(1.5f), Icons.Rounded.Clear, onClick = onClear)
-            Key(null, Modifier.weight(5f), Icons.Rounded.SpaceBar) { onText(" ") }
-            Key(stringResource(R.string.media_action_search), Modifier.weight(3f), Icons.Rounded.Search, primary = true, enabled = searchEnabled, onClick = onSearch)
+            KeyRow(key) {
+                Key(null, Modifier.weight(1.5f), Icons.Rounded.Clear, onClick = onClear)
+                Key(null, Modifier.weight(5f), Icons.Rounded.SpaceBar) { onText(" ") }
+                Key(stringResource(R.string.media_action_search), Modifier.weight(3f), Icons.Rounded.Search, primary = true, enabled = searchEnabled, onClick = onSearch)
+            }
         }
     }
 }
 
+private val MIN_KEY = 44.dp
+private val MAX_KEY = 76.dp
+private val GAP = 6.dp
+
+/** The least height a [CarKeyboard] needs: four rows (letters and the space bar) of 44 dp keys. */
+internal val CAR_KEYBOARD_MIN_HEIGHT = MIN_KEY * 4 + GAP * 3
+
 @Composable
-private fun KeyRow(modifier: Modifier, content: @Composable RowScope.() -> Unit) {
-    Row(modifier.fillMaxWidth().heightIn(max = 76.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), content = content)
+private fun KeyRow(height: Dp, content: @Composable RowScope.() -> Unit) {
+    Row(Modifier.fillMaxWidth().height(height), horizontalArrangement = Arrangement.spacedBy(8.dp), content = content)
 }
 
 @Composable

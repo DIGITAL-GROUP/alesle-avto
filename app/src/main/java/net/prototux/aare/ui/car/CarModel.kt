@@ -127,6 +127,15 @@ class CarUiState {
     val phoneApps = mutableStateListOf<CarAppEntry>()
     /** The launcher's tab: car apps or phone apps. */
     var launcherTab by mutableStateOf(LauncherTab.CAR)
+    /** The Phone apps tab's search, and whether its search layout (field, results, keyboard) is open. */
+    var phoneAppsQuery by mutableStateOf("")
+    var phoneAppsSearching by mutableStateOf(false)
+
+    /** Leaves the Phone apps search: back to the normal launcher, filter cleared. */
+    fun closePhoneAppsSearch() {
+        phoneAppsSearching = false
+        phoneAppsQuery = ""
+    }
 
     fun app(id: String?): CarAppEntry? = apps.firstOrNull { it.id == id } ?: phoneApps.firstOrNull { it.id == id }
 }

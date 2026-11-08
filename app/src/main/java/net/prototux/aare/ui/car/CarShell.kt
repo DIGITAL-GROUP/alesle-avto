@@ -590,6 +590,11 @@ fun RoundIcon(icon: ImageVector, label: String, filled: Boolean, onClick: () -> 
  */
 @Composable
 private fun Launcher(state: CarUiState, actions: CarActions, onWallpaper: Boolean, modifier: Modifier) {
+    if (state.launcherTab == LauncherTab.PHONE && state.phoneAppsSearching) {
+        // Searching: the field, a row of matches and a keyboard get the whole area (no tabs, no grid).
+        PhoneAppsSearch(state, actions, onWallpaper, modifier)
+        return
+    }
     Column(modifier) {
         Row(Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             LauncherTabPill(stringResource(R.string.launcher_tab_car), state.launcherTab == LauncherTab.CAR, onWallpaper) { state.launcherTab = LauncherTab.CAR }

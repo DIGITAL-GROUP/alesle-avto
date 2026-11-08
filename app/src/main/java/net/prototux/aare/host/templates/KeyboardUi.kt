@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -76,9 +77,28 @@ private val SYMBOLS = listOf("1234567890", "@#&_-+()/", "*\"':;!?")
 /**
  * A car-sized on-screen keyboard. The app is drawn on a virtual display streamed to the car,
  * where the phone's IME cannot appear, so text entry needs its own keyboard.
+ *
+ * Keys are [keyHeight] tall when there is room. On a short screen they shrink to fit the height
+ * given, but never below [MIN_KEY_HEIGHT]: whatever sits above the keyboard has to give way.
  */
 @Composable
 internal fun CarKeyboard(mode: KeyboardMode, sink: KeyboardSink, submitIcon: ImageVector, modifier: Modifier = Modifier, keyHeight: Dp = 58.dp) {
+    BoxWithConstraints(modifier.fillMaxWidth()) {
+        val fit = if (constraints.hasBoundedHeight) (maxHeight - PAD * 2 - GAP * 3) / 4 else keyHeight
+        KeyboardRows(mode, sink, submitIcon, fit.coerceIn(MIN_KEY_HEIGHT, keyHeight.coerceAtLeast(MIN_KEY_HEIGHT)))
+    }
+}
+
+/** The smallest key a fingertip hits and a glance reads in a car. */
+internal val MIN_KEY_HEIGHT = 44.dp
+private val PAD = 8.dp
+private val GAP = 6.dp
+
+/** The height of a [CarKeyboard] with keys of [MIN_KEY_HEIGHT]. */
+internal val MIN_KEYBOARD_HEIGHT = MIN_KEY_HEIGHT * 4 + GAP * 3 + PAD * 2
+
+@Composable
+private fun KeyboardRows(mode: KeyboardMode, sink: KeyboardSink, submitIcon: ImageVector, keyHeight: Dp) {
     var symbols by remember { mutableStateOf(false) }
     var shift by remember { mutableStateOf(false) }
     val rows: List<List<Key>> = when (mode) {
@@ -109,11 +129,11 @@ internal fun CarKeyboard(mode: KeyboardMode, sink: KeyboardSink, submitIcon: Ima
     }
     val scheme = MaterialTheme.colorScheme
     Column(
-        modifier.fillMaxWidth().background(scheme.surfaceContainerLow).padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+        Modifier.fillMaxWidth().background(scheme.surfaceContainerLow).padding(PAD),
+        verticalArrangement = Arrangement.spacedBy(GAP),
     ) {
         rows.forEach { row ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(GAP)) {
                 row.forEach { key ->
                     val m = Modifier.weight(key.weight).height(keyHeight)
                     when (key) {
