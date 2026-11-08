@@ -54,6 +54,7 @@ class ShellDisplayService : IShellDisplay.Stub {
         val vd = displayManager.createVirtualDisplay("AARE apps", width, height, densityDpi, surface, flags())
         val id = vd.display.displayId
         synchronized(displays) { displays[id] = vd }
+        keepUpright(id)
         // The keyboard shows on this display, not on the phone (scrcpy's --display-ime-policy=local).
         runCatching { setImePolicy(id, DISPLAY_IME_POLICY_LOCAL) }.onFailure { Log.w(TAG, "IME policy", it) }
         Log.i(TAG, "display $id: ${width}x$height/$densityDpi")
@@ -126,17 +127,43 @@ class ShellDisplayService : IShellDisplay.Stub {
 
     private fun display(id: Int): VirtualDisplay? = synchronized(displays) { displays[id] }
 
-    /** scrcpy's new-display flags: public and trusted (apps may start there), touchable, unlocked, its own focus. */
+    /**
+     * scrcpy's new-display flags: public and trusted (apps may start there), touchable, unlocked, its
+     * own focus. Not ROTATES_WITH_CONTENT, unlike scrcpy: the car screen is fixed, so the display
+     * must not turn when an app asks for portrait ([keepUpright]).
+     */
     private fun flags(): Int {
         var f = DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC or DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION or
-            DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY or FLAG_SUPPORTS_TOUCH or FLAG_ROTATES_WITH_CONTENT or
-            FLAG_DESTROY_CONTENT_ON_REMOVAL
+            DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY or FLAG_SUPPORTS_TOUCH or FLAG_DESTROY_CONTENT_ON_REMOVAL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             f = f or FLAG_TRUSTED or FLAG_OWN_DISPLAY_GROUP or FLAG_ALWAYS_UNLOCKED or FLAG_TOUCH_FEEDBACK_DISABLED
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) f = f or FLAG_OWN_FOCUS or FLAG_DEVICE_DISPLAY_GROUP
         }
         return f
     }
+
+    /**
+     * Holds the display at rotation 0 and has it ignore apps' orientation requests (Android 12L+):
+     * an app that wants portrait is then resized to the landscape display (Android 16+, large
+     * screens) or letterboxed in the centre, instead of the whole display turning. (The letterbox
+     * colour isn't set: it is global, and HyperOS doesn't draw it on this display anyway. The bars
+     * are left empty and the car screen's background shows through.)
+     */
+    private fun keepUpright(id: Int) {
+        wm("user-rotation", "-d", "$id", "lock", "0")
+        wm("set-ignore-orientation-request", "-d", "$id", "true")
+        wm("get-ignore-orientation-request", "-d", "$id")
+    }
+
+    private fun wm(vararg args: String): String = run("wm", *args).also { Log.i(TAG, "wm ${args.joinToString(" ")}: $it") }
+
+    /** Runs a shell command as this (shell) process; its output, or the error. */
+    private fun run(vararg cmd: String): String = runCatching {
+        val p = ProcessBuilder(*cmd).redirectErrorStream(true).start()
+        val out = p.inputStream.bufferedReader().readText()
+        p.waitFor()
+        out.trim()
+    }.getOrElse { it.toString() }
 
     // ------------------------------------------------------------------ input
 
@@ -166,15 +193,13 @@ class ShellDisplayService : IShellDisplay.Stub {
     }
 
     /** The shell command, if the binder call's signature changed in this Android version. */
-    private fun amStart(displayId: Int, component: ComponentName): String? = runCatching {
-        val p = ProcessBuilder("am", "start", "--display", displayId.toString(), "--windowingMode", WINDOWING_MODE_FULLSCREEN.toString(),
+    private fun amStart(displayId: Int, component: ComponentName): String? {
+        val out = run("am", "start", "--display", displayId.toString(), "--windowingMode", WINDOWING_MODE_FULLSCREEN.toString(),
             "-a", Intent.ACTION_MAIN, "-c", Intent.CATEGORY_LAUNCHER, "-f", Intent.FLAG_ACTIVITY_NEW_TASK.toString(),
-            "-n", component.flattenToShortString()).redirectErrorStream(true).start()
-        val out = p.inputStream.bufferedReader().readText()
-        p.waitFor()
-        Log.i(TAG, "am start: ${out.trim()}")
-        if ("Error" in out) out.trim() else null
-    }.getOrElse { it.toString() }
+            "-n", component.flattenToShortString())
+        Log.i(TAG, "am start: $out")
+        return if ("Error" in out || "Exception" in out) out else null
+    }
 
     private class RootTask(val taskId: Int, val displayId: Int, val packageName: String?, val visible: Boolean)
 
@@ -213,7 +238,6 @@ class ShellDisplayService : IShellDisplay.Stub {
         const val TAG = "AareShellDisplay"
         // Hidden DisplayManager flags (the values scrcpy uses).
         const val FLAG_SUPPORTS_TOUCH = 1 shl 6
-        const val FLAG_ROTATES_WITH_CONTENT = 1 shl 7
         const val FLAG_DESTROY_CONTENT_ON_REMOVAL = 1 shl 8
         const val FLAG_TRUSTED = 1 shl 10
         const val FLAG_OWN_DISPLAY_GROUP = 1 shl 11

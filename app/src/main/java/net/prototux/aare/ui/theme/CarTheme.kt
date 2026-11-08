@@ -47,6 +47,9 @@ private val Ink = Color(0xFF0B0D10)
 private val Graphite = Color(0xFF15181D)
 private val GraphiteHigh = Color(0xFF1E2228)
 
+/** Behind phone apps on their car display, day and night, and around an app that is letterboxed there. */
+val AppDisplayBackground = Ink
+
 private val NightColors: ColorScheme = darkColorScheme(
     primary = Signal,
     // White on #FF4F00 is only 3.3:1; near-black is 5.9:1, which reads better at a glance.

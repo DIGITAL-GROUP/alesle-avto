@@ -9,7 +9,10 @@ import android.view.Surface;
  * and inject input into them. This is what scrcpy does with --new-display and --start-app.
  */
 interface IShellDisplay {
-    /** Creates a virtual display drawing into [surface] (may be null). Returns its id, or -1. */
+    /**
+     * Creates a virtual display drawing into [surface] (may be null) that never rotates: an app
+     * that asks for another orientation is resized or letterboxed instead. Returns its id, or -1.
+     */
     int create(in Surface surface, int width, int height, int densityDpi) = 1;
 
     void resize(int displayId, int width, int height, int densityDpi) = 2;

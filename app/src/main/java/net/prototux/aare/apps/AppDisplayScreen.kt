@@ -38,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +51,7 @@ import net.prototux.aare.host.CarRuntime
 import net.prototux.aare.media.Placeholder
 import net.prototux.aare.ui.car.CarAppEntry
 import net.prototux.aare.ui.car.CarAppKind
+import net.prototux.aare.ui.theme.AppDisplayBackground
 import rikka.shizuku.Shizuku
 
 /**
@@ -73,7 +73,7 @@ internal fun AppDisplayScreen(runtime: CarRuntime, app: CarAppEntry, modifier: M
     }
     val driving = runtime.ui.drivingRestricted
     val known = runtime.ui.apps.filter { it.kind == CarAppKind.NAVIGATION || it.kind == CarAppKind.MEDIA }.mapTo(HashSet()) { it.packageName }
-    Box(modifier.background(Color.Black)) {
+    Box(modifier.background(AppDisplayBackground)) {
         when {
             access != AppDisplay.Access.READY -> ShizukuCard(runtime, app, access)
             driving && !PhoneApps.drivingAllowed(app.packageName, known) ->
@@ -201,7 +201,11 @@ private fun Button(label: String, filled: Boolean, onClick: () -> Unit) {
     }
 }
 
-/** Draws the app display and sends it the touches it gets, in display pixels, all pointers kept. */
+/**
+ * Draws the app display and sends it the touches it gets, in display pixels, all pointers kept.
+ * The display has the view's pixel size (touches map 1:1) at a [DisplayDensity] that makes it a
+ * large screen; it never rotates, so no rotation is undone here.
+ */
 @SuppressLint("ViewConstructor", "ClickableViewAccessibility")
 private class AppSurfaceView(context: Context, private val display: AppDisplay, private val dpi: Int) :
     TextureView(context), TextureView.SurfaceTextureListener {
@@ -210,19 +214,21 @@ private class AppSurfaceView(context: Context, private val display: AppDisplay, 
 
     init {
         surfaceTextureListener = this
+        // Where nothing is drawn (the bars beside a letterboxed app) the car background shows.
+        isOpaque = false
     }
 
     override fun onSurfaceTextureAvailable(st: SurfaceTexture, w: Int, h: Int) {
         val s = Surface(st)
         surface = s
         map = DisplayTouch(w, h, w, h)
-        display.attach(s, w, h, dpi)
+        display.attach(s, w, h, DisplayDensity.pick(w, h, dpi))
     }
 
     override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, w: Int, h: Int) {
         val s = surface ?: return
         map = DisplayTouch(w, h, w, h)
-        display.attach(s, w, h, dpi)
+        display.attach(s, w, h, DisplayDensity.pick(w, h, dpi))
     }
 
     override fun onSurfaceTextureDestroyed(st: SurfaceTexture): Boolean {
