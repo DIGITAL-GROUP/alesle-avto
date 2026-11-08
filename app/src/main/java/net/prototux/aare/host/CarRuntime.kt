@@ -474,6 +474,18 @@ class CarRuntime(
 
     private fun builtinIcon(res: Int) = ContextCompat.getDrawable(context, res)?.toBitmap(128, 128)
 
+    /**
+     * [packageName]'s launcher activity as a phone app entry (run as itself on the app display), or
+     * null if it has none. Listed apps are reused; others are added, so the rail's recent apps find them.
+     */
+    fun phoneAppFor(packageName: String): CarAppEntry? {
+        ui.phoneApps.firstOrNull { it.packageName == packageName }?.let { return it }
+        val component = context.packageManager.getLaunchIntentForPackage(packageName)?.component ?: return null
+        val carApp = ui.apps.firstOrNull { it.packageName == packageName }
+        val label = carApp?.label ?: runCatching { context.packageManager.getApplicationInfo(packageName, 0).loadLabel(context.packageManager).toString() }.getOrDefault(packageName)
+        return CarAppEntry(phoneAppId(component), packageName, label, carApp?.icon, CarAppKind.PHONE_APP).also { ui.phoneApps.add(it) }
+    }
+
     /** Packages of the navigation apps hosted on the car screen. */
     fun navigationPackages(): Set<String> = carApps.values.filter { it.isNavigation }.mapTo(HashSet()) { it.packageName }
 

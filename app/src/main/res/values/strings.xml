@@ -335,4 +335,5 @@
     <string name="app_display_left">%1$s left the car screen: it was closed, or moved itself to the phone.</string>
     <string name="app_display_open_again">Open again</string>
     <string name="app_display_retry">Try again</string>
+    <string name="app_display_open_itself">Open the app itself</string>
 </resources>

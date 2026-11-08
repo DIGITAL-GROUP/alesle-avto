@@ -54,6 +54,8 @@ class AppDisplay(private val context: Context) {
     private var dpi = 0
 
     private val args = Shizuku.UserServiceArgs(ComponentName(context.packageName, ShellDisplayService::class.java.name))
+        // One service process per AppDisplay: the car session's and the preview's don't stop each other's.
+        .tag("display-${System.identityHashCode(this)}")
         .daemon(false)
         .processNameSuffix("display")
         .debuggable(BuildConfig.DEBUG)

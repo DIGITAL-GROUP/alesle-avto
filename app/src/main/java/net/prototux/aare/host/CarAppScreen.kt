@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -62,6 +63,7 @@ fun CarAppScreen(conn: CarAppConnection, runtime: CarRuntime, modifier: Modifier
         onDispose { runtime.releaseVisible(conn) }
     }
     val host = remember(conn) { ConnectionTemplateHost(conn, runtime) }
+    val canOpenItself = remember(conn) { conn.info.packageName.let { runtime.context.packageManager.getLaunchIntentForPackage(it) != null } }
     Box(modifier) {
         val template = conn.template
         // The map surface outlives template changes: recreating it with each new template (as a
@@ -73,7 +75,10 @@ fun CarAppScreen(conn: CarAppConnection, runtime: CarRuntime, modifier: Modifier
             else Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainer))
         }
         when {
-            conn.status == CarAppConnection.Status.FAILED -> AppMessage(conn, conn.error ?: "Something went wrong", retry = { conn.connect() })
+            // An app that won't work with AARE as its host (Yandex Maps: "Could not start Maps") can still
+            // run as itself on the car screen.
+            conn.status == CarAppConnection.Status.FAILED -> AppMessage(conn, conn.error ?: "Something went wrong", retry = { conn.connect() },
+                openItself = if (canOpenItself) ({ runtime.phoneAppFor(conn.info.packageName)?.let(runtime.actions::openApp) }) else null)
             template == null -> AppMessage(conn, null, retry = null)
             // A new screen (new template id) starts fresh; refreshes keep scroll position and input.
             else -> androidx.compose.runtime.key(conn.templateId) { RenderTemplate(template, host, Modifier.fillMaxSize()) }
@@ -88,7 +93,7 @@ private fun usesMap(t: Template?): Boolean = t is NavigationTemplate || t is Map
 
 /** Loading spinner or error with the app's icon. */
 @Composable
-private fun AppMessage(conn: CarAppConnection, message: String?, retry: (() -> Unit)?) {
+private fun AppMessage(conn: CarAppConnection, message: String?, retry: (() -> Unit)?, openItself: (() -> Unit)? = null) {
     Column(
         Modifier.fillMaxSize().padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -100,13 +105,28 @@ private fun AppMessage(conn: CarAppConnection, message: String?, retry: (() -> U
             CircularProgressIndicator()
         } else {
             Text(message, style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center, modifier = Modifier.widthIn(max = 560.dp))
-            if (retry != null) {
+            if (retry != null || openItself != null) {
                 Spacer(Modifier.height(20.dp))
-                Text(
-                    "Try again", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.clip(RoundedCornerShape(32.dp)).background(MaterialTheme.colorScheme.primary)
-                        .clickable(onClick = retry).padding(horizontal = 32.dp, vertical = 18.dp),
-                )
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    if (openItself != null) {
+                        Text(
+                            stringResource(R.string.app_display_open_itself), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.clip(RoundedCornerShape(32.dp)).background(MaterialTheme.colorScheme.primary)
+                                .clickable(onClick = openItself).padding(horizontal = 32.dp, vertical = 18.dp),
+                        )
+                    }
+                    if (retry != null) {
+                        // The way out is the app itself when there is one: "Try again" steps back.
+                        val main = openItself == null
+                        Text(
+                            stringResource(R.string.app_display_retry), style = MaterialTheme.typography.labelLarge,
+                            color = if (main) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.clip(RoundedCornerShape(32.dp))
+                                .background(if (main) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer)
+                                .clickable(onClick = retry).padding(horizontal = 32.dp, vertical = 18.dp),
+                        )
+                    }
+                }
             }
         }
     }

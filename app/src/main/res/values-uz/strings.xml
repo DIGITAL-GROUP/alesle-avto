@@ -21,4 +21,5 @@
     <string name="app_display_left">%1$s avtomobil ekranidan chiqib ketdi: u yopildi yoki o‘zini telefonga o‘tkazdi.</string>
     <string name="app_display_open_again">Qayta ochish</string>
     <string name="app_display_retry">Qayta urinish</string>
+    <string name="app_display_open_itself">Ilovaning o‘zini ochish</string>
 </resources>
