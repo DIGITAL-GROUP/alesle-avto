@@ -100,6 +100,10 @@ private val WALLPAPERS = mapOf(
 )
 val WALLPAPER_NAMES = WALLPAPERS.keys.toList()
 
+/** Whether [Wallpaper] draws anything (a built-in gradient, or a custom picture that loaded). */
+internal fun hasWallpaper(ui: CarUiState): Boolean =
+    if (ui.wallpaper == net.prototux.aare.Settings.WALLPAPER_CUSTOM) ui.wallpaperImage != null else ui.wallpaper in WALLPAPERS
+
 /** The dashboard's wallpaper, filling [modifier]; nothing for "none". */
 @Composable
 internal fun Wallpaper(ui: CarUiState, modifier: Modifier) {

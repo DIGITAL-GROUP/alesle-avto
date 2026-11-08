@@ -76,6 +76,10 @@ import net.prototux.aare.R
 import net.prototux.aare.notify.PhoneGuidance
 import net.prototux.aare.ui.theme.CarTheme
 import net.prototux.aare.ui.theme.LocalCarDimens
+import net.prototux.aare.ui.theme.WALLPAPER_CHROME_ALPHA
+import net.prototux.aare.ui.theme.WallpaperLabel
+import net.prototux.aare.ui.theme.WallpaperScrim
+import net.prototux.aare.ui.theme.WallpaperTile
 
 /**
  * Root of the car screen: a rail on the driver's side and the content area.
@@ -144,7 +148,13 @@ private fun ContentArea(
                 Wallpaper(state, Modifier.fillMaxSize())
                 Dashboard(state, actions, navMap, Modifier.fillMaxSize().padding(gutter))
             }
-            CarScreen.Launcher -> Launcher(state, actions, Modifier.fillMaxSize())
+            CarScreen.Launcher -> Box(Modifier.fillMaxSize()) {
+                // The dashboard's wallpaper, dimmed so the tiles read; "none" keeps the plain background.
+                val onWallpaper = hasWallpaper(state)
+                Wallpaper(state, Modifier.fillMaxSize())
+                if (onWallpaper) Box(Modifier.fillMaxSize().background(WallpaperScrim))
+                Launcher(state, actions, onWallpaper, Modifier.fillMaxSize())
+            }
             is CarScreen.App -> {
                 val app = state.app(screen.appId)
                 if (app != null) appContent(app, Modifier.fillMaxSize()) else Dashboard(state, actions, navMap, Modifier.fillMaxSize().padding(gutter))
@@ -550,22 +560,27 @@ fun RoundIcon(icon: ImageVector, label: String, filled: Boolean, onClick: () -> 
  * own launcher apps, which run as themselves on a display of their own ([PhoneAppsGrid]).
  */
 @Composable
-private fun Launcher(state: CarUiState, actions: CarActions, modifier: Modifier) {
+private fun Launcher(state: CarUiState, actions: CarActions, onWallpaper: Boolean, modifier: Modifier) {
     Column(modifier) {
         Row(Modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            LauncherTabPill(stringResource(R.string.launcher_tab_car), state.launcherTab == LauncherTab.CAR) { state.launcherTab = LauncherTab.CAR }
-            LauncherTabPill(stringResource(R.string.launcher_tab_phone), state.launcherTab == LauncherTab.PHONE) { state.launcherTab = LauncherTab.PHONE }
+            LauncherTabPill(stringResource(R.string.launcher_tab_car), state.launcherTab == LauncherTab.CAR, onWallpaper) { state.launcherTab = LauncherTab.CAR }
+            LauncherTabPill(stringResource(R.string.launcher_tab_phone), state.launcherTab == LauncherTab.PHONE, onWallpaper) { state.launcherTab = LauncherTab.PHONE }
         }
         when (state.launcherTab) {
-            LauncherTab.CAR -> CarAppsGrid(state, actions, Modifier.weight(1f).fillMaxWidth())
-            LauncherTab.PHONE -> PhoneAppsGrid(state, actions, Modifier.weight(1f).fillMaxWidth())
+            LauncherTab.CAR -> CarAppsGrid(state, actions, onWallpaper, Modifier.weight(1f).fillMaxWidth())
+            LauncherTab.PHONE -> PhoneAppsGrid(state, actions, Modifier.weight(1f).fillMaxWidth(), onWallpaper)
         }
     }
 }
 
+/** A launcher tile: on the wallpaper, a translucent card; on the plain background, just its touch area. */
+internal fun Modifier.launcherTile(onWallpaper: Boolean, shape: RoundedCornerShape): Modifier =
+    clip(shape).then(if (onWallpaper) Modifier.background(WallpaperTile) else Modifier)
+
 @Composable
-private fun LauncherTabPill(label: String, selected: Boolean, onClick: () -> Unit) {
-    val bg = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer
+private fun LauncherTabPill(label: String, selected: Boolean, onWallpaper: Boolean, onClick: () -> Unit) {
+    val bg = if (selected) MaterialTheme.colorScheme.primary
+    else MaterialTheme.colorScheme.secondaryContainer.let { if (onWallpaper) it.copy(alpha = WALLPAPER_CHROME_ALPHA) else it }
     val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
     Box(
         Modifier.height(64.dp).clip(RoundedCornerShape(32.dp)).background(bg)
@@ -577,7 +592,7 @@ private fun LauncherTabPill(label: String, selected: Boolean, onClick: () -> Uni
 }
 
 @Composable
-private fun CarAppsGrid(state: CarUiState, actions: CarActions, modifier: Modifier) {
+private fun CarAppsGrid(state: CarUiState, actions: CarActions, onWallpaper: Boolean, modifier: Modifier) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(150.dp),
         modifier = modifier,
@@ -588,12 +603,13 @@ private fun CarAppsGrid(state: CarUiState, actions: CarActions, modifier: Modifi
         // Already in the user's order (CarRuntime.applyApps).
         items(state.apps, key = { it.id }) { app ->
             Column(
-                Modifier.clip(RoundedCornerShape(24.dp)).clickable { actions.openApp(app) }.padding(12.dp),
+                Modifier.launcherTile(onWallpaper, RoundedCornerShape(if (onWallpaper) 20.dp else 24.dp)).clickable { actions.openApp(app) }.padding(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AppIcon(app, 80)
                 Spacer(Modifier.height(10.dp))
-                Text(app.label, style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(app.label, style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    color = if (onWallpaper) WallpaperLabel else Color.Unspecified)
             }
         }
     }

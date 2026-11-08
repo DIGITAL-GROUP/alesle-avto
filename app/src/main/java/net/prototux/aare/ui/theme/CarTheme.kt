@@ -50,6 +50,15 @@ private val GraphiteHigh = Color(0xFF1E2228)
 /** Behind phone apps on their car display, day and night, and around an app that is letterboxed there. */
 val AppDisplayBackground = Ink
 
+/**
+ * The launcher over the wallpaper, day and night: a scrim over the picture, translucent graphite
+ * tiles with light labels, and the tabs and search field on translucent versions of their colours.
+ */
+val WallpaperScrim = Ink.copy(alpha = 0.55f)
+val WallpaperTile = Graphite.copy(alpha = 0.70f)
+val WallpaperLabel = Color(0xFFF2F3F5)
+const val WALLPAPER_CHROME_ALPHA = 0.72f
+
 private val NightColors: ColorScheme = darkColorScheme(
     primary = Signal,
     // White on #FF4F00 is only 3.3:1; near-black is 5.9:1, which reads better at a glance.

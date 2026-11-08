@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,6 +45,8 @@ import net.prototux.aare.apps.PhoneApps
 import net.prototux.aare.media.CarKeyboard
 import net.prototux.aare.media.Placeholder
 import net.prototux.aare.ui.theme.LocalCarDimens
+import net.prototux.aare.ui.theme.WALLPAPER_CHROME_ALPHA
+import net.prototux.aare.ui.theme.WallpaperLabel
 
 /**
  * The launcher's "Phone apps" tab: every app of the phone's own launcher, run as itself on the
@@ -51,7 +54,7 @@ import net.prototux.aare.ui.theme.LocalCarDimens
  * While driving only navigation and music apps are listed, as the phone screen mirror allows.
  */
 @Composable
-internal fun PhoneAppsGrid(state: CarUiState, actions: CarActions, modifier: Modifier) {
+internal fun PhoneAppsGrid(state: CarUiState, actions: CarActions, modifier: Modifier, onWallpaper: Boolean = false) {
     var query by rememberSaveable { mutableStateOf("") }
     var typing by remember { mutableStateOf(false) }
     val driving = state.drivingRestricted
@@ -62,10 +65,10 @@ internal fun PhoneAppsGrid(state: CarUiState, actions: CarActions, modifier: Mod
         query, { it.label }, { it.packageName },
     )
     Column(modifier) {
-        SearchField(query, enabled = !driving, onOpen = { typing = !typing }, onClear = { query = "" })
+        SearchField(query, enabled = !driving, onWallpaper, onOpen = { typing = !typing }, onClear = { query = "" })
         if (driving) {
             Text(stringResource(R.string.phone_apps_driving_only), style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 24.dp))
+                color = if (onWallpaper) WallpaperLabel else MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 24.dp))
         }
         Box(Modifier.weight(1f).fillMaxWidth()) {
             when {
@@ -80,14 +83,15 @@ internal fun PhoneAppsGrid(state: CarUiState, actions: CarActions, modifier: Mod
                 ) {
                     items(shown, key = { it.id }) { app ->
                         Column(
-                            Modifier.clip(RoundedCornerShape(20.dp)).carFocusHighlight(RoundedCornerShape(20.dp))
+                            Modifier.launcherTile(onWallpaper, RoundedCornerShape(20.dp)).carFocusHighlight(RoundedCornerShape(20.dp))
                                 .clickable { typing = false; actions.openApp(app) }.padding(10.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             AppIcon(app, 72)
                             Spacer(Modifier.height(8.dp))
                             Text(app.label, style = MaterialTheme.typography.labelLarge, maxLines = 1,
-                                overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center)
+                                overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center,
+                                color = if (onWallpaper) WallpaperLabel else Color.Unspecified)
                         }
                     }
                 }
@@ -108,11 +112,12 @@ internal fun PhoneAppsGrid(state: CarUiState, actions: CarActions, modifier: Mod
 
 /** The search box: shows the query (typed on the car keyboard below), or a hint. */
 @Composable
-private fun SearchField(query: String, enabled: Boolean, onOpen: () -> Unit, onClear: () -> Unit) {
+private fun SearchField(query: String, enabled: Boolean, onWallpaper: Boolean, onOpen: () -> Unit, onClear: () -> Unit) {
     val d = LocalCarDimens.current
     Row(
         Modifier.padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 8.dp).fillMaxWidth().heightIn(min = 64.dp)
-            .clip(RoundedCornerShape(32.dp)).background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .clip(RoundedCornerShape(32.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh.let { if (onWallpaper) it.copy(alpha = WALLPAPER_CHROME_ALPHA) else it })
             .carFocusHighlight(RoundedCornerShape(32.dp)).clickable(enabled = enabled, onClick = onOpen)
             .padding(start = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
