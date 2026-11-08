@@ -66,7 +66,7 @@ This is what matters for Alesle Avto, and it varies:
 |---|---|---|
 | Google's Desktop Head Unit (DHU) | yes, against the Google Automotive Link root | **no**: TLS completes, then `AUTH_COMPLETE` with status -3 |
 | Factory head units built on Google's receiver library | believed to check like the DHU | most likely **no** |
-| Denso Ten E-DA2 (factory unit, 2026 Toyota Land Cruiser 79 series) | no | **yes**, with Alesle Avto's self-signed certificate ([#37](https://github.com/prototux/AARE/issues/37)) |
+| Denso Ten E-DA2 (factory unit, 2026 Toyota Land Cruiser 79 series) | no | **yes**, with AARE's self-signed certificate ([#37](https://github.com/prototux/AARE/issues/37)) |
 | openauto / Crankshaft | no | yes |
 | Headunit Revived | no | yes |
 | LIVI, aa-proxy-rs | no | yes |

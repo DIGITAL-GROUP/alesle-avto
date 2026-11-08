@@ -1,6 +1,10 @@
-# AARE
+# Alesle Avto
 
-AARE is an open-source reimplementation of the phone side of Android Auto. The phone talks the
+> Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later.
+> This fork adds a restyled car screen (in English and Uzbek), the phone's own apps on the car
+> screen through Shizuku, and the Alesle Avto name. Not affiliated with Google.
+
+Alesle Avto is an open-source reimplementation of the phone side of Android Auto. The phone talks the
 Android Auto projection protocol (AAP) to the car's head unit, draws the car screen itself, and
 runs apps that Google's Android Auto keeps out:
 
@@ -20,7 +24,7 @@ It needs no Google Play Services.
 
 > [!WARNING]
 > **This is early software.** The protocol stack is tested against a simulated head unit, against
-> AARE's own desktop head unit and against Google's Desktop Head Unit up to the certificate check
+> Alesle Avto's own desktop head unit and against Google's Desktop Head Unit up to the certificate check
 > (see below). So far it has been tried in two real cars, one over wireless and one over USB (see
 > [Tested on real head units](#tested-on-real-head-units)). Don't depend on it while driving
 > until you have tried it in yours.
@@ -41,7 +45,7 @@ It needs no Google Play Services.
 | Media apps: browse, search, now playing, transport, active session tracking | done |
 | Messaging apps: conversations from notifications, read aloud, mark as read, reply when parked | new |
 | Turn-by-turn to the instrument cluster and now-playing to the head unit | done |
-| Instrument-cluster video (cars with a cluster display): the navigation app's cluster map, or AARE's turn card | new, tested only with the desktop head unit's `--cluster` |
+| Instrument-cluster video (cars with a cluster display): the navigation app's cluster map, or Alesle Avto's turn card | new, tested only with the desktop head unit's `--cluster` |
 | Directions from Google Maps, Waze… on the phone, on the dashboard and the cluster | new, untested with Google Maps and Waze |
 | Phone screen in the car, with touch | new, untested on hardware |
 | Phone audio to the car: screen capture, Shizuku, or system audio routing like Android Auto (music and navigation voice apart) | screen capture tested; Shizuku and system routing new, untested |
@@ -55,18 +59,18 @@ It needs no Google Play Services.
 
 ## Not done yet
 
-What Android Auto or the protocol offers that AARE doesn't do (yet).
+What Android Auto or the protocol offers that Alesle Avto doesn't do (yet).
 
-Not planned (rare, or redundant with what AARE draws itself):
+Not planned (rare, or redundant with what Alesle Avto draws itself):
 
 | Missing | Why not |
 |---|---|
 | Radio service (AM/FM/DAB tuning, presets) | Very few head units offer it to the phone. |
 | Vendor extensions | Specific to each car maker, undocumented. |
-| Generic notifications service | AARE shows notifications on its own screen; sending them to the car would show them twice. |
-| Native media browser service | Same: media apps are browsed on AARE's own screen. |
+| Generic notifications service | Alesle Avto shows notifications on its own screen; sending them to the car would show them twice. |
+| Native media browser service | Same: media apps are browsed on Alesle Avto's own screen. |
 | User switch, connected-devices list, service discovery update | Only matter with several phones in the car or channels changing during a connection. |
-| Audio kept open with silence | AARE closes the car's audio stream after a few seconds of silence and reopens it when sound comes back, like Android Auto does for navigation prompts. |
+| Audio kept open with silence | Alesle Avto closes the car's audio stream after a few seconds of silence and reopens it when sound comes back, like Android Auto does for navigation prompts. |
 
 ## Requirements
 
@@ -84,23 +88,23 @@ Not planned (rare, or redundant with what AARE draws itself):
   *Local network* permission (asked during setup): without it, Android silently drops the
   connection to the head unit.
 
-- A head unit that accepts AARE's certificate (see *Compatibility*), or a computer to run the
+- A head unit that accepts Alesle Avto's certificate (see *Compatibility*), or a computer to run the
   desktop head unit.
 
 ## Installing
 
-Download `aare-<version>.apk` from the [releases](https://github.com/prototux/AARE/releases) and
-open it on the phone, or `adb install -r aare-<version>.apk`. Each release also has the Magisk
-module (rooted phones, see [Car audio](#car-audio)) and the desktop head unit.
+Alesle Avto has no published releases yet: build it (see *Building*) and
+`adb install -r app/build/outputs/apk/debug/app-debug.apk`. Its application id is
+`uz.alesle.avto`, so it installs next to AARE (`net.prototux.aare`) rather than replacing it.
 
-Releases are signed with AARE's release key, SHA-256
-`63:EF:0D:E1:DB:2C:09:BB:7F:B2:5C:E7:EA:4A:DC:35:38:AF:42:3B:88:52:78:B5:9D:F2:88:9C:7F:18:28:6F`.
-Builds you make yourself are signed with your own debug key, so switching between the two needs
-an uninstall first.
+Upstream AARE's releases ([github.com/prototux/AARE/releases](https://github.com/prototux/AARE/releases))
+are signed with AARE's release key, SHA-256
+`63:EF:0D:E1:DB:2C:09:BB:7F:B2:5C:E7:EA:4A:DC:35:38:AF:42:3B:88:52:78:B5:9D:F2:88:9C:7F:18:28:6F`;
+they are AARE, not Alesle Avto.
 
 ## AA Key extraction
 
-As head units based on the official Google's host implementation checks the certificate/key of AARE,
+As head units based on the official Google's host implementation checks the certificate/key of Alesle Avto,
 in order to use those, key extraction is needed:
 
 1. On your computer, clone this repository, or use **Code → Download ZIP** on GitHub and
@@ -108,8 +112,8 @@ in order to use those, key extraction is needed:
    is located alongside this README. For Git:
 
    ```sh
-   git clone https://github.com/prototux/AARE.git
-   cd AARE
+   git clone <this repository's URL> AlesleAvto
+   cd AlesleAvto
    ```
 
 2. Download the APKm of Android Auto/com.google.android.projection.gearhead, for example from
@@ -126,11 +130,11 @@ in order to use those, key extraction is needed:
 
 4. The key and certificate are the `carservice_key.pem` and `carservice_cert.pem`. Copy them on your phone.
 
-5. Open those two files with AARE. It should now work with the head unit.
+5. Open those two files with Alesle Avto. It should now work with the head unit.
 
 ## Using it
 
-1. Open AARE on the phone and finish *Finish setting up*: permissions, notification access (for
+1. Open Alesle Avto on the phone and finish *Finish setting up*: permissions, notification access (for
    messages, directions from Google Maps and Waze, and now playing) and car audio (see
    [Car audio](#car-audio)).
 2. Have a look at the settings pages (car screen, apps, voice assistant, messages, car audio,
@@ -154,7 +158,7 @@ calendar event, over a wallpaper if you pick one. On very wide screens (1920x720
 three cards side by side. The weather comes from [Open-Meteo](https://open-meteo.com/) (no account,
 no Google), asked for an approximate position (about 10 km); you can turn it off.
 
-**Instrument cluster.** On cars whose head unit offers a cluster display, AARE sends it its own
+**Instrument cluster.** On cars whose head unit offers a cluster display, Alesle Avto sends it its own
 video, like Android Auto: the navigation app's cluster map when the app supports it
 (`androidx.car.app.category.FEATURE_CLUSTER`), otherwise a turn card with the next maneuver, its
 distance, the road and the arrival time (also for Google Maps and Waze directions). Without
@@ -179,7 +183,7 @@ car's driving status: typing a destination, long lists and the phone screen stay
 moving, for a passenger. The driver must not use the screen while driving.
 - **Phone screen:** the phone's own screen (see below).
 
-As an easter egg, *Settings > Style > CarPlay* gives the car screen a CarPlay-like look. AARE is
+As an easter egg, *Settings > Style > CarPlay* gives the car screen a CarPlay-like look. Alesle Avto is
 not affiliated with Apple; CarPlay is a trademark of Apple Inc.
 
 | | |
@@ -191,7 +195,7 @@ not affiliated with Apple; CarPlay is a trademark of Apple Inc.
 
 ### Which apps appear
 
-| Kind of app | Found by | In AARE |
+| Kind of app | Found by | In Alesle Avto |
 |---|---|---|
 | Car App Library apps (CoMaps, Organic Maps, OsmAnd, EV charging…) | `androidx.car.app.CarAppService` | yes |
 | Media apps | `MediaBrowserService` / media3 `MediaLibraryService` | yes |
@@ -200,19 +204,19 @@ not affiliated with Apple; CarPlay is a trademark of Apple Inc.
 
 Some apps, Google Maps and Waze among them, draw their car screen through an undocumented
 interface that only Google's Android Auto app can host, and they check that the host is Google's.
-AARE can't host them. AARE's settings list every app that declares Android Auto support but that
-AARE can't show, with the reason. Two things make up for it:
+Alesle Avto can't host them. Alesle Avto's settings list every app that declares Android Auto support but that
+Alesle Avto can't show, with the reason. Two things make up for it:
 
 - **Their directions in the car.** While Google Maps, Waze or another app guides you on the
-  phone, AARE reads its navigation notification and shows the next turn, the distance and the
+  phone, Alesle Avto reads its navigation notification and shows the next turn, the distance and the
   arrival time on the dashboard and on the car's instrument cluster. Their voice prompts reach
   the car through the phone's Bluetooth link.
 - **Phone screen.** An entry in the car's app list that shows the phone's own screen, so you can
   use those apps from the car:
   - it uses the screen-capture permission of *Car audio and phone screen* (choose *Entire
     screen* when Android asks);
-  - touching it needs AARE's accessibility service (*Touch on the phone screen* in *Setup*;
-    for a sideloaded APK, Android may first ask you to *Allow restricted settings* in AARE's
+  - touching it needs Alesle Avto's accessibility service (*Touch on the phone screen* in *Setup*;
+    for a sideloaded APK, Android may first ask you to *Allow restricted settings* in Alesle Avto's
     app info);
   - it is off by default (turn on *Phone screen in the car* in *Setup*), and not offered on a
     session from the developer head unit server unless you also turn on *Phone screen on the
@@ -235,7 +239,7 @@ open the assistant full screen; it closes by itself after the answer.
 
 **Car tools.** The assistant the voice button opens can act on the car through
 `content://uz.alesle.avto.car` (`ContentResolver.call`): `call("tools")` returns tool specs in
-the function-calling JSON schema, and `call("run", name, {"args": json})` runs one. AARE only
+the function-calling JSON schema, and `call("run", name, {"args": json})` runs one. Alesle Avto only
 answers that assistant, and only while a car (or the preview) is connected. The tools:
 
 | Tool | Does |
@@ -249,26 +253,26 @@ answers that assistant, and only while a car (or the preview) is connected. The 
 | `car_mark_read` | marks a conversation as read |
 | `car_display` | dark, light or the car's day/night colors |
 
-Lapin adds them to its own device tools when it runs on AARE, so you can say "take me to the
+Lapin adds them to its own device tools when it runs on Alesle Avto, so you can say "take me to the
 nearest charger", "what's the next turn?", "read my messages" or "reply to Alex that I'm 10
 minutes late".
 
 ### Car audio
 
-AARE uses the best way to send the phone's sound to the car that the phone allows:
+Alesle Avto uses the best way to send the phone's sound to the car that the phone allows:
 
 | Method | Needs | Navigation voice | Phone speaker |
 |---|---|---|---|
-| **System audio routing**, as Android Auto does it | a rooted phone, AARE installed as a privileged app (below) | yes, on the car's navigation channel | off |
+| **System audio routing**, as Android Auto does it | a rooted phone, Alesle Avto installed as a privileged app (below) | yes, on the car's navigation channel | off |
 | **Shizuku** | [Shizuku](https://shizuku.rikka.app/) running, Android 12+ | yes, mixed with the music | off |
 | **Screen-capture permission** | one consent (choose *Entire screen*) | no | still plays |
 
-- **Privileged install (root):** `tools/magisk/build-module.sh` makes `build/aare-magisk.zip`.
-  Install it from Magisk (*Modules > Install from storage*) and reboot. AARE is then in
+- **Privileged install (root):** `tools/magisk/build-module.sh` makes `build/alesle-magisk.zip`.
+  Install it from Magisk (*Modules > Install from storage*) and reboot. Alesle Avto is then in
   `/system/priv-app` with `MODIFY_AUDIO_ROUTING`. Later updates install normally if they are
   signed with the same key.
 - **Shizuku (no root):** install Shizuku and start it (wireless debugging, once after each
-  reboot). Then on AARE's *Car audio* page tap *Shizuku* to allow AARE.
+  reboot). Then on Alesle Avto's *Car audio* page tap *Shizuku* to allow Alesle Avto.
 - **Screen capture:** works everywhere, but Android only gives normal apps media, game and
   "unknown" sounds, so navigation voice stays on the phone, and apps may opt out.
 
@@ -279,8 +283,8 @@ of the above is needed: pair the phone with the car and leave *Car audio* unset.
 **Samsung Galaxy / One UI:** *Settings → Sounds and vibration → Separate app sound* can route
 chosen navigation or media apps directly to a paired **vehicle Bluetooth audio device**. A Galaxy
 S23 owner reports hearing both music and spoken navigation guidance this way. This is **phone
-Bluetooth output**, not proof that AARE captures navigation voice or sends it over an AAP audio
-channel; it also does not verify simultaneous official Android Auto plus AARE projection.
+Bluetooth output**, not proof that Alesle Avto captures navigation voice or sends it over an AAP audio
+channel; it also does not verify simultaneous official Android Auto plus Alesle Avto projection.
 See [Samsung Separate app sound and Bluetooth](docs/samsung-separate-app-sound.md) for the
 setup, caveats and the scoped field report.
 
@@ -290,28 +294,28 @@ setup, caveats and the scoped field report.
 need `adb` (Android SDK platform-tools), `ffmpeg` and a JDK 17-21.
 
 1. On the phone, turn on USB debugging and plug it into the computer.
-2. Install a **debug** build of AARE (`./build.sh && adb install -r app/build/outputs/apk/debug/app-debug.apk`).
+2. Install a **debug** build of Alesle Avto (`./build.sh && adb install -r app/build/outputs/apk/debug/app-debug.apk`).
 3. Run `./headunit.sh`.
 
-The script forwards TCP 5277 to the phone's `@aare_hu` socket over adb (`adb forward tcp:5277 localabstract:aare_hu`), switches on AARE's head-unit server (debug builds do it
-when asked; on release builds, turn on *Head unit server* in AARE's settings), builds the
+The script forwards TCP 5277 to the phone's `@alesle_hu` socket over adb (`adb forward tcp:5277 localabstract:alesle_hu`), switches on Alesle Avto's head-unit server (debug builds do it
+when asked; on release builds, turn on *Head unit server* in Alesle Avto's settings), builds the
 desktop head unit and opens a window showing the car screen. The *Phone screen* app is not
 offered on this server unless you turn on *Phone screen on the server* (next to *Head unit
-server* in AARE's settings), as its peer is unauthenticated.
+server* in Alesle Avto's settings), as its peer is unauthenticated.
 
 The phone only accepts the head-unit server's adb connection from adb itself (uid shell or root),
 so other apps on the phone can't use it (processes running as shell, such as `adb shell` or Shizuku, are accepted).
-For Google's DHU, or any tool on the computer running adb, run `adb forward tcp:5277 localabstract:aare_hu`
+For Google's DHU, or any tool on the computer running adb, run `adb forward tcp:5277 localabstract:alesle_hu`
 and point it at `localhost:5277`; head units on another device (Headunit Revived, openauto on a Pi) need
 *Accept from the network*. The desktop head unit takes `--adb-target tcp:5277` to drive the official
 Android Auto app's head unit server instead. *Accept from the
 network* in the settings also opens TCP 5277 on every network interface with no authentication: anyone
-on the same Wi-Fi can connect (apps on the phone itself are refused on every interface), so by default AARE switches it off again after one session. openauto and Headunit Revived reconnect
+on the same Wi-Fi can connect (apps on the phone itself are refused on every interface), so by default Alesle Avto switches it off again after one session. openauto and Headunit Revived reconnect
 on their own and would find it off: for them, turn off *Turn off network mode after a session* so
 network mode stays on until you switch it off.
 
 ```sh
-./headunit.sh                       # AARE, through AARE's desktop head unit
+./headunit.sh                       # Alesle Avto, through Alesle Avto's desktop head unit
 ./headunit.sh google                # the official Android Auto app, through Google's Desktop Head Unit
 ./headunit.sh --res 1920x1080 --time-scale 10 --speed 110 --rhd
 ./headunit.sh --cluster             # also an 800x480 instrument cluster, in a second window
@@ -341,16 +345,16 @@ The window also gives you:
 - **Headless mode:** `--headless DIR --script "tap:640,360@10 key:4@12"` runs without a window
   and saves screenshots, for automated tests.
 
-AARE's head unit works with AARE (or other open-source phone implementations), not with Google's
+Alesle Avto's head unit works with Alesle Avto (or other open-source phone implementations), not with Google's
 Android Auto app: Android Auto only accepts head units whose certificate is issued by Google, and
-this one's is self-signed. The head unit says so when a phone refuses it. AARE refuses a certificate it
-hasn't seen until you tap *Trust* on its *New head unit* notification (or on AARE's home screen) and connect again; the head
-unit keeps its own certificate in `~/.config/aare/headunit` (`%APPDATA%\aare\headunit` on Windows), so you tap *Trust* once, unless you give it another with `--hu-cert`/`--hu-key`.
+this one's is self-signed. The head unit says so when a phone refuses it. Alesle Avto refuses a certificate it
+hasn't seen until you tap *Trust* on its *New head unit* notification (or on Alesle Avto's home screen) and connect again; the head
+unit keeps its own certificate in `~/.config/alesle-avto/headunit` (`%APPDATA%\alesle\headunit` on Windows), so you tap *Trust* once, unless you give it another with `--hu-cert`/`--hu-key`.
 
 **Google mode** runs Google's Desktop Head Unit, downloading it if needed, with the same drive on
 an emulator's GPS. The official app only accepts head units with a Google-issued head-unit
-certificate, which AARE doesn't include, so Google's own tool is the way to compare. Turn on
-*Start head unit server* in Android Auto's developer settings first. AARE's head unit can also
+certificate, which Alesle Avto doesn't include, so Google's own tool is the way to compare. Turn on
+*Start head unit server* in Android Auto's developer settings first. Alesle Avto's head unit can also
 present a head-unit certificate you supply (`--hu-cert`, `--hu-key`).
 
 Other tools:
@@ -363,7 +367,9 @@ Other tools:
 
 ### Tested on real head units
 
-| Head unit | Phone | Link | AARE | Result |
+These reports were made with upstream AARE, on which Alesle Avto is based (same protocol code).
+
+| Head unit | Phone | Link | AARE version | Result |
 |---|---|---|---|---|
 | ZLink 3 aftermarket unit, model K2001N (Allwinner T3, Android 7, sold as Android 12), in a VW Golf 6 | Pixel 10 Pro XL, Android 17 | Wireless | 1.1.0 | **Works:** full sessions with video, with AARE's own certificate. On Android 17 it needs the local network permission ([#22](https://github.com/prototux/AARE/pull/22)). Known issue: the unit asks for 1280x720 at 160 dpi with 256x120 margins, and the screen edges are cut off. |
 | Denso Ten E-DA2, the factory unit of a 2026 Toyota Land Cruiser 79 series (wired Android Auto only) | Samsung Galaxy S23 (SM-S911B), Android 16, not rooted | USB | not stated | **Works**, all features tried ([#37](https://github.com/prototux/AARE/issues/37)), with AARE's own self-signed certificate. The unit also plays the phone's Bluetooth audio during Android Auto, so the car audio setup isn't needed. |
@@ -371,7 +377,7 @@ Other tools:
 | Factory Denso unit of a 2024 Toyota RAV4 | — | — | not stated | **Rejected:** the self-signed certificate ([#46](https://github.com/prototux/AARE/issues/46)). |
 | Factory unit of a 2024 Ford Transit | — | — | not stated | **Rejected:** status -3 ([#44](https://github.com/prototux/AARE/issues/44)). |
 
-If you try AARE on another head unit, please open an issue or a pull request to add it here,
+If you try Alesle Avto on another head unit, please open an issue or a pull request to add it here,
 whether it worked or not.
 
 ### Phone certificate
@@ -380,17 +386,17 @@ During the handshake the head unit checks the phone's TLS certificate.
 
 - **Google's head unit library:** Google's Desktop Head Unit and head units built on Google's
   receiver library accept only a phone certificate issued by Google's "Google Automotive Link"
-  CA. AARE was tested against Google's DHU: the TLS handshake completes, then the head unit
+  CA. Alesle Avto was tested against Google's DHU: the TLS handshake completes, then the head unit
   refuses authentication (status -3).
 - **Open-source head units:** openauto/Crankshaft, Headunit Revived, LIVI and aa-proxy-rs accept
-  AARE's generated certificate, as do some OEM units.
-- **Importing a certificate:** AARE does not ship or extract Google's key. If you have a
+  Alesle Avto's generated certificate, as do some OEM units.
+- **Importing a certificate:** Alesle Avto does not ship or extract Google's key. If you have a
   certificate and key you're entitled to use, import it under *Advanced > Phone certificates*.
-- **Fallback order:** AARE offers its certificates in turn. After a head unit rejects one, the
+- **Fallback order:** Alesle Avto offers its certificates in turn. After a head unit rejects one, the
   next connection uses the next one.
 
 [docs/certificates.md](docs/certificates.md) explains the certificates in detail: what Google's
-Android Auto presents and requires, which head units check what, and how to read AARE's
+Android Auto presents and requires, which head units check what, and how to read Alesle Avto's
 connection log when a car doesn't connect.
 
 ### Car apps that only trust Google
@@ -399,15 +405,15 @@ A Car App Library app decides which hosts it accepts (`HostValidator`).
 
 - **Debug builds** of most apps accept any host.
 - **Release builds:** apps built with car-app library 1.8.0-beta01 or older also accept a host
-  holding `android.car.permission.TEMPLATE_RENDERER`. AARE holds it, so CoMaps (1.7.0), Organic
+  holding `android.car.permission.TEMPLATE_RENDERER`. Alesle Avto holds it, so CoMaps (1.7.0), Organic
   Maps (1.8.0-alpha02) and Lapin (1.7.0) work today.
-- **Newer library versions** dropped that path on phones. Those apps need AARE's signing
+- **Newer library versions** dropped that path on phones. Those apps need Alesle Avto's signing
   certificate digest in their allow-list:
 
   ```kotlin
   HostValidator.Builder(context)
       .addAllowedHosts(androidx.car.app.R.array.hosts_allowlist_sample)
-      .addAllowedHost("uz.alesle.avto", "<sha256 of AARE's signing certificate>")
+      .addAllowedHost("uz.alesle.avto", "<sha256 of Alesle Avto's signing certificate>")
       .build()
   ```
 
@@ -421,7 +427,7 @@ Calls go through Bluetooth (HFP), as with Android Auto.
 
 ### VPN
 
-AARE works with a VPN app running on the phone (WireGuard, OpenVPN...), as long as the VPN's
+Alesle Avto works with a VPN app running on the phone (WireGuard, OpenVPN...), as long as the VPN's
 address ranges don't overlap the head unit's network. Over wireless, the head unit's Wi-Fi has its
 own addresses (often `192.168.x.x`): if the VPN claims the same range, the phone sends the car's
 traffic into the VPN and the connection times out. Then change the VPN's range, or exclude the head
@@ -431,8 +437,8 @@ affected.
 ### Coexisting with Google's Android Auto
 
 - **USB:** both apps answer the same USB accessory, so Android asks which one to use. Choose
-  AARE and "always", or disable Android Auto.
-- **Permissions:** AARE never redeclares the permissions Android Auto defines, so both can be
+  Alesle Avto and "always", or disable Android Auto.
+- **Permissions:** Alesle Avto never redeclares the permissions Android Auto defines, so both can be
   installed.
 
 ## Building
@@ -449,7 +455,7 @@ echo "sdk.dir=$HOME/Android/Sdk" > local.properties   # or set ANDROID_HOME
 ```
 
 `build.sh` finds a suitable JDK and runs Gradle. On a machine without swap, set
-`AARE_BUILD_MEMORY=5G` to run the build in a memory-capped systemd scope. Opening the project
+`ALESLE_BUILD_MEMORY=5G` to run the build in a memory-capped systemd scope. Opening the project
 in Android Studio works too.
 
 ## Layout
@@ -464,7 +470,7 @@ in Android Studio works too.
 | `app/.../media/` | media apps: discovery, media3 browser, now playing, UI |
 | `app/.../mirror/` | the *Phone screen* app: mirroring and touch |
 | `app/.../audio/` | car audio: capture methods (audio policy, Shizuku, screen capture), microphone |
-| `tools/magisk/` | Magisk module that installs AARE as a privileged app |
+| `tools/magisk/` | Magisk module that installs Alesle Avto as a privileged app |
 | `app/.../notify/` | notifications: messaging apps, and directions from navigation apps on the phone |
 | `app/.../transport/` | USB accessory, TCP server, wireless (Bluetooth + Wi-Fi) |
 | `app/.../ui/` | phone UI, car shell (rail, dashboard, launcher), theme |
@@ -475,13 +481,13 @@ in Android Studio works too.
 
 Bug reports and pull requests are welcome. Reports from real cars are the most useful: say which
 head unit (make, model, year, or the open-source software it runs), USB or wireless, and attach
-`adb logcat` output around the connection (`adb logcat | grep -i aare`).
+`adb logcat` output around the connection (`adb logcat | grep -i alesle`).
 
 Before sending a pull request, run `./build.sh :aap:test` and build the app.
 
 ## Thanks
 
-To [@dustfeather](https://github.com/dustfeather), for a security review of AARE and the fixes
+From upstream AARE: to [@dustfeather](https://github.com/dustfeather), for a security review of AARE and the fixes
 that came with it:
 
 - the protocol: the handshake order enforced, fragment reassembly capped;
@@ -496,6 +502,8 @@ that came with it:
 and for the first test of AARE in a real car.
 
 ## License
+
+Alesle Avto is based on AARE by prototux (github.com/prototux/AARE), GPL-3.0-or-later.
 
 GPL-3.0-or-later (see [LICENSE](LICENSE)). The protobuf definitions come from aasdk
 (GPL-3.0-or-later, see [aap/src/main/proto/NOTICE.md](aap/src/main/proto/NOTICE.md)).
