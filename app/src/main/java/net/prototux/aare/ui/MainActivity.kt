@@ -90,6 +90,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -246,8 +248,9 @@ private fun CategoryRow(page: Page, onClick: () -> Unit) {
 @Composable
 private fun Header() {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.size(48.dp).clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.primaryContainer), contentAlignment = Alignment.Center) {
-            Icon(Icons.Rounded.DirectionsCar, null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
+        // The Alesle Avto emblem, on white as in the logo (and the launcher icon).
+        Box(Modifier.size(56.dp).clip(RoundedCornerShape(16.dp)).background(Color.White).padding(6.dp), contentAlignment = Alignment.Center) {
+            Image(painterResource(R.drawable.logo_emblem), contentDescription = null, modifier = Modifier.fillMaxSize())
         }
         Spacer(Modifier.width(14.dp))
         Column {
